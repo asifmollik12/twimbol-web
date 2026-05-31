@@ -4,7 +4,6 @@ import CheckLogin from './components/auth/CheckLogin'
 // import { SpeedInsights } from "@vercel/speed-insights/next"
 
 // Public Pages
-import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 // import ForgotPassword from './pages/ForgotPassword'
@@ -31,8 +30,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         {/* Public */}
-        <Route path="/" element={<CheckLogin><Landing /></CheckLogin>} />
-        <Route path="/login" element={<CheckLogin><Login /></CheckLogin>} />
+        <Route path="/" element={<CheckLogin><Login /></CheckLogin>} />
         <Route path="/signup" element={<CheckLogin><Signup /></CheckLogin>} />
         {/* <Route path="/forgot-password" element={<CheckLogin><ForgotPassword /></CheckLogin>} /> */}
         <Route path="/outgoing/" element={<Outgoing />} />

@@ -50,12 +50,12 @@ const Login = () => {
           <div className="absolute bottom-1/3 left-16 w-20 h-20 rounded-full bg-[#4DD9E8] opacity-15" />
         </div>
 
-        {/* Logo and tagline */}
-        <div className="relative z-10 text-center px-12">
+        {/* Platform image and tagline */}
+        <div className="relative z-10 text-center px-8">
           <img
-            src="/logo.png"
-            alt="Twimbol"
-            className="w-64 mx-auto mb-8 drop-shadow-lg"
+            src="/Twimbol Safe Platform.png"
+            alt="Twimbol Safe Platform"
+            className="w-full max-w-lg mx-auto mb-6 drop-shadow-2xl rounded-xl"
           />
           <h2 className="text-white text-2xl font-light mb-3 tracking-wide">
             Safe Social Media for Kids

@@ -1,0 +1,20 @@
+{
+  "enabled": true,
+  "name": "Auto Deploy to Vercel",
+  "description": "Automatically commits, pushes to GitHub, and deploys to Vercel production after any code file is edited",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "*.jsx",
+      "*.js",
+      "*.css",
+      "*.html",
+      "*.json"
+    ]
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "cd '/Users/asifmollik/Documents/Twimbol web' && git add -A && git commit -m 'Auto deploy update' && git push origin main; vercel --prod --yes"
+  }
+}

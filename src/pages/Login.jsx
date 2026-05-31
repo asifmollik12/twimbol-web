@@ -82,6 +82,11 @@ const Login = () => {
             <img src="/logo.png" alt="Twimbol" className="w-40" />
           </div>
 
+          {/* Logo */}
+          <div className="hidden lg:flex justify-center mb-6">
+            <img src="/timbol logo .png" alt="Twimbol" className="w-44" />
+          </div>
+
           {/* Welcome text */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-[#2D1B69] mb-2">

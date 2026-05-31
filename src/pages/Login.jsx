@@ -77,24 +77,9 @@ const Login = () => {
       {/* Right Panel - Login Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 bg-[#f8f7fc]">
         <div className="w-full max-w-md">
-          {/* Mobile logo */}
-          <div className="lg:hidden flex justify-center mb-8">
-            <img src="/logo.png" alt="Twimbol" className="w-40" />
-          </div>
-
           {/* Logo */}
-          <div className="hidden lg:flex justify-center mb-6">
-            <img src="/timbol logo .png" alt="Twimbol" className="w-44" />
-          </div>
-
-          {/* Welcome text */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-[#2D1B69] mb-2">
-              Welcome back
-            </h1>
-            <p className="text-gray-500 text-sm">
-              Sign in to continue to Twimbol
-            </p>
+          <div className="flex justify-center mb-8">
+            <img src="/timbol logo .png" alt="Twimbol" className="w-44 lg:w-48" />
           </div>
 
           {/* Form Card */}

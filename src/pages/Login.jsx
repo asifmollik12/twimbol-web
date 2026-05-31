@@ -87,15 +87,7 @@ const Login = () => {
             <img src="/timbol logo .png" alt="Twimbol" className="w-44" />
           </div>
 
-          {/* Welcome text */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-[#2D1B69] mb-2">
-              Welcome back
-            </h1>
-            <p className="text-gray-500 text-sm">
-              Sign in to continue to Twimbol
-            </p>
-          </div>
+
 
           {/* Form Card */}
           <div className="bg-white rounded-2xl shadow-lg shadow-purple-100/50 p-8 border border-gray-100">

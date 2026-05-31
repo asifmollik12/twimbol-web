@@ -78,7 +78,7 @@ const Login = () => {
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 bg-[#f8f7fc]">
         <div className="w-full max-w-md">
           {/* Logo */}
-          <div className="flex justify-center mb-8">
+          <div className="flex justify-start mb-8">
             <img src="/timbol logo .png" alt="Twimbol" className="w-44 lg:w-48" />
           </div>
 

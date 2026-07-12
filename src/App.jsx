@@ -22,6 +22,8 @@ import Settings from './pages/Settings'
 import CreatorDashboard from './pages/CreatorDashboard'
 import EditProfile from './pages/EditProfile'
 import Events from './pages/Events'
+import Learn from './pages/Learn'
+import Game from './pages/Game'
 
 
 
@@ -51,6 +53,8 @@ export default function App() {
         {/* <Route path="/profile/:id" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
         <Route path="/creator/apply" element={<ProtectedRoute><ApplyCreator /></ProtectedRoute>} />*/}
         <Route path="/creator/dashboard" element={<ProtectedRoute><CreatorDashboard /></ProtectedRoute>} /> 
+        <Route path="/learn" element={<ProtectedRoute><Learn /></ProtectedRoute>} />
+        <Route path="/game" element={<ProtectedRoute><Game /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )

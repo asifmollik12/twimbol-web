@@ -1,16 +1,29 @@
 @import "tailwindcss";
 
-/* Custom theme variables using CSS variables */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+/* ── Twimbol Design System — Blue/Purple Theme ── */
 @theme {
-  --color-brand: #FF6E42;
-  --color-brand-light: #FCF3D4;
-  --color-surface: #F0F0F0;
-  --color-txt: #121212;
-  --color-txt-secondary: #7D7D7D;
-  --color-muted: #6b6560;
+  --color-brand: #5B2FC9;
+  --color-brand-light: #ede9ff;
+  --color-brand-hover: #4a25a8;
+  --color-accent: #7C3AED;
+  --color-surface: #f5f4fb;
+  --color-surface-2: #eeeaf8;
+  --color-txt: #1a1a2e;
+  --color-txt-secondary: #6b7280;
+  --color-muted: #9ca3af;
+  --color-border: #e5e0f5;
 }
 
-/* Global styles */
 body {
   @apply antialiased;
+  font-family: 'DM Sans', sans-serif;
+  background: #f5f4fb;
+  color: #1a1a2e;
 }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #c4b5fd; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #5B2FC9; }

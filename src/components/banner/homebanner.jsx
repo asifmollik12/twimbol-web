@@ -51,18 +51,16 @@ export const HomeBanner = () => {
 
   return (
     <>
-    
     <div
       className="home-banner"
       style={{
         position: "relative",
         overflow: "hidden",
-        borderRadius: "10px",
-        marginBottom: "30px",
+        borderRadius: "20px",
+        marginBottom: "24px",
         cursor: "pointer",
-        // border: "3px solid #333",
-        // backgroundColor: "#000",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+        boxShadow: "0 8px 32px rgba(91,47,201,0.2)",
+        border: "1.5px solid rgba(91,47,201,0.1)",
       }}
       onClick={() => handleClick(route, param)}
     >
@@ -73,50 +71,39 @@ export const HomeBanner = () => {
           width: "100%",
           display: "block",
           objectFit: "cover",
-          height: "300px",
+          height: "280px",
+          transition: "transform 0.4s ease",
         }}
+        onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
+        onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
       />
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          background: "rgba(0,0,0,0.1)",
-          color: "#fff",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-          textAlign: "left",
-          padding: "20px",
-        }}
-      >
-        {/* <h1 style={{ fontSize: "1.3rem", color: "#000" }}>{title}</h1>
-        <p style={{ fontSize: "1rem", color: "#000" }}>{description}</p> */}
-      </div>
+      {/* Purple gradient overlay */}
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        background: "linear-gradient(135deg, rgba(45,27,105,0.15) 0%, transparent 60%)",
+        pointerEvents: "none",
+      }} />
       {/* dots */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "10px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          gap: "6px",
-        }}
-      >
+      <div style={{
+        position: "absolute",
+        bottom: "14px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        display: "flex",
+        gap: "6px",
+      }}>
         {bannerItems.map((_, idx) => (
           <span
             key={idx}
             onClick={(e) => { e.stopPropagation(); setCurrent(idx); }}
             style={{
-              width: "10px",
-              height: "10px",
-              borderRadius: "50%",
+              width: idx === current ? "22px" : "8px",
+              height: "8px",
+              borderRadius: "4px",
               background: idx === current ? "#fff" : "rgba(255,255,255,0.5)",
               cursor: "pointer",
+              transition: "all 0.3s ease",
             }}
           />
         ))}

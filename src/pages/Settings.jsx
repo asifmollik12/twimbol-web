@@ -72,7 +72,7 @@ function TermsAndConditions() {
           },
         ].map((s) => (
           <div key={s.title}>
-            <h2 className="font-bold text-purple-600 mb-1">{s.title}</h2>
+            <h2 className="font-bold text-brand mb-1">{s.title}</h2>
             <p className="text-txt-secondary">{s.body}</p>
           </div>
         ))}
@@ -123,7 +123,7 @@ function FAQs() {
               className="w-full flex items-center justify-between px-5 py-4 text-left"
             >
               <span className="font-semibold text-sm text-txt">{f.q}</span>
-              <span className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-sm font-bold ${open === i ? "bg-purple-600" : "bg-purple-600"}`}>
+              <span className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-sm font-bold bg-brand`}>
                 {open === i ? "−" : "+"}
               </span>
             </button>

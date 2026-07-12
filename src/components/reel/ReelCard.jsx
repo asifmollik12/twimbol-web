@@ -201,7 +201,7 @@ function DefaultAvatar({ name }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(135deg, #FF6B35, #FF9F1C)",
+        background: "linear-gradient(135deg, #2D1B69, #5B2FC9)",
         color: "#fff",
         fontWeight: "700",
         fontSize: "14px",

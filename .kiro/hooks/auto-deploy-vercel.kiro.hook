@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "name": "Auto Deploy to Vercel",
   "description": "Automatically commits, pushes to GitHub, and deploys to Vercel production after any code file is edited",
   "version": "1",

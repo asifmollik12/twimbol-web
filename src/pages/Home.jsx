@@ -1,9 +1,16 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import NavBar from "../components/layout/Navbar.jsx";
 import ReelCard from "../components/reel/ReelCard.jsx";
-import { fetchReels } from "../api/api.js";
+import { fetchReels, fetchProfile, getImageUrl } from "../api/api.js";
 import Spinner from "../components/ui/Spinner.jsx";
-import HomeBanner from "../components/banner/homebanner.jsx";
+import { Clapperboard, BookOpen, Gamepad2, FileText, Flame, ArrowRight } from "lucide-react";
+
+const getGreeting = () => {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 18) return "Good afternoon";
+  return "Good evening";
+};
 
 /**
  * Home.jsx – Twimbol Reels home page.
@@ -17,7 +24,14 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [profile, setProfile] = useState(null);
   const loaderRef = useRef(null);
+
+  useEffect(() => {
+    fetchProfile()
+      .then((data) => setProfile(Array.isArray(data) ? data[0] : data))
+      .catch(() => {});
+  }, []);
 
   const loadReels = useCallback(async (pageNum = 1) => {
     try {
@@ -173,18 +187,93 @@ export default function Home() {
 
       <main style={{ maxWidth: "1400px", margin: "0 auto", padding: "28px 24px" }}>
 
-        {/* ── Banner ── */}
-        <HomeBanner />
+        {/* ── Greeting hero ── */}
+        <div
+          style={{
+            position: "relative",
+            overflow: "hidden",
+            borderRadius: "20px",
+            marginBottom: "24px",
+            padding: "32px 36px",
+            background: "linear-gradient(135deg, #2D1B69 0%, #5B2FC9 100%)",
+            boxShadow: "0 8px 32px rgba(91,47,201,0.25)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "20px",
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0 }}>
+            <div
+              style={{
+                width: "56px",
+                height: "56px",
+                borderRadius: "50%",
+                overflow: "hidden",
+                flexShrink: 0,
+                border: "2px solid rgba(255,255,255,0.4)",
+                background: "rgba(255,255,255,0.15)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#fff",
+                fontWeight: "700",
+                fontSize: "22px",
+              }}
+            >
+              {profile?.user?.profile_pic ? (
+                <img
+                  src={getImageUrl(profile.user.profile_pic)}
+                  alt=""
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              ) : (
+                (profile?.user?.first_name || profile?.user?.username || "T")[0].toUpperCase()
+              )}
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <h1 style={{ margin: 0, fontSize: "22px", fontWeight: "800", color: "#fff", letterSpacing: "-0.3px" }}>
+                {getGreeting()}{profile?.user?.first_name ? `, ${profile.user.first_name}` : ""} 👋
+              </h1>
+              <p style={{ margin: "4px 0 0", fontSize: "14px", color: "rgba(255,255,255,0.8)" }}>
+                Catch up on trending reels and fresh posts from your community.
+              </p>
+            </div>
+          </div>
+          <a
+            href="/reel"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              background: "#fff",
+              color: "#5B2FC9",
+              fontWeight: "700",
+              fontSize: "14px",
+              padding: "12px 22px",
+              borderRadius: "30px",
+              textDecoration: "none",
+              flexShrink: 0,
+              boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
+              transition: "transform 0.2s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
+          >
+            Explore Reels <ArrowRight size={16} />
+          </a>
+        </div>
 
         {/* ── Quick stats bar ── */}
         <div style={{
           display: "flex", gap: "12px", marginBottom: "28px", flexWrap: "wrap"
         }}>
           {[
-            { icon: "🎬", label: "Reels", value: "Trending now", color: "#5B2FC9", bg: "#ede9ff" },
-            { icon: "📚", label: "Learn", value: "New courses", color: "#0ea5e9", bg: "#e0f2fe", href: "/learn" },
-            { icon: "🎮", label: "Game", value: "Play & earn", color: "#10b981", bg: "#d1fae5", href: "/game" },
-            { icon: "📝", label: "Posts", value: "Latest posts", color: "#f59e0b", bg: "#fef3c7", href: "/post" },
+            { icon: Clapperboard, label: "Reels", value: "Trending now", color: "#5B2FC9", bg: "#ede9ff" },
+            { icon: BookOpen, label: "Learn", value: "New courses", color: "#0ea5e9", bg: "#e0f2fe", href: "/learn" },
+            { icon: Gamepad2, label: "Game", value: "Play & earn", color: "#10b981", bg: "#d1fae5", href: "/game" },
+            { icon: FileText, label: "Posts", value: "Latest posts", color: "#f59e0b", bg: "#fef3c7", href: "/post" },
           ].map((item) => (
             <a
               key={item.label}
@@ -206,8 +295,8 @@ export default function Home() {
               onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 20px rgba(91,47,201,0.1)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(91,47,201,0.05)"; }}
             >
-              <div style={{ width: "44px", height: "44px", background: item.bg, borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "22px", flexShrink: 0 }}>
-                {item.icon}
+              <div style={{ width: "44px", height: "44px", background: item.bg, borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <item.icon size={22} color={item.color} strokeWidth={2.2} />
               </div>
               <div>
                 <p style={{ margin: 0, fontSize: "15px", fontWeight: "700", color: "#1a1a2e" }}>{item.label}</p>
@@ -221,9 +310,13 @@ export default function Home() {
         <div className="section-header">
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <h2 className="section-title">
-              🎬 Reels
+              <Clapperboard size={20} color="#1a1a2e" strokeWidth={2.2} />
+              Reels
             </h2>
-            <span className="section-badge">TRENDING</span>
+            <span className="section-badge">
+              <Flame size={12} style={{ verticalAlign: "-2px", marginRight: "3px" }} />
+              TRENDING
+            </span>
           </div>
           <a href="/reel" className="view-all-btn">View all →</a>
         </div>
@@ -253,7 +346,9 @@ export default function Home() {
           <>
             {reels.length === 0 ? (
               <div style={{ textAlign: "center", padding: "80px 20px" }}>
-                <div style={{ width: "80px", height: "80px", background: "#ede9ff", borderRadius: "20px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "36px", margin: "0 auto 16px" }}>🎬</div>
+                <div style={{ width: "80px", height: "80px", background: "#ede9ff", borderRadius: "20px", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
+                  <Clapperboard size={36} color="#5B2FC9" strokeWidth={1.8} />
+                </div>
                 <p style={{ fontSize: "16px", fontWeight: "600", color: "#1a1a2e" }}>No reels yet</p>
                 <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "6px" }}>Check back soon for fresh content!</p>
               </div>

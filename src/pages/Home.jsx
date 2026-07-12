@@ -2,20 +2,24 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/layout/Navbar.jsx";
 import PostCard from "../components/post/PostCard.jsx";
+import ReelFeedCard from "../components/reel/ReelFeedCard.jsx";
 import { fetchReels } from "../api/api.js";
 import { getPosts } from "../api/posts.js";
 import Spinner from "../components/ui/Spinner.jsx";
 import { Play, Newspaper } from "lucide-react";
 
+// Insert a reel into the feed after every REEL_INTERVAL posts.
+const REEL_INTERVAL = 3;
+
 /**
  * Home.jsx – Twimbol news feed.
  * Instagram-style reel "stories" bar up top, Facebook-style vertical
- * feed of posts below. Supports infinite scroll / load more.
+ * feed mixing posts and reels below. Supports infinite scroll / load more.
  */
 export default function Home() {
   const navigate = useNavigate();
-  const [reels, setReels] = useState([]);
-  const [posts, setPosts] = useState([]);
+  const [stories, setStories] = useState([]);
+  const [feedItems, setFeedItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
@@ -23,10 +27,41 @@ export default function Home() {
   const [totalPages, setTotalPages] = useState(1);
   const loaderRef = useRef(null);
 
-  // Reels strip for the stories bar
+  // Reel queue used to interleave reels into the post feed
+  const reelQueueRef = useRef([]);
+  const reelPageRef = useRef(1);
+  const reelIdsRef = useRef(new Set());
+  const reelsExhaustedRef = useRef(false);
+
+  const ensureReelQueue = useCallback(async (minCount) => {
+    while (reelQueueRef.current.length < minCount && !reelsExhaustedRef.current) {
+      try {
+        const data = await fetchReels(reelPageRef.current, 15);
+        const results = data.results || [];
+        reelPageRef.current += 1;
+        if (results.length === 0) {
+          reelsExhaustedRef.current = true;
+          break;
+        }
+        results.forEach((r) => {
+          if (!reelIdsRef.current.has(r.post)) {
+            reelIdsRef.current.add(r.post);
+            reelQueueRef.current.push(r);
+          }
+        });
+        if (data.total_pages && reelPageRef.current > data.total_pages) {
+          reelsExhaustedRef.current = true;
+        }
+      } catch {
+        reelsExhaustedRef.current = true;
+      }
+    }
+  }, []);
+
+  // Stories bar (independent small fetch, first page of reels)
   useEffect(() => {
     fetchReels(1, 15)
-      .then((data) => setReels(data.results || []))
+      .then((data) => setStories(data.results || []))
       .catch(() => {});
   }, []);
 
@@ -35,11 +70,23 @@ export default function Home() {
       if (pageNum === 1) setLoading(true);
       else setLoadingMore(true);
 
-      const res = await getPosts({ page: pageNum, page_size: 10 });
+      const [res] = await Promise.all([
+        getPosts({ page: pageNum, page_size: 10 }),
+        ensureReelQueue(4),
+      ]);
       const data = res.data;
-      const results = data.results || [];
+      const newPosts = data.results || [];
 
-      setPosts((prev) => (pageNum === 1 ? results : [...prev, ...results]));
+      const newItems = [];
+      newPosts.forEach((post, idx) => {
+        newItems.push({ type: "post", key: `post-${post.id}`, data: post });
+        if ((idx + 1) % REEL_INTERVAL === 0) {
+          const reel = reelQueueRef.current.shift();
+          if (reel) newItems.push({ type: "reel", key: `reel-${reel.post}`, data: reel });
+        }
+      });
+
+      setFeedItems((prev) => (pageNum === 1 ? newItems : [...prev, ...newItems]));
       setTotalPages(data.total_pages || 1);
       setPage(pageNum);
     } catch (err) {
@@ -48,7 +95,7 @@ export default function Home() {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, []);
+  }, [ensureReelQueue]);
 
   useEffect(() => {
     loadPosts(1);
@@ -69,7 +116,7 @@ export default function Home() {
   }, [page, totalPages, loadingMore, loadPosts]);
 
   const handleHidden = (postId) => {
-    setPosts((prev) => prev.filter((p) => p.id !== postId));
+    setFeedItems((prev) => prev.filter((item) => !(item.type === "post" && item.data.id === postId)));
   };
 
   return (
@@ -78,12 +125,12 @@ export default function Home() {
 
       <main className="max-w-xl mx-auto px-4 py-6">
         {/* ── Stories bar (reels) ── */}
-        {reels.length > 0 && (
+        {stories.length > 0 && (
           <div
             className="flex gap-4 overflow-x-auto pb-1 mb-5"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {reels.map((reel) => {
+            {stories.map((reel) => {
               const username =
                 reel.user_profile?.username || reel.user_profile?.user?.username || "Reel";
               return (
@@ -142,7 +189,7 @@ export default function Home() {
               />
             ))}
           </div>
-        ) : posts.length === 0 ? (
+        ) : feedItems.length === 0 ? (
           <div className="text-center py-20">
             <div className="w-20 h-20 bg-brand-light rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Newspaper size={32} color="#5B2FC9" strokeWidth={1.8} />
@@ -154,9 +201,13 @@ export default function Home() {
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            {posts.map((post) => (
-              <PostCard key={post.id} post={post} onHidden={handleHidden} />
-            ))}
+            {feedItems.map((item) =>
+              item.type === "post" ? (
+                <PostCard key={item.key} post={item.data} onHidden={handleHidden} />
+              ) : (
+                <ReelFeedCard key={item.key} reel={item.data} />
+              )
+            )}
           </div>
         )}
 

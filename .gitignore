@@ -23,8 +23,11 @@ public/assets
 *.sln
 *.sw?
 
-# Environment 
+# Environment
 *.env
+
+# Claude Code local settings
+.claude/settings.local.json
 
 
 

@@ -377,12 +377,12 @@ export default function PostCard({ post, onHidden }) {
             {toast && (
                 <Toast toast={toast} />
             )}
-            <article className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <article className="bg-white rounded-2xl shadow-sm border border-border overflow-hidden">
                 {/* Header */}
                 <div className="flex items-start justify-between px-5 pt-5 pb-3">
                     <div className="flex items-center gap-3">
                         {/* Avatar */}
-                        <div className="w-11 h-11 rounded-full bg-surface overflow-hidden flex-shrink-0 ring-2 ring-brand/10">
+                        <div className="w-11 h-11 rounded-full bg-surface overflow-hidden flex-shrink-0 ring-2 ring-brand/20">
                             {profilePic ? (
                                 <img
                                     src={profilePic}
@@ -453,7 +453,7 @@ export default function PostCard({ post, onHidden }) {
                 )}
 
                 {/* Stats row */}
-                <div className="px-5 py-2 flex items-center justify-between text-xs text-txt-secondary border-t border-gray-50">
+                <div className="px-5 py-2 flex items-center justify-between text-xs text-txt-secondary border-t border-border">
                     <div className="flex items-center gap-1">
                         <div className="flex -space-x-1">
                             <span className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">

@@ -59,33 +59,33 @@ export default function NavBar({ activePage = "Reels" }) {
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
         .nav-link {
           font-family: 'DM Sans', sans-serif;
-          font-size: 15px;
+          font-size: 14px;
           font-weight: 500;
-          color: #444;
+          color: #6b7280;
           text-decoration: none;
-          padding: 8px 14px;
+          padding: 8px 16px;
           border-radius: 30px;
           transition: color 0.2s, background 0.2s;
         }
-        .nav-link:hover { color: #FF6B35; background: #fff4ef; }
+        .nav-link:hover { color: #5B2FC9; background: #ede9ff; }
         .nav-link.active {
-          background: #FF6B35;
+          background: linear-gradient(135deg, #2D1B69, #5B2FC9);
           color: #fff !important;
           font-weight: 700;
         }
         .icon-btn {
-          width: 42px;
-          height: 42px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
-          background: #f5f5f5;
-          border: none;
+          background: #f5f4fb;
+          border: 1.5px solid #e5e0f5;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: background 0.2s, transform 0.15s;
+          transition: background 0.2s, transform 0.15s, border-color 0.2s;
         }
-        .icon-btn:hover { background: #ffe9de; transform: scale(1.08); }
+        .icon-btn:hover { background: #ede9ff; border-color: #c4b5fd; transform: scale(1.07); }
       `}</style>
 
             <nav
@@ -93,15 +93,16 @@ export default function NavBar({ activePage = "Reels" }) {
                     position: "sticky",
                     top: 0,
                     zIndex: 100,
-                    background: "rgba(255,255,255,0.92)",
-                    backdropFilter: "blur(14px)",
-                    borderBottom: "1px solid rgba(0,0,0,0.06)",
+                    background: "rgba(255,255,255,0.95)",
+                    backdropFilter: "blur(16px)",
+                    borderBottom: "1px solid #e5e0f5",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
                     padding: "0 32px",
-                    height: "66px",
+                    height: "64px",
                     fontFamily: "'DM Sans', sans-serif",
+                    boxShadow: "0 1px 20px rgba(91,47,201,0.06)",
                 }}
             >
                 {/* Logo */}

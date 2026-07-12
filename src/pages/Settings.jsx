@@ -202,25 +202,24 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F0F0F0] flex items-center justify-center p-6">
+    <div className="min-h-screen bg-surface flex items-center justify-center p-6">
       <div className="flex gap-5 w-full max-w-6xl">
         {/* ── Sidebar ── */}
         <aside className="w-72 bg-white rounded-2xl shadow-sm p-4 flex flex-col shrink-0 self-start sticky top-6">
           {/* Back */}
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-1 text-brand font-semibold text-sm mb-5"
-          >
+            className="flex items-center gap-1 text-brand font-semibold text-sm mb-5"          >
             <ChevronLeft size={16} /> Back
           </button>
 
           {/* User info */}
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-14 h-14 rounded-full bg-purple-200 overflow-hidden shrink-0">
+            <div className="w-14 h-14 rounded-full bg-brand-light overflow-hidden shrink-0">
               {user.profile_pic ? (
                 <img src={user.profile_pic} alt="avatar" className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-purple-700 text-xl font-bold">
+                <div className="w-full h-full flex items-center justify-center text-brand text-xl font-bold">
                   {user.username?.[0]?.toUpperCase() ?? "U"}
                 </div>
               )}

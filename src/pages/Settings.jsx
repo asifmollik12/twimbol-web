@@ -30,11 +30,11 @@ function NavItem({ icon, label, active, onClick }) {
       onClick={onClick}
       className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition ${
         active
-          ? "bg-surface text-txt"
-          : "text-txt-secondary hover:bg-surface/60"
+          ? "bg-brand-light text-brand font-semibold"
+          : "text-txt-secondary hover:bg-surface"
       }`}
     >
-      <span className={active ? "text-txt" : "text-txt-secondary"}>{icon}</span>
+      <span className={active ? "text-brand" : "text-txt-secondary"}>{icon}</span>
       {label}
     </button>
   );

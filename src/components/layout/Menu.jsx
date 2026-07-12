@@ -87,7 +87,7 @@ export default function Menu({ profile, onClose }) {
           display: "flex",
           alignItems: "center",
           gap: "14px",
-          background: "linear-gradient(135deg, #fff5f0, #fff)",
+      background: "linear-gradient(135deg, #f0ebff, #fff)",
         }}
       >
         {/* Avatar */}
@@ -98,7 +98,7 @@ export default function Menu({ profile, onClose }) {
             borderRadius: "50%",
             overflow: "hidden",
             flexShrink: 0,
-            border: "3px solid #FF6B35",
+            border: "3px solid #5B2FC9",
             background: "#eee",
           }}
         >
@@ -147,7 +147,7 @@ export default function Menu({ profile, onClose }) {
                 userGroup === "admin"
                   ? "#1a1aff"
                   : userGroup === "creator"
-                  ? "#FF6B35"
+                  ? "#5B2FC9"
                   : "#e8e8e8",
               color: userGroup === "visitor" ? "#666" : "#fff",
               fontSize: "10px",
@@ -203,7 +203,7 @@ export default function Menu({ profile, onClose }) {
             background: "none",
             border: "none",
             cursor: "pointer",
-            color: "#e03e2d",
+            color: "#5B2FC9",
             fontSize: "14px",
             fontFamily: "'DM Sans', sans-serif",
             fontWeight: "600",
@@ -227,7 +227,7 @@ function AvatarFallback({ name }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(135deg, #FF6B35, #FF9F1C)",
+        background: "linear-gradient(135deg, #2D1B69, #5B2FC9)",
         color: "#fff",
         fontWeight: "700",
         fontSize: "20px",

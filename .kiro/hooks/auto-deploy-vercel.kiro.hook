@@ -16,5 +16,7 @@
   "then": {
     "type": "runCommand",
     "command": "cd '/Users/asifmollik/Documents/Twimbol web' && git add -A && git commit -m 'Auto deploy update' && git push origin main; vercel --prod --yes"
-  }
+  },
+  "workspaceFolderName": "Twimbol web",
+  "shortName": "auto-deploy-vercel"
 }

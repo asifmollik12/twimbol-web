@@ -2,124 +2,198 @@ import React, { useState } from "react";
 import NavBar from "../components/layout/Navbar";
 
 const CATEGORIES = [
-    { id: "all", label: "All" },
+    { id: "all", label: "সব" },
     { id: "programming", label: "Programming" },
     { id: "design", label: "Design" },
-    { id: "math", label: "Math" },
-    { id: "science", label: "Science" },
+    { id: "academic", label: "Academic" },
     { id: "language", label: "Language" },
-    { id: "arts", label: "Arts & Crafts" },
+    { id: "freelancing", label: "Freelancing" },
+];
+
+const PLATFORMS = [
+    { id: "all", label: "All Platforms" },
+    { id: "10ms", label: "10 Minute School" },
+    { id: "creative-it", label: "Creative IT" },
+    { id: "shikho", label: "Shikho" },
+    { id: "bohubrihi", label: "Bohubrihi" },
 ];
 
 const COURSES = [
     {
         id: 1,
-        title: "Python for Kids",
-        provider: "Udemy",
-        providerLogo: "🎓",
-        category: "programming",
-        image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=400&h=220&fit=crop",
-        price: "$12.99",
-        originalPrice: "$49.99",
-        rating: 4.8,
-        students: "12,400",
-        description: "Learn Python programming in a fun and interactive way designed for children aged 8-14.",
-        affiliate: "https://udemy.com",
+        title: "Spoken English Course",
+        provider: "10 Minute School",
+        platformId: "10ms",
+        providerColor: "#00a651",
+        providerBg: "#f0fdf4",
+        category: "language",
+        price: "৳ ৯৯৯",
+        originalPrice: "৳ ১,৯৯৯",
+        rating: 4.9,
+        students: "৫০,০০০+",
+        description: "ঘরে বসেই Spoken English শিখুন। প্র্যাকটিক্যাল exercises ও live class সহ।",
+        link: "https://10minuteschool.com/en/categories/language-learning/",
         badge: "Bestseller",
         badgeColor: "#f59e0b",
+        image: "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=400&h=200&fit=crop",
     },
     {
         id: 2,
-        title: "Creative Drawing for Beginners",
-        provider: "Skillshare",
-        providerLogo: "🎨",
-        category: "arts",
-        image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=220&fit=crop",
-        price: "$9.99",
-        originalPrice: "$29.99",
-        rating: 4.7,
-        students: "8,200",
-        description: "Develop your artistic skills with fun drawing lessons perfect for young learners.",
-        affiliate: "https://skillshare.com",
+        title: "HSC Physics Complete Course",
+        provider: "10 Minute School",
+        platformId: "10ms",
+        providerColor: "#00a651",
+        providerBg: "#f0fdf4",
+        category: "academic",
+        price: "৳ ১,৫০০",
+        originalPrice: "৳ ৩,০০০",
+        rating: 4.8,
+        students: "৩০,০০০+",
+        description: "HSC Physics পরীক্ষার জন্য সম্পূর্ণ প্রস্তুতি। Live class, notes ও model test।",
+        link: "https://10minuteschool.com/en/academic/",
         badge: "Popular",
         badgeColor: "#8b5cf6",
+        image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=200&fit=crop",
     },
     {
         id: 3,
-        title: "Math Made Easy — Grade 3-6",
-        provider: "Khan Academy",
-        providerLogo: "➕",
-        category: "math",
-        image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=220&fit=crop",
+        title: "HSC Biology Foundation Course",
+        provider: "10 Minute School",
+        platformId: "10ms",
+        providerColor: "#00a651",
+        providerBg: "#f0fdf4",
+        category: "academic",
         price: "Free",
         originalPrice: null,
-        rating: 4.9,
-        students: "50,000+",
-        description: "Master mathematics with interactive lessons, quizzes and practice problems.",
-        affiliate: "https://khanacademy.org",
+        rating: 4.7,
+        students: "২০,০০০+",
+        description: "HSC Biology এর সম্পূর্ণ foundation তৈরি করুন বিনামূল্যে।",
+        link: "https://10minuteschool.com/en/product/hsc-biology-foundation-course/",
         badge: "Free",
         badgeColor: "#10b981",
+        image: "https://images.unsplash.com/photo-1532094349884-543290e6e5bf?w=400&h=200&fit=crop",
     },
     {
         id: 4,
-        title: "Web Design for Young Creators",
-        provider: "Coursera",
-        providerLogo: "💻",
+        title: "Professional Web Design",
+        provider: "Creative IT Institute",
+        platformId: "creative-it",
+        providerColor: "#e11d48",
+        providerBg: "#fff1f2",
         category: "design",
-        image: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=400&h=220&fit=crop",
-        price: "$14.99",
-        originalPrice: "$59.99",
-        rating: 4.6,
-        students: "6,800",
-        description: "Build your first website using HTML, CSS and basic design principles.",
-        affiliate: "https://coursera.org",
-        badge: "New",
-        badgeColor: "#3b82f6",
+        price: "৳ ১৫,০০০",
+        originalPrice: "৳ ২০,০০০",
+        rating: 4.8,
+        students: "১২,০০০+",
+        description: "HTML, CSS, Bootstrap দিয়ে professional website design শিখুন। Job placement support সহ।",
+        link: "https://www.creativeitinstitute.com/courses/web-design",
+        badge: "Job Support",
+        badgeColor: "#ef4444",
+        image: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=400&h=200&fit=crop",
     },
     {
         id: 5,
-        title: "English Speaking Confidence",
-        provider: "Duolingo",
-        providerLogo: "🗣️",
-        category: "language",
-        image: "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=400&h=220&fit=crop",
-        price: "Free",
-        originalPrice: null,
-        rating: 4.8,
-        students: "100,000+",
-        description: "Build confidence in English speaking through daily interactive exercises.",
-        affiliate: "https://duolingo.com",
-        badge: "Free",
-        badgeColor: "#10b981",
+        title: "Professional UX/UI Design",
+        provider: "Creative IT Institute",
+        platformId: "creative-it",
+        providerColor: "#e11d48",
+        providerBg: "#fff1f2",
+        category: "design",
+        price: "৳ ১৮,০০০",
+        originalPrice: "৳ ২৫,০০০",
+        rating: 4.7,
+        students: "৮,০০০+",
+        description: "Figma দিয়ে UX/UI design শিখুন। User research, wireframing, prototyping সব।",
+        link: "https://www.creativeitinstitute.com/courses/professional-uxui-design",
+        badge: "Trending",
+        badgeColor: "#8b5cf6",
+        image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&h=200&fit=crop",
     },
     {
         id: 6,
-        title: "Introduction to Science Experiments",
-        provider: "Udemy",
-        providerLogo: "🔬",
-        category: "science",
-        image: "https://images.unsplash.com/photo-1532094349884-543290e6e5bf?w=400&h=220&fit=crop",
-        price: "$11.99",
-        originalPrice: "$39.99",
+        title: "Diploma in Full Stack Web Development",
+        provider: "Creative IT Institute",
+        platformId: "creative-it",
+        providerColor: "#e11d48",
+        providerBg: "#fff1f2",
+        category: "programming",
+        price: "৳ ৩০,০০০",
+        originalPrice: "৳ ৪০,০০০",
+        rating: 4.9,
+        students: "১৫,০০০+",
+        description: "HTML থেকে React, Node.js পর্যন্ত সম্পূর্ণ Full Stack Development।",
+        link: "https://www.creativeitinstitute.com/courses/diploma-in-full-stack-development",
+        badge: "Bestseller",
+        badgeColor: "#f59e0b",
+        image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=400&h=200&fit=crop",
+    },
+    {
+        id: 7,
+        title: "SSC/HSC সম্পূর্ণ প্রস্তুতি",
+        provider: "Shikho",
+        platformId: "shikho",
+        providerColor: "#f97316",
+        providerBg: "#fff7ed",
+        category: "academic",
+        price: "৳ ৮৯৯/মাস",
+        originalPrice: "৳ ১,৪৯৯/মাস",
+        rating: 4.8,
+        students: "৪০,০০০+",
+        description: "ঘরে বসে SSC/HSC এর A+ প্রস্তুতি। বিশ্বস্ত শিক্ষকদের live class ও notes।",
+        link: "https://shikho.com",
+        badge: "Popular",
+        badgeColor: "#f97316",
+        image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&h=200&fit=crop",
+    },
+    {
+        id: 8,
+        title: "Python দিয়ে Machine Learning",
+        provider: "Bohubrihi",
+        platformId: "bohubrihi",
+        providerColor: "#2563eb",
+        providerBg: "#eff6ff",
+        category: "programming",
+        price: "৳ ৩,৫০০",
+        originalPrice: "৳ ৫,০০০",
         rating: 4.7,
-        students: "9,500",
-        description: "Fun science experiments you can do at home to learn about the world around you.",
-        affiliate: "https://udemy.com",
+        students: "৬,০০০+",
+        description: "Python ব্যবহার করে Machine Learning এর হাতেকলমে শিক্ষা। বাংলায় সহজ ভাষায়।",
+        link: "https://bohubrihi.com",
         badge: "Trending",
-        badgeColor: "#ef4444",
+        badgeColor: "#2563eb",
+        image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=200&fit=crop",
+    },
+    {
+        id: 9,
+        title: "Freelancing Complete Course",
+        provider: "Bohubrihi",
+        platformId: "bohubrihi",
+        providerColor: "#2563eb",
+        providerBg: "#eff6ff",
+        category: "freelancing",
+        price: "৳ ২,৯৯৯",
+        originalPrice: "৳ ৪,৫০০",
+        rating: 4.6,
+        students: "১০,০০০+",
+        description: "Upwork, Fiverr এ ক্যারিয়ার গড়ুন। Profile setup থেকে client পাওয়া পর্যন্ত।",
+        link: "https://bohubrihi.com",
+        badge: "Bestseller",
+        badgeColor: "#f59e0b",
+        image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=200&fit=crop",
     },
 ];
 
 export default function Learn() {
     const [activeCategory, setActiveCategory] = useState("all");
+    const [activePlatform, setActivePlatform] = useState("all");
     const [search, setSearch] = useState("");
 
     const filtered = COURSES.filter((c) => {
         const matchCat = activeCategory === "all" || c.category === activeCategory;
-        const matchSearch =
-            c.title.toLowerCase().includes(search.toLowerCase()) ||
-            c.provider.toLowerCase().includes(search.toLowerCase());
-        return matchCat && matchSearch;
+        const matchPlat = activePlatform === "all" || c.platformId === activePlatform;
+        const q = search.toLowerCase();
+        const matchSearch = c.title.toLowerCase().includes(q) || c.provider.toLowerCase().includes(q) || c.description.toLowerCase().includes(q);
+        return matchCat && matchPlat && matchSearch;
     });
 
     return (
@@ -127,92 +201,71 @@ export default function Learn() {
             <NavBar activePage="Learn" />
 
             {/* Hero */}
-            <div
-                style={{
-                    background: "linear-gradient(135deg, #2D1B69 0%, #3B1F8E 50%, #5B2FC9 100%)",
-                    padding: "48px 32px 40px",
-                    textAlign: "center",
-                }}
-            >
-                <h1 style={{ color: "#fff", fontSize: "32px", fontWeight: "800", margin: "0 0 8px" }}>
-                    Learn Something New Today 🚀
-                </h1>
-                <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "15px", margin: "0 0 24px" }}>
-                    Explore courses from top platforms — all curated for young learners
+            <div style={{ background: "linear-gradient(135deg, #2D1B69 0%, #3B1F8E 50%, #5B2FC9 100%)", padding: "48px 32px 40px", textAlign: "center" }}>
+                <h1 style={{ color: "#fff", fontSize: "30px", fontWeight: "800", margin: "0 0 8px" }}>শেখার সেরা জায়গা 🚀</h1>
+                <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "15px", margin: "0 0 24px" }}>
+                    10 Minute School, Creative IT সহ দেশের সেরা platforms এর courses এক জায়গায়
                 </p>
-
-                {/* Search */}
-                <div style={{ maxWidth: "480px", margin: "0 auto", position: "relative" }}>
+                <div style={{ maxWidth: "500px", margin: "0 auto 28px", position: "relative" }}>
                     <input
                         type="text"
-                        placeholder="Search courses..."
+                        placeholder="Course খুঁজুন..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        style={{
-                            width: "100%",
-                            padding: "14px 20px 14px 48px",
-                            borderRadius: "50px",
-                            border: "none",
-                            fontSize: "14px",
-                            outline: "none",
-                            boxSizing: "border-box",
-                        }}
+                        style={{ width: "100%", padding: "14px 20px 14px 48px", borderRadius: "50px", border: "none", fontSize: "14px", outline: "none", boxSizing: "border-box", fontFamily: "'DM Sans', sans-serif" }}
                     />
-                    <span style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", fontSize: "18px" }}>
-                        🔍
-                    </span>
+                    <span style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", fontSize: "18px" }}>🔍</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "center", gap: "10px", flexWrap: "wrap" }}>
+                    {[
+                        { name: "10 Minute School", color: "#4ade80", bg: "rgba(74,222,128,0.15)" },
+                        { name: "Creative IT", color: "#f87171", bg: "rgba(248,113,113,0.15)" },
+                        { name: "Shikho", color: "#fb923c", bg: "rgba(251,146,60,0.15)" },
+                        { name: "Bohubrihi", color: "#60a5fa", bg: "rgba(96,165,250,0.15)" },
+                    ].map((p) => (
+                        <span key={p.name} style={{ background: p.bg, color: p.color, padding: "5px 14px", borderRadius: "50px", fontSize: "12px", fontWeight: "700" }}>
+                            {p.name}
+                        </span>
+                    ))}
                 </div>
             </div>
 
             <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "32px 16px" }}>
 
-                {/* Category tabs */}
-                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "28px" }}>
-                    {CATEGORIES.map((cat) => (
-                        <button
-                            key={cat.id}
-                            onClick={() => setActiveCategory(cat.id)}
-                            style={{
-                                padding: "8px 18px",
-                                borderRadius: "50px",
-                                border: "none",
-                                cursor: "pointer",
-                                fontSize: "13px",
-                                fontWeight: "600",
-                                fontFamily: "'DM Sans', sans-serif",
-                                background: activeCategory === cat.id ? "#FF6B35" : "#fff",
-                                color: activeCategory === cat.id ? "#fff" : "#555",
-                                boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
-                                transition: "all 0.2s",
-                            }}
-                        >
-                            {cat.label}
-                        </button>
-                    ))}
+                {/* Platform filter */}
+                <div style={{ marginBottom: "14px" }}>
+                    <p style={{ fontSize: "11px", color: "#999", marginBottom: "8px", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.5px" }}>Platform</p>
+                    <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                        {PLATFORMS.map((p) => (
+                            <button key={p.id} onClick={() => setActivePlatform(p.id)} style={{ padding: "7px 16px", borderRadius: "50px", border: "none", cursor: "pointer", fontSize: "13px", fontWeight: "600", fontFamily: "'DM Sans', sans-serif", background: activePlatform === p.id ? "#2D1B69" : "#fff", color: activePlatform === p.id ? "#fff" : "#555", boxShadow: "0 1px 4px rgba(0,0,0,0.08)", transition: "all 0.2s" }}>
+                                {p.label}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
-                {/* Results count */}
-                <p style={{ color: "#888", fontSize: "13px", marginBottom: "20px" }}>
-                    {filtered.length} course{filtered.length !== 1 ? "s" : ""} found
-                </p>
+                {/* Category filter */}
+                <div style={{ marginBottom: "28px" }}>
+                    <p style={{ fontSize: "11px", color: "#999", marginBottom: "8px", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.5px" }}>Category</p>
+                    <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                        {CATEGORIES.map((cat) => (
+                            <button key={cat.id} onClick={() => setActiveCategory(cat.id)} style={{ padding: "7px 16px", borderRadius: "50px", border: "none", cursor: "pointer", fontSize: "13px", fontWeight: "600", fontFamily: "'DM Sans', sans-serif", background: activeCategory === cat.id ? "#FF6B35" : "#fff", color: activeCategory === cat.id ? "#fff" : "#555", boxShadow: "0 1px 4px rgba(0,0,0,0.08)", transition: "all 0.2s" }}>
+                                {cat.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
 
-                {/* Course grid */}
-                <div
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-                        gap: "24px",
-                    }}
-                >
-                    {filtered.map((course) => (
-                        <CourseCard key={course.id} course={course} />
-                    ))}
+                <p style={{ color: "#888", fontSize: "13px", marginBottom: "20px" }}>{filtered.length}টি course পাওয়া গেছে</p>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "24px" }}>
+                    {filtered.map((course) => <CourseCard key={course.id} course={course} />)}
                 </div>
 
                 {filtered.length === 0 && (
                     <div style={{ textAlign: "center", padding: "80px 0", color: "#aaa" }}>
                         <div style={{ fontSize: "48px", marginBottom: "12px" }}>📚</div>
-                        <p style={{ fontSize: "16px" }}>No courses found. Try a different search.</p>
+                        <p style={{ fontSize: "16px" }}>কোনো course পাওয়া যায়নি।</p>
                     </div>
                 )}
             </div>
@@ -223,103 +276,35 @@ export default function Learn() {
 function CourseCard({ course }) {
     return (
         <div
-            style={{
-                background: "#fff",
-                borderRadius: "16px",
-                overflow: "hidden",
-                boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
-                transition: "transform 0.2s, box-shadow 0.2s",
-                cursor: "pointer",
-            }}
-            onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-4px)";
-                e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.12)";
-            }}
-            onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.07)";
-            }}
+            style={{ background: "#fff", borderRadius: "16px", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.07)", transition: "transform 0.2s, box-shadow 0.2s" }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.12)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.07)"; }}
         >
-            {/* Thumbnail */}
             <div style={{ position: "relative" }}>
-                <img
-                    src={course.image}
-                    alt={course.title}
-                    style={{ width: "100%", height: "160px", objectFit: "cover", display: "block" }}
-                />
+                <img src={course.image} alt={course.title} style={{ width: "100%", height: "155px", objectFit: "cover", display: "block" }} />
                 {course.badge && (
-                    <span
-                        style={{
-                            position: "absolute",
-                            top: "10px",
-                            left: "10px",
-                            background: course.badgeColor,
-                            color: "#fff",
-                            fontSize: "11px",
-                            fontWeight: "700",
-                            padding: "3px 10px",
-                            borderRadius: "50px",
-                        }}
-                    >
+                    <span style={{ position: "absolute", top: "10px", left: "10px", background: course.badgeColor, color: "#fff", fontSize: "11px", fontWeight: "700", padding: "3px 10px", borderRadius: "50px" }}>
                         {course.badge}
                     </span>
                 )}
+                <span style={{ position: "absolute", bottom: "10px", right: "10px", background: course.providerBg, color: course.providerColor, fontSize: "10px", fontWeight: "800", padding: "3px 10px", borderRadius: "50px" }}>
+                    {course.provider}
+                </span>
             </div>
-
-            {/* Content */}
             <div style={{ padding: "16px" }}>
-                {/* Provider */}
-                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "8px" }}>
-                    <span style={{ fontSize: "16px" }}>{course.providerLogo}</span>
-                    <span style={{ fontSize: "12px", color: "#888", fontWeight: "600" }}>{course.provider}</span>
-                </div>
-
-                {/* Title */}
-                <h3 style={{ margin: "0 0 8px", fontSize: "15px", fontWeight: "700", color: "#1a1a2e", lineHeight: "1.4" }}>
-                    {course.title}
-                </h3>
-
-                {/* Description */}
-                <p style={{ margin: "0 0 12px", fontSize: "13px", color: "#666", lineHeight: "1.5" }}>
-                    {course.description}
-                </p>
-
-                {/* Rating + students */}
+                <h3 style={{ margin: "0 0 8px", fontSize: "15px", fontWeight: "700", color: "#1a1a2e", lineHeight: "1.4" }}>{course.title}</h3>
+                <p style={{ margin: "0 0 12px", fontSize: "13px", color: "#666", lineHeight: "1.5" }}>{course.description}</p>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
                     <span style={{ color: "#f59e0b", fontSize: "13px", fontWeight: "700" }}>★ {course.rating}</span>
-                    <span style={{ color: "#aaa", fontSize: "12px" }}>({course.students} students)</span>
+                    <span style={{ color: "#aaa", fontSize: "12px" }}>({course.students} জন)</span>
                 </div>
-
-                {/* Price + CTA */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <div>
-                        <span style={{ fontSize: "17px", fontWeight: "800", color: "#2D1B69" }}>
-                            {course.price}
-                        </span>
-                        {course.originalPrice && (
-                            <span style={{ fontSize: "12px", color: "#aaa", textDecoration: "line-through", marginLeft: "6px" }}>
-                                {course.originalPrice}
-                            </span>
-                        )}
+                        <span style={{ fontSize: "17px", fontWeight: "800", color: "#2D1B69" }}>{course.price}</span>
+                        {course.originalPrice && <span style={{ fontSize: "12px", color: "#aaa", textDecoration: "line-through", marginLeft: "6px" }}>{course.originalPrice}</span>}
                     </div>
-                    <a
-                        href={course.affiliate}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                            background: "linear-gradient(135deg, #FF6B35, #ff8c5a)",
-                            color: "#fff",
-                            padding: "8px 18px",
-                            borderRadius: "50px",
-                            fontSize: "13px",
-                            fontWeight: "700",
-                            textDecoration: "none",
-                            transition: "opacity 0.2s",
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
-                        onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-                    >
-                        Enroll →
+                    <a href={course.link} target="_blank" rel="noopener noreferrer" style={{ background: "linear-gradient(135deg, #FF6B35, #ff8c5a)", color: "#fff", padding: "8px 18px", borderRadius: "50px", fontSize: "13px", fontWeight: "700", textDecoration: "none", whiteSpace: "nowrap" }}>
+                        দেখুন →
                     </a>
                 </div>
             </div>

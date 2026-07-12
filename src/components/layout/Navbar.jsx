@@ -150,7 +150,7 @@ export default function NavBar({ activePage = "Reels" }) {
                                         right: "4px",
                                         width: "18px",
                                         height: "18px",
-                                        background: "#FF6B35",
+                                        background: "#5B2FC9",
                                         borderRadius: "50%",
                                         border: "2px solid #fff",
                                         display: "flex",

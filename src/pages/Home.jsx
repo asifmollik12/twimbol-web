@@ -60,7 +60,7 @@ export default function Home() {
     <div
       style={{
         minHeight: "100vh",
-        background: "#fafafa",
+        background: "#f5f4fb",
         fontFamily: "'DM Sans', sans-serif",
       }}
     >
@@ -95,7 +95,7 @@ export default function Home() {
         }
 
         .skeleton {
-          background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
+          background: linear-gradient(90deg, #e8e4f5 25%, #f0edfb 50%, #e8e4f5 75%);
           background-size: 200% 100%;
           animation: shimmer 1.4s infinite;
           border-radius: 16px;
@@ -108,7 +108,7 @@ export default function Home() {
         }
 
         .load-more-btn {
-          background: linear-gradient(135deg, #FF6B35, #FF9F1C);
+          background: linear-gradient(135deg, #2D1B69, #5B2FC9);
           color: #fff;
           border: none;
           border-radius: 30px;
@@ -121,7 +121,7 @@ export default function Home() {
         }
         .load-more-btn:hover {
           transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(255,107,53,0.4);
+          box-shadow: 0 8px 24px rgba(91,47,201,0.35);
         }
         .load-more-btn:disabled {
           opacity: 0.6;
@@ -140,13 +140,13 @@ export default function Home() {
             style={{
               fontSize: "28px",
               fontWeight: "800",
-              color: "#1a1a1a",
+              color: "#1a1a2e",
               letterSpacing: "-0.5px",
             }}
           >
             Reels
           </h1>
-          <p style={{ color: "#888", fontSize: "14px", marginTop: "4px" }}>
+          <p style={{ color: "#6b7280", fontSize: "14px", marginTop: "4px" }}>
             Discover trending short videos from creators
           </p>
         </div>
@@ -155,11 +155,11 @@ export default function Home() {
         {error && (
           <div
             style={{
-              background: "#fff0ee",
-              border: "1px solid #ffcdc4",
+              background: "#f0ebff",
+              border: "1px solid #c4b5fd",
               borderRadius: "12px",
               padding: "16px 20px",
-              color: "#c0392b",
+              color: "#4a25a8",
               marginBottom: "24px",
               display: "flex",
               alignItems: "center",
@@ -172,7 +172,7 @@ export default function Home() {
               onClick={() => { setError(null); loadReels(1); }}
               style={{
                 marginLeft: "auto",
-                background: "#FF6B35",
+                background: "#5B2FC9",
                 color: "#fff",
                 border: "none",
                 borderRadius: "20px",

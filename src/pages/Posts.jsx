@@ -82,7 +82,7 @@ export default function Posts() {
       <div className="max-w-2xl mx-auto px-4 py-6">
         {/* Search + Filter bar */}
         <div className="mb-6 flex gap-2 items-center">
-          <div className="flex-1 flex items-center gap-2 bg-white rounded-2xl px-4 py-3 shadow-sm border border-gray-100">
+          <div className="flex-1 flex items-center gap-2 bg-white rounded-2xl px-4 py-3 shadow-sm border border-border">
             <Search size={16} className="text-txt-secondary flex-shrink-0" />
             <input
               type="text"
@@ -97,7 +97,7 @@ export default function Posts() {
             className={`p-3 rounded-2xl border shadow-sm transition-colors ${
               showFilters
                 ? "bg-brand text-white border-brand"
-                : "bg-white text-txt-secondary border-gray-100 hover:bg-surface"
+                : "bg-white text-txt-secondary border-border hover:bg-surface"
             }`}
           >
             <SlidersHorizontal size={16} />
@@ -106,7 +106,7 @@ export default function Posts() {
 
         {/* Filter panel */}
         {showFilters && (
-          <div className="mb-5 bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4 flex flex-wrap gap-2 items-center">
+          <div className="mb-5 bg-white rounded-2xl border border-border shadow-sm px-5 py-4 flex flex-wrap gap-2 items-center">
             <span className="text-xs font-semibold text-txt-secondary uppercase tracking-wide mr-2">
               Sort by
             </span>

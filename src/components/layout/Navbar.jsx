@@ -1,19 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Home, BookOpen, Clapperboard, Lightbulb, Gamepad2, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import Notification from "../layout/Notification.jsx";
 import Menu from "../layout/Menu.jsx";
 import { fetchProfile, fetchNotifications, getImageUrl } from "../../api/api.js";
 import { onNotifications, startNotificationPolling } from "../../api/notifications.js";
+import { NAV_LINKS } from "../../constants/navLinks.js";
 // import useAuthStore from "../../store/authStore.js";
-
-const NAV_LINKS = [
-    { label: "Home", href: "/home", icon: Home, color: "#5B2FC9", bg: "#ede9ff" },
-    { label: "Kids Book", href: "/kids-book", icon: BookOpen, color: "#e8620c", bg: "#fff1e6" },
-    { label: "Reels", href: "/reel", icon: Clapperboard, color: "#d6208a", bg: "#fde7f3" },
-    { label: "Learn", href: "/learn", icon: Lightbulb, color: "#0a9b8f", bg: "#e3faf7" },
-    { label: "Game", href: "/game", icon: Gamepad2, color: "#2e9d3f", bg: "#e9f9ec" },
-];
 
 /**
  * NavBar – Top navigation bar for Twimbol.

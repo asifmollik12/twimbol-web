@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/layout/Navbar.jsx";
-import { fetchReels } from "../api/api.js";
+import { NAV_LINKS } from "../constants/navLinks.js";
+import { fetchReels, hideReel } from "../api/api.js";
 import DecorativeBackground from "../components/ui/DecorativeBackground.jsx";
 import GroundFooter from "../components/ui/GroundFooter.jsx";
-import { X, Clapperboard } from "lucide-react";
+import { X, Clapperboard, MoreHorizontal, EyeOff } from "lucide-react";
 import { isYouTubeUrl, getYouTubeId, getYouTubeEmbedUrl, getYouTubeWatchUrl } from "../utils/youtube.js";
 
 function getVideoHref(reel) {
@@ -14,14 +15,33 @@ function getVideoHref(reel) {
   return `/reel/${reel.post}`;
 }
 
-function VideoCard({ reel, onClick }) {
+function VideoCard({ reel, onClick, onHidden }) {
   const navigate = useNavigate();
   const [hovering, setHovering] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+  const menuBtnRef = useRef(null);
   const isYouTube = isYouTubeUrl(reel.video_url);
   const youtubeId = isYouTube ? getYouTubeId(reel.video_url) : null;
   const creatorId = reel.user_profile?.user?.id || reel.created_by;
   const creatorName =
     reel.user_profile?.username || reel.user_profile?.user?.username || null;
+  const href = getVideoHref(reel);
+
+  // Close menu on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(e.target) &&
+        !menuBtnRef.current.contains(e.target)
+      ) {
+        setMenuOpen(false);
+      }
+    };
+    if (menuOpen) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [menuOpen]);
 
   const handleClick = (e) => {
     // Let modifier/middle clicks behave like a normal link (open in new tab, etc.)
@@ -36,15 +56,26 @@ function VideoCard({ reel, onClick }) {
     if (creatorId) navigate(`/profile/${creatorId}`);
   };
 
+  const handleHide = async () => {
+    setMenuOpen(false);
+    try {
+      await hideReel(reel.post);
+      onHidden?.(reel.post);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
-    <a
-      href={getVideoHref(reel)}
-      onClick={handleClick}
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
-      className="block text-left group"
-    >
-      <div className="relative w-full rounded-lg overflow-hidden bg-txt shadow-sm" style={{ aspectRatio: "16/9" }}>
+    <div className="bg-white rounded-2xl shadow-sm border border-border overflow-hidden">
+      <a
+        href={href}
+        onClick={handleClick}
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
+        className="relative block w-full bg-txt group"
+        style={{ aspectRatio: "16/9" }}
+      >
         {reel.thumbnail_url && (
           <img
             src={reel.thumbnail_url}
@@ -71,19 +102,80 @@ function VideoCard({ reel, onClick }) {
             />
           )
         )}
+      </a>
+
+      <div className="flex items-start justify-between gap-2 px-3 pt-3">
+        <a href={href} onClick={handleClick} className="min-w-0 flex-1 block text-left">
+          <p className="text-base font-semibold text-txt line-clamp-2 leading-snug min-h-11">
+            {reel.title || "Untitled"}
+          </p>
+        </a>
+        <div className="relative flex-shrink-0">
+          <button
+            ref={menuBtnRef}
+            onClick={() => setMenuOpen((o) => !o)}
+            className="p-1.5 -mr-1 rounded-full hover:bg-surface transition-colors text-txt-secondary"
+            aria-label="Video options"
+          >
+            <MoreHorizontal size={18} />
+          </button>
+          {menuOpen && (
+            <div
+              ref={menuRef}
+              className="absolute right-0 top-8 z-20 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1.5 overflow-hidden"
+            >
+              <button
+                onClick={handleHide}
+                className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-txt hover:bg-surface transition-colors text-left"
+              >
+                <EyeOff size={15} className="flex-shrink-0" />
+                Hide from feed
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-      <p className="text-base font-semibold text-txt mt-3 line-clamp-2 leading-snug min-h-11">
-        {reel.title || "Untitled"}
-      </p>
+
       {creatorName && (
-        <span
-          onClick={handleCreatorClick}
-          className="inline-block text-xs text-txt-secondary mt-1 hover:text-brand hover:underline"
-        >
-          {creatorName}
-        </span>
+        <div className="px-3 pb-3 pt-0.5">
+          <span
+            onClick={handleCreatorClick}
+            className="inline-block text-xs text-txt-secondary hover:text-brand hover:underline cursor-pointer"
+          >
+            {creatorName}
+          </span>
+        </div>
       )}
-    </a>
+    </div>
+  );
+}
+
+function MobileBottomNav({ activePage }) {
+  return (
+    <nav
+      className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-border flex items-stretch justify-around px-1 pt-1.5"
+      style={{ paddingBottom: "calc(6px + env(safe-area-inset-bottom))" }}
+    >
+      {NAV_LINKS.map((link) => {
+        const Icon = link.icon;
+        const isActive = activePage === link.label;
+        return (
+          <a
+            key={link.label}
+            href={link.href}
+            className="flex flex-1 flex-col items-center justify-center gap-0.5 rounded-xl py-1"
+          >
+            <Icon size={22} color={isActive ? link.color : "#9891ad"} strokeWidth={2.2} />
+            <span
+              className="text-[10px] font-semibold"
+              style={{ color: isActive ? link.color : "#9891ad" }}
+            >
+              {link.label}
+            </span>
+          </a>
+        );
+      })}
+    </nav>
   );
 }
 
@@ -112,6 +204,10 @@ export default function Home() {
     }
   };
 
+  const handleHideVideo = (postId) => {
+    setVideos((prev) => prev.filter((v) => v.post !== postId));
+  };
+
   return (
     <div className="min-h-screen bg-surface" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <DecorativeBackground />
@@ -119,10 +215,10 @@ export default function Home() {
         <NavBar activePage="Home" />
 
         {/* ── Videos (YouTube-Kids-style grid, every reel) ── */}
-        <section className="max-w-6xl mx-auto px-10 py-8">
+        <section className="max-w-6xl mx-auto px-4 sm:px-10 py-5 sm:py-8 pb-24 sm:pb-8">
           <h2 className="text-xl font-bold text-txt mb-4">Videos</h2>
           {videosLoading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="rounded-lg bg-white border border-border animate-pulse" style={{ aspectRatio: "16/9" }} />
               ))}
@@ -138,9 +234,14 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-6">
               {videos.map((reel) => (
-                <VideoCard key={reel.post} reel={reel} onClick={() => handleVideoClick(reel)} />
+                <VideoCard
+                  key={reel.post}
+                  reel={reel}
+                  onClick={() => handleVideoClick(reel)}
+                  onHidden={handleHideVideo}
+                />
               ))}
             </div>
           )}
@@ -148,6 +249,8 @@ export default function Home() {
 
         {!videosLoading && <GroundFooter />}
       </div>
+
+      <MobileBottomNav activePage="Home" />
 
       {/* ── Video lightbox ── */}
       {lightboxId && (

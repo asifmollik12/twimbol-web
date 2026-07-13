@@ -68,8 +68,8 @@ export default function NavBar({ activePage = "Reels" }) {
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
         .icon-btn {
-          width: 46px;
-          height: 46px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
           background: #f5f4fb;
           border: 1.5px solid #e5e0f5;
@@ -86,11 +86,11 @@ export default function NavBar({ activePage = "Reels" }) {
           display: flex;
           align-items: center;
           flex: 1;
-          max-width: 580px;
+          max-width: 480px;
           background: #f5f4fb;
           border: 2px solid #e5e0f5;
           border-radius: 999px;
-          padding: 5px 5px 5px 24px;
+          padding: 4px 4px 4px 20px;
           transition: border-color 0.2s, box-shadow 0.2s;
         }
         .fun-search:focus-within {
@@ -103,15 +103,15 @@ export default function NavBar({ activePage = "Reels" }) {
           background: transparent;
           outline: none;
           font-family: 'DM Sans', sans-serif;
-          font-size: 17px;
+          font-size: 15px;
           font-weight: 500;
           color: #2D1B69;
-          padding: 13px 0;
+          padding: 10px 0;
         }
         .fun-search input::placeholder { color: #a89fc9; font-weight: 500; }
         .fun-search button {
-          width: 46px;
-          height: 46px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
           border: none;
           background: linear-gradient(135deg, #2D1B69, #5B2FC9);
@@ -128,9 +128,9 @@ export default function NavBar({ activePage = "Reels" }) {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 7px;
+          gap: 6px;
           flex-shrink: 0;
-          padding: 8px 12px;
+          padding: 6px 10px;
           border-radius: 18px;
           text-decoration: none;
           cursor: pointer;
@@ -138,9 +138,9 @@ export default function NavBar({ activePage = "Reels" }) {
         }
         .nav-icon-item:hover { transform: translateY(-2px); }
         .nav-icon-badge {
-          width: 58px;
-          height: 58px;
-          border-radius: 18px;
+          width: 48px;
+          height: 48px;
+          border-radius: 16px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -152,7 +152,7 @@ export default function NavBar({ activePage = "Reels" }) {
         }
         .nav-icon-label {
           font-family: 'DM Sans', sans-serif;
-          font-size: 13px;
+          font-size: 12px;
           font-weight: 700;
           color: #8b85a3;
         }
@@ -184,7 +184,7 @@ export default function NavBar({ activePage = "Reels" }) {
                     {/* Logo */}
                     <a href="/" style={{ textDecoration: "none", flexShrink: 0 }}>
                         <div className="flex items-center gap-1">
-                            <img src="/logo.png" alt="Twimbol Logo" className="w-28" />
+                            <img src="/logo.png" alt="Twimbol Logo" className="w-24" />
                         </div>
                     </a>
 
@@ -197,7 +197,7 @@ export default function NavBar({ activePage = "Reels" }) {
                             placeholder="Search Twimbol Kids…"
                         />
                         <button type="submit" aria-label="Search">
-                            <Search size={19} color="#fff" strokeWidth={2.5} />
+                            <Search size={17} color="#fff" strokeWidth={2.5} />
                         </button>
                     </form>
 
@@ -268,8 +268,8 @@ export default function NavBar({ activePage = "Reels" }) {
                                         src={profilePicUrl}
                                         alt={displayName}
                                         style={{
-                                            width: "48px",
-                                            height: "48px",
+                                            width: "42px",
+                                            height: "42px",
                                             borderRadius: "50%",
                                             objectFit: "cover",
                                         }}
@@ -318,7 +318,7 @@ export default function NavBar({ activePage = "Reels" }) {
                                     }}
                                 >
                                     <Icon
-                                        size={26}
+                                        size={22}
                                         color={isActive ? "#fff" : link.color}
                                         strokeWidth={2.2}
                                     />
@@ -335,7 +335,7 @@ export default function NavBar({ activePage = "Reels" }) {
 
 function BellIcon() {
     return (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
         </svg>
@@ -344,7 +344,7 @@ function BellIcon() {
 
 function UserIcon() {
     return (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
         </svg>

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { Pencil, Clapperboard, LayoutDashboard, Settings, LogOut } from "lucide-react";
 import { logout, getImageUrl } from "../../api/api.js";
 
 /**
@@ -39,18 +40,18 @@ export default function Menu({ profile, onClose }) {
   };
 
   const menuItems = [
-    // { icon: "👤", label: "My Profile", href: "/profile" },
-    { icon: "✏️", label: "Edit Profile", href: "/profile/edit" },
-    // { icon: "🔔", label: "Notification Settings", href: "/settings/notifications" },
-    // { icon: "🔒", label: "Change Password", href: "/settings/password" },
+    // { icon: Users, label: "My Profile", href: "/profile" },
+    { icon: Pencil, label: "Edit Profile", href: "/profile/edit" },
+    // { icon: Bell, label: "Notification Settings", href: "/settings/notifications" },
+    // { icon: Lock, label: "Change Password", href: "/settings/password" },
     ...(userGroup === "visitor"
-      ? [{ icon: "🎬", label: "Apply for Creator", href: "/creator/dashboard" }]
+      ? [{ icon: Clapperboard, label: "Apply for Creator", href: "/creator/dashboard" }]
       : []),
     ...(userGroup === "creator" || userGroup === "admin"
-      ? [{ icon: "📊", label: "Creator Dashboard", href: "/creator/dashboard" }]
+      ? [{ icon: LayoutDashboard, label: "Creator Dashboard", href: "/creator/dashboard" }]
       : []),
-    // { icon: "👨‍👩‍👧", label: "Parental Controls", href: "/settings/parental" },
-    { icon: "⚙️", label: "Settings", href: "/settings" },
+    // { icon: Users, label: "Parental Controls", href: "/settings/parental" },
+    { icon: Settings, label: "Settings", href: "/settings" },
   ];
 
   return (
@@ -165,28 +166,31 @@ export default function Menu({ profile, onClose }) {
 
       {/* Menu items */}
       <div style={{ padding: "8px 0" }}>
-        {menuItems.map((item) => (
-          <a
-            key={item.href}
-            href={item.href}
-            className="menu-item"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              padding: "11px 20px",
-              textDecoration: "none",
-              color: "#333",
-              fontSize: "14px",
-              fontFamily: "'DM Sans', sans-serif",
-            }}
-          >
-            <span style={{ fontSize: "17px", width: "22px", textAlign: "center" }}>
-              {item.icon}
-            </span>
-            {item.label}
-          </a>
-        ))}
+        {menuItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <a
+              key={item.href}
+              href={item.href}
+              className="menu-item"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                padding: "11px 20px",
+                textDecoration: "none",
+                color: "#333",
+                fontSize: "14px",
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              <span style={{ width: "22px", display: "flex", justifyContent: "center", flexShrink: 0 }}>
+                <Icon size={18} strokeWidth={2} color="#5B2FC9" />
+              </span>
+              {item.label}
+            </a>
+          );
+        })}
       </div>
 
       {/* Logout */}
@@ -210,7 +214,9 @@ export default function Menu({ profile, onClose }) {
             textAlign: "left",
           }}
         >
-          <span style={{ fontSize: "17px", width: "22px", textAlign: "center" }}>🚪</span>
+          <span style={{ width: "22px", display: "flex", justifyContent: "center", flexShrink: 0 }}>
+            <LogOut size={18} strokeWidth={2} color="#5B2FC9" />
+          </span>
           Log Out
         </button>
       </div>

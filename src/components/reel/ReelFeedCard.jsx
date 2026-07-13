@@ -140,7 +140,7 @@ export default function ReelFeedCard({ reel }) {
 
       {/* Video */}
       <div
-        className="relative bg-black cursor-pointer overflow-hidden"
+        className="relative w-full bg-black cursor-pointer overflow-hidden"
         style={{ aspectRatio: "9/16", maxHeight: "560px" }}
       >
         <video

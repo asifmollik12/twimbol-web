@@ -4,8 +4,58 @@ import NavBar from "../components/layout/Navbar.jsx";
 import { fetchReels } from "../api/api.js";
 import DecorativeBackground from "../components/ui/DecorativeBackground.jsx";
 import GroundFooter from "../components/ui/GroundFooter.jsx";
-import { Play, X, Clapperboard } from "lucide-react";
+import { X, Clapperboard } from "lucide-react";
 import { isYouTubeUrl, getYouTubeId, getYouTubeEmbedUrl } from "../utils/youtube.js";
+
+function VideoCard({ reel, onClick }) {
+  const [hovering, setHovering] = useState(false);
+  const isYouTube = isYouTubeUrl(reel.video_url);
+  const youtubeId = isYouTube ? getYouTubeId(reel.video_url) : null;
+  const username =
+    reel.user_profile?.username || reel.user_profile?.user?.username || "twimbol";
+
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+      className="text-left group"
+    >
+      <div className="relative w-full rounded-lg overflow-hidden bg-txt shadow-sm" style={{ aspectRatio: "16/9" }}>
+        {reel.thumbnail_url && (
+          <img
+            src={reel.thumbnail_url}
+            alt={reel.title || "Video"}
+            className="w-full h-full object-cover"
+          />
+        )}
+        {hovering && (
+          isYouTube ? (
+            <iframe
+              src={getYouTubeEmbedUrl(youtubeId, { autoplay: true, mute: true, loop: true, controls: false })}
+              title={reel.title || "Video preview"}
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              allow="autoplay; encrypted-media"
+            />
+          ) : (
+            <video
+              src={reel.video_url}
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          )
+        )}
+      </div>
+      <p className="text-base font-semibold text-txt mt-3 line-clamp-2 leading-snug min-h-11">
+        {reel.title || "Untitled"}
+      </p>
+      <p className="text-sm text-txt-secondary mt-1">{username}</p>
+    </button>
+  );
+}
 
 /**
  * Home.jsx – Twimbol home. YouTube-Kids-style video grid only (no posts):
@@ -44,7 +94,7 @@ export default function Home() {
           {videosLoading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="rounded-2xl bg-white border border-border animate-pulse" style={{ aspectRatio: "16/9" }} />
+                <div key={i} className="rounded-lg bg-white border border-border animate-pulse" style={{ aspectRatio: "16/9" }} />
               ))}
             </div>
           ) : videos.length === 0 ? (
@@ -59,36 +109,9 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-              {videos.map((reel) => {
-                const username =
-                  reel.user_profile?.username || reel.user_profile?.user?.username || "twimbol";
-                return (
-                  <button
-                    key={reel.post}
-                    onClick={() => handleVideoClick(reel)}
-                    className="text-left group"
-                  >
-                    <div className="relative w-full rounded-2xl overflow-hidden bg-txt shadow-sm" style={{ aspectRatio: "16/9" }}>
-                      {reel.thumbnail_url && (
-                        <img
-                          src={reel.thumbnail_url}
-                          alt={reel.title || "Video"}
-                          className="w-full h-full object-cover"
-                        />
-                      )}
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/15 group-hover:bg-black/30 transition-colors">
-                        <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
-                          <Play size={24} className="text-brand fill-brand ml-0.5" />
-                        </div>
-                      </div>
-                    </div>
-                    <p className="text-base font-semibold text-txt mt-3 line-clamp-2 leading-snug min-h-11">
-                      {reel.title || "Untitled"}
-                    </p>
-                    <p className="text-sm text-txt-secondary mt-1">{username}</p>
-                  </button>
-                );
-              })}
+              {videos.map((reel) => (
+                <VideoCard key={reel.post} reel={reel} onClick={() => handleVideoClick(reel)} />
+              ))}
             </div>
           )}
         </section>

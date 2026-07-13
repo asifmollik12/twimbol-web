@@ -19,8 +19,17 @@ export function getYouTubeThumbnail(id) {
   return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 }
 
-export function getYouTubeEmbedUrl(id, { autoplay = false } = {}) {
-  return `https://www.youtube.com/embed/${id}${autoplay ? "?autoplay=1" : ""}`;
+export function getYouTubeEmbedUrl(id, { autoplay = false, mute = false, loop = false, controls = true } = {}) {
+  const params = new URLSearchParams();
+  if (autoplay) params.set("autoplay", "1");
+  if (mute) params.set("mute", "1");
+  if (loop) {
+    params.set("loop", "1");
+    params.set("playlist", id); // required for single-video looping
+  }
+  if (!controls) params.set("controls", "0");
+  const query = params.toString();
+  return `https://www.youtube.com/embed/${id}${query ? `?${query}` : ""}`;
 }
 
 export function getYouTubeWatchUrl(id) {

@@ -39,10 +39,10 @@ export default function Home() {
         <NavBar activePage="Home" />
 
         {/* ── Videos (YouTube-Kids-style grid, every reel) ── */}
-        <section className="max-w-6xl mx-auto px-5 py-7">
-          <h2 className="text-lg font-bold text-txt mb-4">Videos</h2>
+        <section className="max-w-400 mx-auto px-8 py-8">
+          <h2 className="text-xl font-bold text-txt mb-4">Videos</h2>
           {videosLoading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="rounded-2xl bg-white border border-border animate-pulse" style={{ aspectRatio: "16/9" }} />
               ))}
@@ -58,7 +58,7 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
               {videos.map((reel) => {
                 const username =
                   reel.user_profile?.username || reel.user_profile?.user?.username || "twimbol";
@@ -77,12 +77,12 @@ export default function Home() {
                         />
                       )}
                       <div className="absolute inset-0 flex items-center justify-center bg-black/15 group-hover:bg-black/30 transition-colors">
-                        <div className="w-13 h-13 rounded-full bg-white/90 flex items-center justify-center">
-                          <Play size={20} className="text-brand fill-brand ml-0.5" />
+                        <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
+                          <Play size={24} className="text-brand fill-brand ml-0.5" />
                         </div>
                       </div>
                     </div>
-                    <p className="text-base font-medium text-txt mt-2.5 line-clamp-2 leading-snug">
+                    <p className="text-base font-semibold text-txt mt-3 line-clamp-2 leading-snug">
                       {reel.title || "Untitled"}
                     </p>
                     <p className="text-sm text-txt-secondary mt-1">{username}</p>

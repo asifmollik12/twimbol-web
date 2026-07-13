@@ -14,14 +14,6 @@ const CATEGORIES = [
     { id: "freelancing", label: "Freelancing" },
 ];
 
-const PLATFORMS = [
-    { id: "all", label: "All Platforms" },
-    { id: "10ms", label: "10 Minute School" },
-    { id: "creative-it", label: "Creative IT" },
-    { id: "shikho", label: "Shikho" },
-    { id: "bohubrihi", label: "Bohubrihi" },
-];
-
 const COURSES = [
     {
         id: 1,
@@ -189,22 +181,20 @@ const COURSES = [
 
 export default function Learn() {
     const [activeCategory, setActiveCategory] = useState("all");
-    const [activePlatform, setActivePlatform] = useState("all");
     const [search, setSearch] = useState("");
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
     const filtered = COURSES.filter((c) => {
         const matchCat = activeCategory === "all" || c.category === activeCategory;
-        const matchPlat = activePlatform === "all" || c.platformId === activePlatform;
         const q = search.toLowerCase();
         const matchSearch = c.title.toLowerCase().includes(q) || c.provider.toLowerCase().includes(q) || c.description.toLowerCase().includes(q);
-        return matchCat && matchPlat && matchSearch;
+        return matchCat && matchSearch;
     });
     const visible = filtered.slice(0, visibleCount);
 
     React.useEffect(() => {
         setVisibleCount(PAGE_SIZE);
-    }, [activeCategory, activePlatform, search]);
+    }, [activeCategory, search]);
 
     return (
         <div style={{ minHeight: "100vh", background: "#f8f7fc", fontFamily: "'DM Sans', sans-serif" }}>
@@ -236,7 +226,7 @@ export default function Learn() {
                             placeholder="Course খুঁজুন..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            style={{ width: "100%", padding: "15px 20px 15px 48px", borderRadius: "50px", border: "1px solid rgba(255,255,255,0.2)", fontSize: "14px", outline: "none", boxSizing: "border-box", fontFamily: "'DM Sans', sans-serif", color: "#1a1a2e", boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }}
+                            style={{ width: "100%", padding: "15px 20px 15px 48px", borderRadius: "50px", border: "1px solid rgba(255,255,255,0.2)", fontSize: "14px", outline: "none", boxSizing: "border-box", fontFamily: "'DM Sans', sans-serif", backgroundColor: "#fff", color: "#000", boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }}
                         />
                         <Search size={18} color="#6b7280" strokeWidth={2} style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)" }} />
                     </div>
@@ -256,18 +246,6 @@ export default function Learn() {
             </div>
 
             <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "32px 16px" }}>
-
-                {/* Platform filter */}
-                <div style={{ marginBottom: "14px" }}>
-                    <p style={{ fontSize: "11px", color: "#999", marginBottom: "8px", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.5px" }}>Platform</p>
-                    <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                        {PLATFORMS.map((p) => (
-                            <button key={p.id} onClick={() => setActivePlatform(p.id)} style={{ padding: "7px 16px", borderRadius: "50px", border: "none", cursor: "pointer", fontSize: "13px", fontWeight: "600", fontFamily: "'DM Sans', sans-serif", background: activePlatform === p.id ? "#2D1B69" : "#fff", color: activePlatform === p.id ? "#fff" : "#555", boxShadow: "0 1px 4px rgba(0,0,0,0.08)", transition: "all 0.2s" }}>
-                                {p.label}
-                            </button>
-                        ))}
-                    </div>
-                </div>
 
                 {/* Category filter */}
                 <div style={{ marginBottom: "28px" }}>

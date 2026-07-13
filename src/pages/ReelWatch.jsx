@@ -15,6 +15,8 @@ import CommentsCard from "../components/reel/ReelComments.jsx";
 import DescriptionCard from "../components/reel/ReelDescription.jsx";
 import ReelError from "../components/reel/ReelError.jsx";
 import NavBar from "../components/layout/Navbar.jsx";
+import { Star, Users, UserCircle } from "lucide-react";
+import { Toast, showToast } from "../components/ui/Toast.jsx";
 
 
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -113,6 +115,7 @@ function ReelSlide({
   activeSidePanel,
   muted,
   onMuteToggle,
+  slideDirection,
 }) {
   const videoRef = useRef(null);
   const progressRef = useRef(null);
@@ -240,7 +243,7 @@ function ReelSlide({
   const avatarSrc = getImageUrl(reel.user_profile?.user?.profile_pic);
 
   return (
-    <div className="reel-slide">
+    <div className={`reel-slide ${slideDirection === "next" ? "slide-in-up" : slideDirection === "prev" ? "slide-in-down" : ""}`}>
       {/* ── Video ─────────────────────────────────────────────────────────── */}
       <video
         ref={videoRef}
@@ -431,6 +434,7 @@ export default function ReelWatch() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [direction, setDirection] = useState(null); // "next" | "prev" -- drives the slide animation
 
   // ui
   const [showMenu, setShowMenu] = useState(false);
@@ -439,6 +443,7 @@ export default function ReelWatch() {
   const [likedMap, setLikedMap] = useState({});
   const [likeCountMap, setLikeCountMap] = useState({});
   const [muted, setMuted] = useState(false); // persists across reels
+  const [sidebarToast, setSidebarToast] = useState(null);
 
   const stackRef = useRef(null);
   const touchStartY = useRef(null);
@@ -537,10 +542,11 @@ export default function ReelWatch() {
   const goTo = useCallback((nextIndex) => {
     if (isTransitioning) return;
     if (nextIndex < 0 || nextIndex >= reels.length) return;
+    setDirection(nextIndex > currentIndex ? "next" : "prev");
     setIsTransitioning(true);
     setCurrentIndex(nextIndex);
-    setTimeout(() => setIsTransitioning(false), 380);
-  }, [isTransitioning, reels.length]);
+    setTimeout(() => setIsTransitioning(false), 320);
+  }, [isTransitioning, reels.length, currentIndex]);
 
   const goNext = useCallback(() => goTo(currentIndex + 1), [goTo, currentIndex]);
   const goPrev = useCallback(() => goTo(currentIndex - 1), [goTo, currentIndex]);
@@ -593,19 +599,26 @@ export default function ReelWatch() {
     return () => el.removeEventListener("touchmove", onTouchMove);
   }, [onTouchMove]);
 
-  // ── Wheel scroll (desktop) ─────────────────────────────────────────────────
+  // ── Wheel scroll (desktop) — fires as soon as the threshold is crossed
+  // instead of waiting for the user to stop scrolling, for a snappier,
+  // more immediate feel (closer to native scroll-snap).
   const wheelAccum = useRef(0);
   const wheelTimer = useRef(null);
   const onWheel = useCallback((e) => {
     e.preventDefault();
+    if (isTransitioning) return;
     wheelAccum.current += e.deltaY;
     clearTimeout(wheelTimer.current);
-    wheelTimer.current = setTimeout(() => {
-      if (wheelAccum.current > 60) goNext();
-      else if (wheelAccum.current < -60) goPrev();
+    if (wheelAccum.current > 50) {
       wheelAccum.current = 0;
-    }, 80);
-  }, [goNext, goPrev]);
+      goNext();
+    } else if (wheelAccum.current < -50) {
+      wheelAccum.current = 0;
+      goPrev();
+    } else {
+      wheelTimer.current = setTimeout(() => { wheelAccum.current = 0; }, 150);
+    }
+  }, [goNext, goPrev, isTransitioning]);
 
   useEffect(() => {
     const el = stackRef.current;
@@ -730,14 +743,35 @@ export default function ReelWatch() {
     <>
       <style>{CSS}</style>
       <NavBar activePage="Reels" />
+      {sidebarToast && <Toast toast={sidebarToast} />}
       <div className="rw-root">
 
-        {/* Back button — outside the player */}
+        {/* Back button — outside the player, shown only when the sidebar is hidden */}
         <button className="rw-back-btn" onClick={() => navigate(-1)}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M19 12H5M5 12l7-7M5 12l7 7" />
           </svg>
         </button>
+
+        {/* ── Sidebar — Facebook-style Reels nav ──────────────────────────────── */}
+        <div className="rw-sidebar">
+          <h2 className="rw-sidebar-title">Reels</h2>
+          <button className="rw-sidebar-item rw-sidebar-item--active">
+            <Star size={20} className="rw-sidebar-icon" />
+            For You
+          </button>
+          <button
+            className="rw-sidebar-item"
+            onClick={() => showToast("Following feed is coming soon", "info", setSidebarToast)}
+          >
+            <Users size={20} className="rw-sidebar-icon" />
+            Following
+          </button>
+          <button className="rw-sidebar-item" onClick={() => navigate("/profile/edit")}>
+            <UserCircle size={20} className="rw-sidebar-icon" />
+            Profile
+          </button>
+        </div>
 
         {/* ── Player column ────────────────────────────────────────────────── */}
         <div
@@ -763,6 +797,7 @@ export default function ReelWatch() {
               activeSidePanel={sidePanel}
               muted={muted}
               onMuteToggle={() => setMuted((m) => !m)}
+              slideDirection={direction}
             />
 
             {/* Three-dot menu */}
@@ -860,7 +895,7 @@ const CSS = `
     overscroll-behavior: none;
   }
 
-  /* ── Back button ── */
+  /* ── Back button — only shown when the sidebar is hidden (narrow screens) ── */
   .rw-back-btn {
     position: fixed;
     top: 82px;
@@ -871,13 +906,52 @@ const CSS = `
     color: #fff;
     width: 38px; height: 38px;
     border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
+    display: none;
+    align-items: center; justify-content: center;
     cursor: pointer;
     backdrop-filter: blur(8px);
     transition: background 0.2s, transform 0.15s;
   }
   .rw-back-btn:hover { background: rgba(255,255,255,0.15); transform: scale(1.08); }
   .rw-back-btn svg { width: 18px; height: 18px; }
+
+  /* ── Sidebar — Facebook-style Reels nav (For You / Following / Profile) ── */
+  .rw-sidebar {
+    flex: 0 0 240px;
+    height: calc(100dvh - 64px);
+    padding: 24px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: #0a0a0f;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+  .rw-sidebar-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 4px 12px 16px;
+  }
+  .rw-sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: none;
+    background: none;
+    color: rgba(255,255,255,0.75);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s, color 0.15s;
+  }
+  .rw-sidebar-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+  .rw-sidebar-item--active { background: rgba(255,255,255,0.1); color: #fff; }
+  .rw-sidebar-icon { flex-shrink: 0; }
 
   /* ── Player column — position:relative container, active reel always centered ── */
   .rw-player-col {
@@ -947,6 +1021,16 @@ const CSS = `
     height: 100%;
     position: relative;
     background: #000;
+  }
+  .reel-slide.slide-in-up   { animation: reelSlideInUp 0.32s cubic-bezier(0.22,1,0.36,1) both; }
+  .reel-slide.slide-in-down { animation: reelSlideInDown 0.32s cubic-bezier(0.22,1,0.36,1) both; }
+  @keyframes reelSlideInUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  @keyframes reelSlideInDown {
+    from { transform: translateY(-100%); }
+    to   { transform: translateY(0); }
   }
 
   .reel-video {
@@ -1415,10 +1499,15 @@ const CSS = `
   .btn-primary:disabled { opacity: 0.5; cursor: default; }
   .modal-success { color: #6fcf97; font-size: 0.95rem; }
 
+  /* ── Narrow screens: sidebar hides, back button takes over navigation ── */
+  @media (max-width: 900px) {
+    .rw-sidebar { display: none; }
+    .rw-back-btn { display: flex; }
+  }
+
   /* ── Mobile: side panel goes full screen ── */
   @media (max-width: 640px) {
     .rw-player-col.panel-open { display: none; }
-    .rw-back-btn { display: none; }
     .rw-side-panel { width: 100vw; position: fixed; inset: 0; z-index: 150; }
     .reel-ghost { display: none; }
     .rw-dots { right: 8px; }

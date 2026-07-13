@@ -5,19 +5,34 @@ import { fetchReels } from "../api/api.js";
 import DecorativeBackground from "../components/ui/DecorativeBackground.jsx";
 import GroundFooter from "../components/ui/GroundFooter.jsx";
 import { X, Clapperboard } from "lucide-react";
-import { isYouTubeUrl, getYouTubeId, getYouTubeEmbedUrl } from "../utils/youtube.js";
+import { isYouTubeUrl, getYouTubeId, getYouTubeEmbedUrl, getYouTubeWatchUrl } from "../utils/youtube.js";
+
+function getVideoHref(reel) {
+  if (isYouTubeUrl(reel.video_url)) {
+    return getYouTubeWatchUrl(getYouTubeId(reel.video_url));
+  }
+  return `/reel/${reel.post}`;
+}
 
 function VideoCard({ reel, onClick }) {
   const [hovering, setHovering] = useState(false);
   const isYouTube = isYouTubeUrl(reel.video_url);
   const youtubeId = isYouTube ? getYouTubeId(reel.video_url) : null;
 
+  const handleClick = (e) => {
+    // Let modifier/middle clicks behave like a normal link (open in new tab, etc.)
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
+    e.preventDefault();
+    onClick();
+  };
+
   return (
-    <button
-      onClick={onClick}
+    <a
+      href={getVideoHref(reel)}
+      onClick={handleClick}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
-      className="text-left group"
+      className="block text-left group"
     >
       <div className="relative w-full rounded-lg overflow-hidden bg-txt shadow-sm" style={{ aspectRatio: "16/9" }}>
         {reel.thumbnail_url && (
@@ -50,7 +65,7 @@ function VideoCard({ reel, onClick }) {
       <p className="text-base font-semibold text-txt mt-3 line-clamp-2 leading-snug min-h-11">
         {reel.title || "Untitled"}
       </p>
-    </button>
+    </a>
   );
 }
 

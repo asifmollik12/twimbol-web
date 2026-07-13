@@ -6,6 +6,7 @@ import ReelFeedCard from "../components/reel/ReelFeedCard.jsx";
 import { fetchReels } from "../api/api.js";
 import { getPosts } from "../api/posts.js";
 import Spinner from "../components/ui/Spinner.jsx";
+import DecorativeBackground from "../components/ui/DecorativeBackground.jsx";
 import { Play, Newspaper } from "lucide-react";
 
 // Insert a reel into the feed after every REEL_INTERVAL posts.
@@ -121,6 +122,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-surface" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <DecorativeBackground />
+      <div className="relative" style={{ zIndex: 1 }}>
       <NavBar activePage="Home" />
 
       <main className="max-w-xl mx-auto px-4 py-6">
@@ -217,6 +220,7 @@ export default function Home() {
           </div>
         )}
       </main>
+      </div>
     </div>
   );
 }

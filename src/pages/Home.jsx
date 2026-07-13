@@ -32,16 +32,18 @@ export default function Home() {
   const [totalPages, setTotalPages] = useState(1);
   const loaderRef = useRef(null);
 
-  // Reels row (uploaded reels) + Kids Video grid (YouTube-embedded reels)
-  const [reelsRow, setReelsRow] = useState([]);
-  const [videoGrid, setVideoGrid] = useState([]);
+  // YouTube-Kids-style video grid: previews every reel (uploaded + YouTube-embedded)
+  const [videos, setVideos] = useState([]);
+  const [videosLoading, setVideosLoading] = useState(true);
   const [lightboxId, setLightboxId] = useState(null);
 
-  // Reel queue used to interleave (non-YouTube) reels into the post feed —
-  // YouTube-hosted reels can't play in the <video> tag ReelFeedCard uses.
+  // Reel queue used to interleave reels into the post feed. Shares
+  // usedReelIdsRef with the video grid fetch so the same reel doesn't show
+  // twice; YouTube-hosted reels are skipped since ReelFeedCard's <video>
+  // tag can't play them.
+  const usedReelIdsRef = useRef(new Set());
   const reelQueueRef = useRef([]);
   const reelPageRef = useRef(1);
-  const reelIdsRef = useRef(new Set());
   const reelsExhaustedRef = useRef(false);
 
   const ensureReelQueue = useCallback(async (minCount) => {
@@ -55,8 +57,8 @@ export default function Home() {
           break;
         }
         results.forEach((r) => {
-          if (!reelIdsRef.current.has(r.post) && !isYouTubeUrl(r.video_url)) {
-            reelIdsRef.current.add(r.post);
+          if (!usedReelIdsRef.current.has(r.post) && !isYouTubeUrl(r.video_url)) {
+            usedReelIdsRef.current.add(r.post);
             reelQueueRef.current.push(r);
           }
         });
@@ -69,16 +71,26 @@ export default function Home() {
     }
   }, []);
 
-  // Reels row + Kids Video grid (independent small fetch, first page of reels)
+  // Video grid (independent fetch, first pages of reels) — every reel is
+  // shown here as a YouTube-Kids-style preview card.
   useEffect(() => {
     fetchReels(1, 30)
       .then((data) => {
         const results = data.results || [];
-        setReelsRow(results.filter((r) => !isYouTubeUrl(r.video_url)));
-        setVideoGrid(results.filter((r) => isYouTubeUrl(r.video_url)));
+        results.forEach((r) => usedReelIdsRef.current.add(r.post));
+        setVideos(results);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setVideosLoading(false));
   }, []);
+
+  const handleVideoClick = (reel) => {
+    if (isYouTubeUrl(reel.video_url)) {
+      setLightboxId(getYouTubeId(reel.video_url));
+    } else {
+      navigate(`/reel/${reel.post}`);
+    }
+  };
 
   const loadPosts = useCallback(async (pageNum = 1) => {
     try {
@@ -143,82 +155,54 @@ export default function Home() {
       <div className="relative" style={{ zIndex: 1 }}>
       <NavBar activePage="Home" />
 
-      <main className="max-w-xl mx-auto px-4 py-6">
-        {/* ── Reels row ── */}
-        {reelsRow.length > 0 && (
-          <div
-            className="flex gap-4 overflow-x-auto pb-1 mb-5"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            {reelsRow.map((reel) => {
-              const username =
-                reel.user_profile?.username || reel.user_profile?.user?.username || "Reel";
-              return (
-                <button
-                  key={reel.post}
-                  onClick={() => navigate(`/reel/${reel.post}`)}
-                  className="flex flex-col items-center gap-1.5 flex-shrink-0 w-16"
-                >
-                  <div
-                    className="w-16 h-16 rounded-full flex-shrink-0"
-                    style={{ padding: "2.5px", background: "linear-gradient(135deg, #2D1B69, #5B2FC9, #a855f7)" }}
+      {/* ── Videos (YouTube-Kids-style grid, every reel) ── */}
+      {(videosLoading || videos.length > 0) && (
+        <section className="max-w-5xl mx-auto px-4 pt-6 pb-2">
+          <h2 className="text-base font-bold text-txt mb-3">Videos</h2>
+          {videosLoading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="rounded-xl bg-white border border-border animate-pulse" style={{ aspectRatio: "16/9" }} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {videos.map((reel) => {
+                const username =
+                  reel.user_profile?.username || reel.user_profile?.user?.username || "twimbol";
+                return (
+                  <button
+                    key={reel.post}
+                    onClick={() => handleVideoClick(reel)}
+                    className="text-left group"
                   >
-                    <div className="relative w-full h-full rounded-full overflow-hidden bg-txt border-2 border-white">
+                    <div className="relative w-full rounded-xl overflow-hidden bg-txt shadow-sm" style={{ aspectRatio: "16/9" }}>
                       {reel.thumbnail_url && (
                         <img
                           src={reel.thumbnail_url}
-                          alt={username}
+                          alt={reel.title || "Video"}
                           className="w-full h-full object-cover"
                         />
                       )}
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/15">
-                        <Play size={14} className="text-white fill-white" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/15 group-hover:bg-black/30 transition-colors">
+                        <div className="w-11 h-11 rounded-full bg-white/90 flex items-center justify-center">
+                          <Play size={18} className="text-brand fill-brand ml-0.5" />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <span className="text-[11px] text-txt truncate w-full text-center">
-                    {username}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {/* ── Kids Videos grid (YouTube-embedded) ── */}
-        {videoGrid.length > 0 && (
-          <div className="mb-6">
-            <h2 className="text-sm font-bold text-txt mb-2.5">Kids Videos</h2>
-            <div className="grid grid-cols-2 gap-3">
-              {videoGrid.map((reel) => (
-                <button
-                  key={reel.post}
-                  onClick={() => setLightboxId(getYouTubeId(reel.video_url))}
-                  className="text-left group"
-                >
-                  <div className="relative w-full rounded-xl overflow-hidden bg-txt" style={{ aspectRatio: "16/9" }}>
-                    {reel.thumbnail_url && (
-                      <img
-                        src={reel.thumbnail_url}
-                        alt={reel.title || "Video"}
-                        className="w-full h-full object-cover"
-                      />
-                    )}
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
-                      <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
-                        <Play size={16} className="text-brand fill-brand ml-0.5" />
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-xs font-medium text-txt mt-1.5 line-clamp-2">
-                    {reel.title || "Untitled"}
-                  </p>
-                </button>
-              ))}
+                    <p className="text-sm font-medium text-txt mt-2 line-clamp-2 leading-snug">
+                      {reel.title || "Untitled"}
+                    </p>
+                    <p className="text-xs text-txt-secondary mt-0.5">{username}</p>
+                  </button>
+                );
+              })}
             </div>
-          </div>
-        )}
+          )}
+        </section>
+      )}
 
+      <main className="max-w-xl mx-auto px-4 py-6">
         {/* Error state */}
         {error && (
           <div className="flex items-center gap-3 bg-brand-light border border-brand/20 text-brand-hover rounded-xl px-5 py-3 mb-4 text-sm">

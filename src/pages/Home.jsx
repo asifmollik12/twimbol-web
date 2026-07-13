@@ -17,9 +17,9 @@ function VideoCard({ reel, onClick }) {
       onClick={onClick}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
-      className="text-left bg-white rounded-xl border-2 border-border overflow-hidden shadow-sm hover:border-brand hover:shadow-md transition-all"
+      className="text-left group"
     >
-      <div className="relative w-full bg-txt" style={{ aspectRatio: "16/9" }}>
+      <div className="relative w-full rounded-lg overflow-hidden bg-txt shadow-sm" style={{ aspectRatio: "16/9" }}>
         {reel.thumbnail_url && (
           <img
             src={reel.thumbnail_url}
@@ -47,7 +47,7 @@ function VideoCard({ reel, onClick }) {
           )
         )}
       </div>
-      <p className="text-sm font-bold text-txt px-3 py-3 line-clamp-2 leading-snug min-h-11">
+      <p className="text-base font-semibold text-txt mt-3 line-clamp-2 leading-snug min-h-11">
         {reel.title || "Untitled"}
       </p>
     </button>
@@ -91,10 +91,7 @@ export default function Home() {
           {videosLoading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="rounded-xl bg-white border-2 border-border overflow-hidden animate-pulse">
-                  <div className="bg-txt/20" style={{ aspectRatio: "16/9" }} />
-                  <div className="h-11 px-3 py-3" />
-                </div>
+                <div key={i} className="rounded-lg bg-white border border-border animate-pulse" style={{ aspectRatio: "16/9" }} />
               ))}
             </div>
           ) : videos.length === 0 ? (

@@ -7,6 +7,7 @@ import { fetchReels } from "../api/api.js";
 import { getPosts } from "../api/posts.js";
 import Spinner from "../components/ui/Spinner.jsx";
 import DecorativeBackground from "../components/ui/DecorativeBackground.jsx";
+import GroundFooter from "../components/ui/GroundFooter.jsx";
 import { Play, Newspaper } from "lucide-react";
 
 // Insert a reel into the feed after every REEL_INTERVAL posts.
@@ -220,6 +221,7 @@ export default function Home() {
           </div>
         )}
       </main>
+      {!loading && page >= totalPages && <GroundFooter />}
       </div>
     </div>
   );

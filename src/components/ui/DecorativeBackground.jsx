@@ -40,74 +40,13 @@ function Star5({ size, color }) {
 
 const STAR_COMPONENTS = { star4: Star4, star5: Star5 };
 
-function GroundScene() {
-  return (
-    <div className="absolute bottom-0 left-0 w-full" style={{ height: "150px" }}>
-      {/* Rolling hill */}
-      <svg
-        className="absolute bottom-0 left-0 w-full"
-        style={{ height: "140px" }}
-        viewBox="0 0 1440 200"
-        preserveAspectRatio="none"
-      >
-        <path
-          d="M0,120 C200,90 400,140 600,110 C800,80 1000,130 1200,100 C1300,90 1400,110 1440,100 L1440,200 L0,200 Z"
-          fill="#bbf0c6"
-        />
-        <path
-          d="M0,150 C200,170 400,140 600,165 C800,190 1000,150 1200,175 C1300,185 1400,165 1440,170 L1440,200 L0,200 Z"
-          fill="#7fd858"
-        />
-      </svg>
-
-      {/* Tree, bottom-left */}
-      <svg
-        className="absolute"
-        style={{ bottom: "58px", left: "3%" }}
-        width="72"
-        height="90"
-        viewBox="0 0 72 90"
-      >
-        <rect x="31" y="46" width="10" height="40" rx="2" fill="#8b5a2b" />
-        <circle cx="24" cy="34" r="20" fill="#66bb6a" />
-        <circle cx="48" cy="34" r="18" fill="#4caf50" />
-        <circle cx="36" cy="18" r="20" fill="#5cb860" />
-      </svg>
-
-      {/* Flowers near the tree */}
-      <svg className="absolute" style={{ bottom: "50px", left: "12%" }} width="24" height="30" viewBox="0 0 24 30">
-        <rect x="10" y="14" width="3" height="16" fill="#4caf50" />
-        {[0, 72, 144, 216, 288].map((a) => (
-          <ellipse key={a} cx="11.5" cy="8" rx="4" ry="6" fill="#ef4444" transform={`rotate(${a} 11.5 8)`} />
-        ))}
-        <circle cx="11.5" cy="8" r="3" fill="#facc15" />
-      </svg>
-      <svg className="absolute" style={{ bottom: "48px", left: "17%" }} width="20" height="26" viewBox="0 0 20 26">
-        <rect x="8" y="12" width="3" height="14" fill="#4caf50" />
-        {[0, 72, 144, 216, 288].map((a) => (
-          <ellipse key={a} cx="9.5" cy="7" rx="3.4" ry="5" fill="#a78bfa" transform={`rotate(${a} 9.5 7)`} />
-        ))}
-        <circle cx="9.5" cy="7" r="2.5" fill="#facc15" />
-      </svg>
-
-      {/* Small bushes for texture */}
-      <svg className="absolute" style={{ bottom: "44px", left: "35%" }} width="40" height="20" viewBox="0 0 40 20">
-        <ellipse cx="10" cy="14" rx="10" ry="8" fill="#5cb860" />
-        <ellipse cx="24" cy="12" rx="12" ry="9" fill="#4caf50" />
-      </svg>
-      <svg className="absolute" style={{ bottom: "40px", left: "78%" }} width="34" height="18" viewBox="0 0 34 18">
-        <ellipse cx="9" cy="12" rx="9" ry="7" fill="#66bb6a" />
-        <ellipse cx="21" cy="10" rx="10" ry="8" fill="#4caf50" />
-      </svg>
-    </div>
-  );
-}
-
 /**
- * DecorativeBackground – fixed, non-interactive layer with a grassy ground
- * scene along the bottom and playful scattered icons (clouds, balloon,
- * plane, rocket, notes, sparkles) in the margins. Sits behind content (z-0);
- * solid content cards naturally occlude it in the main column.
+ * DecorativeBackground – fixed, non-interactive layer of playful scattered
+ * icons (clouds, balloon, plane, rocket, notes, sparkles) in the margins.
+ * Sits behind content (z-0); solid content cards naturally occlude it in
+ * the main column. The grassy ground scene lives separately in
+ * GroundFooter, since it needs to scroll with the page instead of staying
+ * pinned to the viewport.
  */
 export default function DecorativeBackground() {
   return (
@@ -122,8 +61,6 @@ export default function DecorativeBackground() {
           50% { transform: translateY(-10px) rotate(calc(var(--r, 0deg) + 5deg)); }
         }
       `}</style>
-
-      <GroundScene />
 
       {FLOATERS.map((f, i) => (
         <div

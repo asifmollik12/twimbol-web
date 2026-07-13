@@ -82,7 +82,7 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                    <p className="text-base font-semibold text-txt mt-3 line-clamp-2 leading-snug">
+                    <p className="text-base font-semibold text-txt mt-3 line-clamp-2 leading-snug min-h-11">
                       {reel.title || "Untitled"}
                     </p>
                     <p className="text-sm text-txt-secondary mt-1">{username}</p>

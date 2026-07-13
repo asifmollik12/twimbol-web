@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import NavBar from "../components/layout/Navbar";
 import GroundFooter from "../components/ui/GroundFooter.jsx";
+import ComingSoonModal from "../components/ui/ComingSoonModal.jsx";
 
 const PAGE_SIZE = 20;
 
@@ -13,7 +14,6 @@ const GAMES = [
         color: "#3b82f6",
         bg: "#eff6ff",
         tag: "Math",
-        comingSoon: false,
     },
     {
         id: 2,
@@ -23,7 +23,6 @@ const GAMES = [
         color: "#8b5cf6",
         bg: "#f5f3ff",
         tag: "Language",
-        comingSoon: false,
     },
     {
         id: 3,
@@ -33,7 +32,6 @@ const GAMES = [
         color: "#10b981",
         bg: "#ecfdf5",
         tag: "Science",
-        comingSoon: true,
     },
     {
         id: 4,
@@ -43,7 +41,6 @@ const GAMES = [
         color: "#f59e0b",
         bg: "#fffbeb",
         tag: "Programming",
-        comingSoon: true,
     },
     {
         id: 5,
@@ -53,7 +50,6 @@ const GAMES = [
         color: "#ef4444",
         bg: "#fef2f2",
         tag: "Geography",
-        comingSoon: true,
     },
     {
         id: 6,
@@ -63,41 +59,62 @@ const GAMES = [
         color: "#ec4899",
         bg: "#fdf2f8",
         tag: "Arts",
-        comingSoon: true,
     },
 ];
 
 export default function Game() {
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+    const [comingSoonOpen, setComingSoonOpen] = useState(false);
     const visible = GAMES.slice(0, visibleCount);
 
     return (
         <div style={{ minHeight: "100vh", background: "#f8f7fc", fontFamily: "'DM Sans', sans-serif" }}>
             <NavBar activePage="Game" />
+            <ComingSoonModal open={comingSoonOpen} onClose={() => setComingSoonOpen(false)} />
 
             {/* Hero */}
             <div
                 style={{
+                    position: "relative",
+                    overflow: "hidden",
                     background: "linear-gradient(135deg, #1a0a3e 0%, #2D1B69 50%, #3B1F8E 100%)",
-                    padding: "48px 32px 40px",
+                    padding: "52px 32px 44px",
                     textAlign: "center",
                 }}
             >
-                <div style={{ fontSize: "48px", marginBottom: "12px" }}>🎮</div>
-                <h1 style={{ color: "#fff", fontSize: "32px", fontWeight: "800", margin: "0 0 8px" }}>
-                    Play & Learn
-                </h1>
-                <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "15px", margin: 0 }}>
-                    Educational games designed to make learning fun for kids
-                </p>
+                <div style={{ position: "absolute", top: "-50px", left: "-50px", width: "180px", height: "180px", borderRadius: "50%", border: "2px solid rgba(77,217,232,0.22)", pointerEvents: "none" }} />
+                <div style={{ position: "absolute", bottom: "-70px", right: "-40px", width: "240px", height: "240px", borderRadius: "50%", border: "1px solid rgba(233,30,140,0.18)", pointerEvents: "none" }} />
+                <div style={{ position: "absolute", top: "20%", right: "10%", width: "70px", height: "70px", borderRadius: "50%", background: "rgba(255,215,0,0.1)", pointerEvents: "none" }} />
+
+                <div style={{ position: "relative", zIndex: 1 }}>
+                    <div
+                        style={{
+                            width: "84px", height: "84px", borderRadius: "50%",
+                            background: "#fff", border: "4px solid rgba(255,255,255,0.3)",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            fontSize: "42px", margin: "0 auto 16px",
+                            boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+                            transform: "rotate(-6deg)",
+                        }}
+                    >
+                        🎮
+                    </div>
+                    <h1 style={{ color: "#fff", fontSize: "32px", fontWeight: "800", margin: "0 0 8px", letterSpacing: "-0.5px" }}>
+                        Play &amp; Learn
+                    </h1>
+                    <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "15px", margin: 0 }}>
+                        Educational games designed to make learning fun for kids
+                    </p>
+                </div>
             </div>
 
             <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "32px 16px" }}>
 
                 {/* Featured banner */}
                 <div
+                    onClick={() => setComingSoonOpen(true)}
                     style={{
-                        background: "linear-gradient(135deg, #FF6B35, #ff8c5a)",
+                        background: "linear-gradient(135deg, #2D1B69, #5B2FC9)",
                         borderRadius: "20px",
                         padding: "28px 32px",
                         marginBottom: "32px",
@@ -106,23 +123,31 @@ export default function Game() {
                         justifyContent: "space-between",
                         flexWrap: "wrap",
                         gap: "16px",
+                        cursor: "pointer",
                     }}
                 >
                     <div>
-                        <p style={{ color: "rgba(255,255,255,0.85)", fontSize: "12px", fontWeight: "700", margin: "0 0 6px", textTransform: "uppercase", letterSpacing: "1px" }}>
-                            Featured Game
-                        </p>
+                        <span
+                            style={{
+                                display: "inline-block", background: "rgba(255,255,255,0.15)",
+                                color: "#FFD700", fontSize: "11px", fontWeight: "800",
+                                padding: "3px 12px", borderRadius: "50px", textTransform: "uppercase",
+                                letterSpacing: "1px", marginBottom: "10px",
+                            }}
+                        >
+                            ✨ Coming Soon
+                        </span>
                         <h2 style={{ color: "#fff", fontSize: "22px", fontWeight: "800", margin: "0 0 8px" }}>
-                            ➕ Math Quest — Now Live!
+                            ➕ Math Quest
                         </h2>
                         <p style={{ color: "rgba(255,255,255,0.85)", fontSize: "14px", margin: 0 }}>
-                            Challenge yourself with 100+ math puzzles across 5 difficulty levels.
+                            Get ready for 100+ math puzzles across 5 difficulty levels!
                         </p>
                     </div>
                     <button
                         style={{
                             background: "#fff",
-                            color: "#FF6B35",
+                            color: "#2D1B69",
                             border: "none",
                             padding: "12px 28px",
                             borderRadius: "50px",
@@ -132,7 +157,7 @@ export default function Game() {
                             fontFamily: "'DM Sans', sans-serif",
                         }}
                     >
-                        Play Now 🚀
+                        Notify Me 🔔
                     </button>
                 </div>
 
@@ -150,6 +175,7 @@ export default function Game() {
                     {visible.map((game) => (
                         <div
                             key={game.id}
+                            onClick={() => setComingSoonOpen(true)}
                             style={{
                                 background: "#fff",
                                 borderRadius: "16px",
@@ -157,40 +183,38 @@ export default function Game() {
                                 boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
                                 position: "relative",
                                 transition: "transform 0.2s, box-shadow 0.2s",
-                                cursor: game.comingSoon ? "default" : "pointer",
-                                opacity: game.comingSoon ? 0.85 : 1,
+                                cursor: "pointer",
                             }}
                             onMouseEnter={(e) => {
-                                if (!game.comingSoon) {
-                                    e.currentTarget.style.transform = "translateY(-4px)";
-                                    e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.12)";
-                                }
+                                e.currentTarget.style.transform = "translateY(-4px)";
+                                e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.12)";
                             }}
                             onMouseLeave={(e) => {
                                 e.currentTarget.style.transform = "translateY(0)";
                                 e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.07)";
                             }}
                         >
-                            {/* Coming soon badge */}
-                            {game.comingSoon && (
-                                <span
-                                    style={{
-                                        position: "absolute",
-                                        top: "14px",
-                                        right: "14px",
-                                        background: "#f3f4f6",
-                                        color: "#888",
-                                        fontSize: "10px",
-                                        fontWeight: "700",
-                                        padding: "3px 10px",
-                                        borderRadius: "50px",
-                                        textTransform: "uppercase",
-                                        letterSpacing: "0.5px",
-                                    }}
-                                >
-                                    Coming Soon
-                                </span>
-                            )}
+                            {/* Coming soon sticker badge */}
+                            <span
+                                style={{
+                                    position: "absolute",
+                                    top: "12px",
+                                    right: "12px",
+                                    background: "#fff",
+                                    color: "#5B2FC9",
+                                    fontSize: "10px",
+                                    fontWeight: "800",
+                                    padding: "4px 10px",
+                                    borderRadius: "50px",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.5px",
+                                    border: "2px solid #ede9ff",
+                                    boxShadow: "0 3px 8px rgba(0,0,0,0.1)",
+                                    transform: "rotate(6deg)",
+                                }}
+                            >
+                                Soon
+                            </span>
 
                             {/* Icon */}
                             <div
@@ -204,12 +228,14 @@ export default function Game() {
                                     justifyContent: "center",
                                     fontSize: "26px",
                                     marginBottom: "14px",
+                                    border: "3px solid #fff",
+                                    boxShadow: "0 3px 10px rgba(0,0,0,0.08)",
                                 }}
                             >
                                 {game.emoji}
                             </div>
 
-                            {/* Tag */}
+                            {/* Tag — sticker style */}
                             <span
                                 style={{
                                     fontSize: "11px",
@@ -220,6 +246,9 @@ export default function Game() {
                                     borderRadius: "50px",
                                     marginBottom: "10px",
                                     display: "inline-block",
+                                    border: "2px solid #fff",
+                                    boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
+                                    transform: "rotate(-2deg)",
                                 }}
                             >
                                 {game.tag}
@@ -233,22 +262,22 @@ export default function Game() {
                             </p>
 
                             <button
-                                disabled={game.comingSoon}
+                                onClick={(e) => { e.stopPropagation(); setComingSoonOpen(true); }}
                                 style={{
                                     width: "100%",
                                     padding: "10px",
                                     borderRadius: "10px",
                                     border: "none",
-                                    background: game.comingSoon ? "#f3f4f6" : `linear-gradient(135deg, ${game.color}, ${game.color}cc)`,
-                                    color: game.comingSoon ? "#aaa" : "#fff",
+                                    background: "linear-gradient(135deg, #2D1B69, #5B2FC9)",
+                                    color: "#fff",
                                     fontSize: "13px",
                                     fontWeight: "700",
-                                    cursor: game.comingSoon ? "not-allowed" : "pointer",
+                                    cursor: "pointer",
                                     fontFamily: "'DM Sans', sans-serif",
                                     transition: "opacity 0.2s",
                                 }}
                             >
-                                {game.comingSoon ? "Coming Soon" : "Play Now →"}
+                                Coming Soon 🔔
                             </button>
                         </div>
                     ))}

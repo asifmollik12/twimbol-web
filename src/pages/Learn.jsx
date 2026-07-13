@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import NavBar from "../components/layout/Navbar";
 import GroundFooter from "../components/ui/GroundFooter.jsx";
 import { Rocket, Search, Sparkles } from "lucide-react";
+import ComingSoonModal from "../components/ui/ComingSoonModal.jsx";
 
 const PAGE_SIZE = 20;
 
@@ -183,6 +184,7 @@ export default function Learn() {
     const [activeCategory, setActiveCategory] = useState("all");
     const [search, setSearch] = useState("");
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+    const [comingSoonOpen, setComingSoonOpen] = useState(false);
 
     const filtered = COURSES.filter((c) => {
         const matchCat = activeCategory === "all" || c.category === activeCategory;
@@ -199,6 +201,7 @@ export default function Learn() {
     return (
         <div style={{ minHeight: "100vh", background: "#f8f7fc", fontFamily: "'DM Sans', sans-serif" }}>
             <NavBar activePage="Learn" />
+            <ComingSoonModal open={comingSoonOpen} onClose={() => setComingSoonOpen(false)} />
 
             {/* Hero */}
             <div style={{ position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1a0a3e 0%, #2D1B69 45%, #3B1F8E 100%)", padding: "56px 32px 48px", textAlign: "center" }}>
@@ -278,7 +281,9 @@ export default function Learn() {
                 <p style={{ color: "#888", fontSize: "13px", marginBottom: "20px" }}>{filtered.length}টি course পাওয়া গেছে</p>
 
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "24px" }}>
-                    {visible.map((course) => <CourseCard key={course.id} course={course} />)}
+                    {visible.map((course) => (
+                        <CourseCard key={course.id} course={course} onSelect={() => setComingSoonOpen(true)} />
+                    ))}
                 </div>
 
                 {filtered.length === 0 && (
@@ -316,10 +321,11 @@ export default function Learn() {
     );
 }
 
-function CourseCard({ course }) {
+function CourseCard({ course, onSelect }) {
     return (
         <div
-            style={{ background: "#fff", borderRadius: "16px", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.07)", transition: "transform 0.2s, box-shadow 0.2s" }}
+            onClick={onSelect}
+            style={{ background: "#fff", borderRadius: "16px", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.07)", transition: "transform 0.2s, box-shadow 0.2s", cursor: "pointer" }}
             onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.12)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.07)"; }}
         >
@@ -346,9 +352,12 @@ function CourseCard({ course }) {
                         <span style={{ fontSize: "17px", fontWeight: "800", color: "#2D1B69" }}>{course.price}</span>
                         {course.originalPrice && <span style={{ fontSize: "12px", color: "#aaa", textDecoration: "line-through", marginLeft: "6px" }}>{course.originalPrice}</span>}
                     </div>
-                    <a href={course.link} target="_blank" rel="noopener noreferrer" style={{ background: "linear-gradient(135deg, #2D1B69, #5B2FC9)", color: "#fff", padding: "8px 18px", borderRadius: "50px", fontSize: "13px", fontWeight: "700", textDecoration: "none", whiteSpace: "nowrap" }}>
+                    <button
+                        onClick={(e) => { e.stopPropagation(); onSelect(); }}
+                        style={{ background: "linear-gradient(135deg, #2D1B69, #5B2FC9)", color: "#fff", padding: "8px 18px", borderRadius: "50px", fontSize: "13px", fontWeight: "700", border: "none", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}
+                    >
                         দেখুন →
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>

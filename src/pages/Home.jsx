@@ -42,7 +42,7 @@ export default function Home() {
         <section className="max-w-6xl mx-auto px-5 py-7">
           <h2 className="text-lg font-bold text-txt mb-4">Videos</h2>
           {videosLoading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="rounded-2xl bg-white border border-border animate-pulse" style={{ aspectRatio: "16/9" }} />
               ))}
@@ -58,7 +58,7 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
               {videos.map((reel) => {
                 const username =
                   reel.user_profile?.username || reel.user_profile?.user?.username || "twimbol";

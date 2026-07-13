@@ -44,7 +44,7 @@ export default function Home() {
           {videosLoading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="bg-white border border-border animate-pulse" style={{ aspectRatio: "16/9" }} />
+                <div key={i} className="rounded-2xl bg-white border border-border animate-pulse" style={{ aspectRatio: "16/9" }} />
               ))}
             </div>
           ) : videos.length === 0 ? (
@@ -68,7 +68,7 @@ export default function Home() {
                     onClick={() => handleVideoClick(reel)}
                     className="text-left group"
                   >
-                    <div className="relative w-full overflow-hidden bg-txt shadow-sm" style={{ aspectRatio: "16/9" }}>
+                    <div className="relative w-full rounded-2xl overflow-hidden bg-txt shadow-sm" style={{ aspectRatio: "16/9" }}>
                       {reel.thumbnail_url && (
                         <img
                           src={reel.thumbnail_url}

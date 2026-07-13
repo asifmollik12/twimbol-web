@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/layout/Navbar.jsx";
 import PostCard from "../components/post/PostCard.jsx";
 import ReelFeedCard from "../components/reel/ReelFeedCard.jsx";
@@ -7,7 +8,8 @@ import { getPosts } from "../api/posts.js";
 import Spinner from "../components/ui/Spinner.jsx";
 import DecorativeBackground from "../components/ui/DecorativeBackground.jsx";
 import GroundFooter from "../components/ui/GroundFooter.jsx";
-import { Newspaper } from "lucide-react";
+import { Newspaper, Play, X } from "lucide-react";
+import { isYouTubeUrl, getYouTubeId, getYouTubeEmbedUrl } from "../utils/youtube.js";
 
 // Insert a reel into the feed after every REEL_INTERVAL posts.
 const REEL_INTERVAL = 3;
@@ -21,6 +23,7 @@ const AUTO_LOAD_PAGES = 2;
  * scroll / load more.
  */
 export default function Home() {
+  const navigate = useNavigate();
   const [feedItems, setFeedItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -29,7 +32,13 @@ export default function Home() {
   const [totalPages, setTotalPages] = useState(1);
   const loaderRef = useRef(null);
 
-  // Reel queue used to interleave reels into the post feed
+  // Reels row (uploaded reels) + Kids Video grid (YouTube-embedded reels)
+  const [reelsRow, setReelsRow] = useState([]);
+  const [videoGrid, setVideoGrid] = useState([]);
+  const [lightboxId, setLightboxId] = useState(null);
+
+  // Reel queue used to interleave (non-YouTube) reels into the post feed —
+  // YouTube-hosted reels can't play in the <video> tag ReelFeedCard uses.
   const reelQueueRef = useRef([]);
   const reelPageRef = useRef(1);
   const reelIdsRef = useRef(new Set());
@@ -46,7 +55,7 @@ export default function Home() {
           break;
         }
         results.forEach((r) => {
-          if (!reelIdsRef.current.has(r.post)) {
+          if (!reelIdsRef.current.has(r.post) && !isYouTubeUrl(r.video_url)) {
             reelIdsRef.current.add(r.post);
             reelQueueRef.current.push(r);
           }
@@ -58,6 +67,17 @@ export default function Home() {
         reelsExhaustedRef.current = true;
       }
     }
+  }, []);
+
+  // Reels row + Kids Video grid (independent small fetch, first page of reels)
+  useEffect(() => {
+    fetchReels(1, 30)
+      .then((data) => {
+        const results = data.results || [];
+        setReelsRow(results.filter((r) => !isYouTubeUrl(r.video_url)));
+        setVideoGrid(results.filter((r) => isYouTubeUrl(r.video_url)));
+      })
+      .catch(() => {});
   }, []);
 
   const loadPosts = useCallback(async (pageNum = 1) => {
@@ -124,6 +144,81 @@ export default function Home() {
       <NavBar activePage="Home" />
 
       <main className="max-w-xl mx-auto px-4 py-6">
+        {/* ── Reels row ── */}
+        {reelsRow.length > 0 && (
+          <div
+            className="flex gap-4 overflow-x-auto pb-1 mb-5"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {reelsRow.map((reel) => {
+              const username =
+                reel.user_profile?.username || reel.user_profile?.user?.username || "Reel";
+              return (
+                <button
+                  key={reel.post}
+                  onClick={() => navigate(`/reel/${reel.post}`)}
+                  className="flex flex-col items-center gap-1.5 flex-shrink-0 w-16"
+                >
+                  <div
+                    className="w-16 h-16 rounded-full flex-shrink-0"
+                    style={{ padding: "2.5px", background: "linear-gradient(135deg, #2D1B69, #5B2FC9, #a855f7)" }}
+                  >
+                    <div className="relative w-full h-full rounded-full overflow-hidden bg-txt border-2 border-white">
+                      {reel.thumbnail_url && (
+                        <img
+                          src={reel.thumbnail_url}
+                          alt={username}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/15">
+                        <Play size={14} className="text-white fill-white" />
+                      </div>
+                    </div>
+                  </div>
+                  <span className="text-[11px] text-txt truncate w-full text-center">
+                    {username}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ── Kids Videos grid (YouTube-embedded) ── */}
+        {videoGrid.length > 0 && (
+          <div className="mb-6">
+            <h2 className="text-sm font-bold text-txt mb-2.5">Kids Videos</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {videoGrid.map((reel) => (
+                <button
+                  key={reel.post}
+                  onClick={() => setLightboxId(getYouTubeId(reel.video_url))}
+                  className="text-left group"
+                >
+                  <div className="relative w-full rounded-xl overflow-hidden bg-txt" style={{ aspectRatio: "16/9" }}>
+                    {reel.thumbnail_url && (
+                      <img
+                        src={reel.thumbnail_url}
+                        alt={reel.title || "Video"}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+                      <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
+                        <Play size={16} className="text-brand fill-brand ml-0.5" />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-xs font-medium text-txt mt-1.5 line-clamp-2">
+                    {reel.title || "Untitled"}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Error state */}
         {error && (
           <div className="flex items-center gap-3 bg-brand-light border border-brand/20 text-brand-hover rounded-xl px-5 py-3 mb-4 text-sm">
@@ -194,6 +289,36 @@ export default function Home() {
       </main>
       {!loading && <GroundFooter />}
       </div>
+
+      {/* ── Kids Video lightbox ── */}
+      {lightboxId && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 p-4"
+          onClick={() => setLightboxId(null)}
+        >
+          <div
+            className="relative w-full max-w-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setLightboxId(null)}
+              className="absolute -top-10 right-0 w-8 h-8 rounded-full bg-white/15 flex items-center justify-center text-white"
+              aria-label="Close"
+            >
+              <X size={18} />
+            </button>
+            <div className="w-full rounded-xl overflow-hidden bg-black" style={{ aspectRatio: "16/9" }}>
+              <iframe
+                src={getYouTubeEmbedUrl(lightboxId, { autoplay: true })}
+                title="Kids video"
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

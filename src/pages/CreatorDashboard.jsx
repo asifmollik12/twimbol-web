@@ -12,6 +12,7 @@ import {
 import { thumbnail } from "@cloudinary/url-gen/actions/resize";
 import { cat } from "@cloudinary/url-gen/qualifiers/focusOn";
 import { useNavigate } from "react-router-dom";
+import { getYouTubeId, getYouTubeThumbnail, getYouTubeWatchUrl } from "../utils/youtube";
 
 
 /* ── helpers ── */
@@ -202,16 +203,41 @@ function CreatePostModal({ onClose, onCreated }) {
          POST /create/api/reel/ with { video_url, title, reel_description }
 ───────────────────────────────────── */
 function UploadReelModal({ onClose, onCreated }) {
+    const [source, setSource] = useState("file"); // file | youtube
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
     const [file, setFile] = useState(null);
+    const [youtubeUrl, setYoutubeUrl] = useState("");
     const [progress, setProgress] = useState(0);
     const [stage, setStage] = useState("idle"); // idle | uploading | saving | done
     const [error, setError] = useState("");
 
+    const youtubeId = source === "youtube" ? getYouTubeId(youtubeUrl) : null;
+
     const handleSubmit = async () => {
-        if (!file) return setError("Please select a video file.");
         setError("");
+
+        if (source === "youtube") {
+            if (!youtubeUrl.trim()) return setError("Please paste a YouTube link.");
+            if (!youtubeId) return setError("That doesn't look like a valid YouTube link.");
+            try {
+                setStage("saving");
+                await createReel({
+                    video_url: getYouTubeWatchUrl(youtubeId),
+                    title: title,
+                    reel_description: desc,
+                    thumbnail_url: getYouTubeThumbnail(youtubeId),
+                });
+                setStage("done");
+                setTimeout(onCreated, 900);
+            } catch (e) {
+                setError(e.response?.data?.detail || e.message || "Failed to save video.");
+                setStage("idle");
+            }
+            return;
+        }
+
+        if (!file) return setError("Please select a video file.");
         try {
             // 1 — Upload video to Cloudinary
             setStage("uploading");
@@ -243,21 +269,42 @@ function UploadReelModal({ onClose, onCreated }) {
                     <div className="w-14 h-14 rounded-full bg-green-50 border border-green-200 flex items-center justify-center text-2xl">
                         ✓
                     </div>
-                    <p className="font-semibold text-sm">Reel published!</p>
+                    <p className="font-semibold text-sm">
+                        {source === "youtube" ? "Video published!" : "Reel published!"}
+                    </p>
                 </div>
             ) : stage === "uploading" ? (
                 <ProgressBlock label="Uploading to Cloudinary…" value={progress} />
             ) : stage === "saving" ? (
-                <ProgressBlock label="Saving reel…" indeterminate />
+                <ProgressBlock label="Saving…" indeterminate />
             ) : (
                 <>
                     {error && <Alert type="error">{error}</Alert>}
+
+                    <div className="inline-flex gap-1 bg-[var(--color-surface)] border border-black/[0.07] rounded-xl p-1 self-start">
+                        {[
+                            { id: "file", label: "📁 Upload File" },
+                            { id: "youtube", label: "▶️ YouTube Link" },
+                        ].map(opt => (
+                            <button
+                                key={opt.id}
+                                onClick={() => setSource(opt.id)}
+                                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${source === opt.id
+                                    ? "bg-white text-[var(--color-txt)] shadow-sm"
+                                    : "text-[var(--color-txt-secondary)]"
+                                    }`}
+                            >
+                                {opt.label}
+                            </button>
+                        ))}
+                    </div>
+
                     <FormField label="Title">
                         <input
                             className={inputCls}
                             value={title}
                             onChange={e => setTitle(e.target.value)}
-                            placeholder="Reel title…"
+                            placeholder={source === "youtube" ? "Video title…" : "Reel title…"}
                         />
                     </FormField>
                     <FormField label="Description">
@@ -265,28 +312,51 @@ function UploadReelModal({ onClose, onCreated }) {
                             className={`${inputCls} resize-y min-h-[70px]`}
                             value={desc}
                             onChange={e => setDesc(e.target.value)}
-                            placeholder="What's this reel about?"
+                            placeholder={source === "youtube" ? "What's this video about?" : "What's this reel about?"}
                         />
                     </FormField>
-                    <FormField label="Video File *">
-                        <input
-                            className={inputCls}
-                            type="file"
-                            accept="video/*"
-                            onChange={e => setFile(e.target.files[0])}
-                        />
-                        {file && (
-                            <p className="text-xs text-[var(--color-txt-secondary)] font-light">
-                                📎 {file.name} ({(file.size / 1024 / 1024).toFixed(1)} MB)
-                            </p>
-                        )}
-                    </FormField>
+
+                    {source === "youtube" ? (
+                        <FormField label="YouTube URL *">
+                            <input
+                                className={inputCls}
+                                value={youtubeUrl}
+                                onChange={e => setYoutubeUrl(e.target.value)}
+                                placeholder="https://www.youtube.com/watch?v=…"
+                            />
+                            {youtubeUrl && !youtubeId && (
+                                <p className="text-xs text-red-500 font-light">Couldn't find a video ID in this link.</p>
+                            )}
+                            {youtubeId && (
+                                <img
+                                    src={getYouTubeThumbnail(youtubeId)}
+                                    alt="Preview"
+                                    className="w-full rounded-xl border border-black/[0.07] mt-1"
+                                />
+                            )}
+                        </FormField>
+                    ) : (
+                        <FormField label="Video File *">
+                            <input
+                                className={inputCls}
+                                type="file"
+                                accept="video/*"
+                                onChange={e => setFile(e.target.files[0])}
+                            />
+                            {file && (
+                                <p className="text-xs text-[var(--color-txt-secondary)] font-light">
+                                    📎 {file.name} ({(file.size / 1024 / 1024).toFixed(1)} MB)
+                                </p>
+                            )}
+                        </FormField>
+                    )}
+
                     <ModalFooter
                         onClose={onClose}
                         onSubmit={handleSubmit}
                         loading={false}
-                        label="Upload & Publish"
-                        disabled={!file}
+                        label={source === "youtube" ? "Save & Publish" : "Upload & Publish"}
+                        disabled={source === "youtube" ? !youtubeId : !file}
                     />
                 </>
             )}

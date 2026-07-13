@@ -234,8 +234,8 @@ export default function Home() {
               disabled={loadingMore}
               className="text-white font-bold text-sm rounded-full px-8 py-3 disabled:opacity-60"
               style={{
-                background: "linear-gradient(135deg, #2563eb, #3b82f6)",
-                boxShadow: "0 4px 16px rgba(37,99,235,0.3)",
+                background: "linear-gradient(135deg, #2D1B69, #5B2FC9)",
+                boxShadow: "0 4px 16px rgba(91,47,201,0.3)",
               }}
             >
               {loadingMore ? <Spinner /> : "See More"}

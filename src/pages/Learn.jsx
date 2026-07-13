@@ -283,7 +283,7 @@ export default function Learn() {
                         <button
                             onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
                             style={{
-                                background: "linear-gradient(135deg, #2563eb, #3b82f6)",
+                                background: "linear-gradient(135deg, #2D1B69, #5B2FC9)",
                                 color: "#fff",
                                 border: "none",
                                 borderRadius: "50px",
@@ -292,7 +292,7 @@ export default function Learn() {
                                 fontWeight: "700",
                                 cursor: "pointer",
                                 fontFamily: "'DM Sans', sans-serif",
-                                boxShadow: "0 4px 16px rgba(37,99,235,0.3)",
+                                boxShadow: "0 4px 16px rgba(91,47,201,0.3)",
                             }}
                         >
                             See More

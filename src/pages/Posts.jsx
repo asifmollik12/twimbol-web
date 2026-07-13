@@ -1,17 +1,20 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { getPosts } from "../api/posts";
 import PostCard from "../components/post/PostCard";
 import { Search, SlidersHorizontal, Loader2 } from "lucide-react";
 import NavBar from "../components/layout/Navbar.jsx";
 
 export default function Posts() {
+  const [searchParams] = useSearchParams();
+  const initialSearch = searchParams.get("search") || "";
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [search, setSearch] = useState("");
-  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState(initialSearch);
+  const [searchInput, setSearchInput] = useState(initialSearch);
   const [ordering, setOrdering] = useState("-created_at");
   const [showFilters, setShowFilters] = useState(false);
   const loaderRef = useRef(null);

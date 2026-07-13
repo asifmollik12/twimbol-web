@@ -243,7 +243,7 @@ export default function Home() {
           </div>
         )}
       </main>
-      {!loading && page >= totalPages && <GroundFooter />}
+      {!loading && <GroundFooter />}
       </div>
     </div>
   );

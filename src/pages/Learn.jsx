@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import NavBar from "../components/layout/Navbar";
 import GroundFooter from "../components/ui/GroundFooter.jsx";
-import { Rocket, Search } from "lucide-react";
+import { Rocket, Search, Sparkles } from "lucide-react";
 
 const PAGE_SIZE = 20;
 
@@ -211,35 +211,47 @@ export default function Learn() {
             <NavBar activePage="Learn" />
 
             {/* Hero */}
-            <div style={{ background: "linear-gradient(135deg, #2D1B69 0%, #3B1F8E 50%, #5B2FC9 100%)", padding: "48px 32px 40px", textAlign: "center" }}>
-                <h1 style={{ color: "#fff", fontSize: "30px", fontWeight: "800", margin: "0 0 8px", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
-                    শেখার সেরা জায়গা
-                    <Rocket size={26} color="#FFD700" strokeWidth={2} />
-                </h1>
-                <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "15px", margin: "0 0 24px" }}>
-                    10 Minute School, Creative IT সহ দেশের সেরা platforms এর courses এক জায়গায়
-                </p>
-                <div style={{ maxWidth: "500px", margin: "0 auto 28px", position: "relative" }}>
-                    <input
-                        type="text"
-                        placeholder="Course খুঁজুন..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        style={{ width: "100%", padding: "14px 20px 14px 48px", borderRadius: "50px", border: "none", fontSize: "14px", outline: "none", boxSizing: "border-box", fontFamily: "'DM Sans', sans-serif", color: "#1a1a2e" }}
-                    />
-                    <Search size={18} color="#6b7280" strokeWidth={2} style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)" }} />
-                </div>
-                <div style={{ display: "flex", justifyContent: "center", gap: "10px", flexWrap: "wrap" }}>
-                    {[
-                        { name: "10 Minute School", color: "#15803d" },
-                        { name: "Creative IT", color: "#be123c" },
-                        { name: "Shikho", color: "#c2410c" },
-                        { name: "Bohubrihi", color: "#1d4ed8" },
-                    ].map((p) => (
-                        <span key={p.name} style={{ background: "#fff", color: p.color, padding: "5px 14px", borderRadius: "50px", fontSize: "12px", fontWeight: "800", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }}>
-                            {p.name}
-                        </span>
-                    ))}
+            <div style={{ position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1a0a3e 0%, #2D1B69 45%, #3B1F8E 100%)", padding: "56px 32px 48px", textAlign: "center" }}>
+                {/* Decorative rings, matching the login page's brand accent treatment */}
+                <div style={{ position: "absolute", top: "-50px", left: "-50px", width: "180px", height: "180px", borderRadius: "50%", border: "2px solid rgba(77,217,232,0.22)", pointerEvents: "none" }} />
+                <div style={{ position: "absolute", bottom: "-70px", right: "-40px", width: "240px", height: "240px", borderRadius: "50%", border: "1px solid rgba(233,30,140,0.18)", pointerEvents: "none" }} />
+                <div style={{ position: "absolute", top: "18%", right: "9%", width: "90px", height: "90px", borderRadius: "50%", background: "rgba(255,215,0,0.1)", pointerEvents: "none" }} />
+                <div style={{ position: "absolute", bottom: "12%", left: "7%", width: "70px", height: "70px", borderRadius: "50%", background: "rgba(77,217,232,0.1)", pointerEvents: "none" }} />
+
+                <div style={{ position: "relative", zIndex: 1 }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", color: "#4DD9E8", padding: "5px 14px", borderRadius: "50px", fontSize: "11px", fontWeight: "800", letterSpacing: "0.6px", textTransform: "uppercase", marginBottom: "18px" }}>
+                        <Sparkles size={12} style={{ marginRight: "2px" }} />
+                        Learning Hub
+                    </span>
+                    <h1 style={{ color: "#fff", fontSize: "32px", fontWeight: "800", margin: "0 0 10px", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", letterSpacing: "-0.5px" }}>
+                        শেখার সেরা জায়গা
+                        <Rocket size={26} color="#4DD9E8" strokeWidth={2} />
+                    </h1>
+                    <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "15px", margin: "0 0 28px" }}>
+                        10 Minute School, Creative IT সহ দেশের সেরা platforms এর courses এক জায়গায়
+                    </p>
+                    <div style={{ maxWidth: "500px", margin: "0 auto 28px", position: "relative" }}>
+                        <input
+                            type="text"
+                            placeholder="Course খুঁজুন..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            style={{ width: "100%", padding: "15px 20px 15px 48px", borderRadius: "50px", border: "1px solid rgba(255,255,255,0.2)", fontSize: "14px", outline: "none", boxSizing: "border-box", fontFamily: "'DM Sans', sans-serif", color: "#1a1a2e", boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }}
+                        />
+                        <Search size={18} color="#6b7280" strokeWidth={2} style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)" }} />
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "center", gap: "10px", flexWrap: "wrap" }}>
+                        {[
+                            { name: "10 Minute School", color: "#15803d" },
+                            { name: "Creative IT", color: "#be123c" },
+                            { name: "Shikho", color: "#c2410c" },
+                            { name: "Bohubrihi", color: "#1d4ed8" },
+                        ].map((p) => (
+                            <span key={p.name} style={{ background: "#fff", color: p.color, padding: "5px 14px", borderRadius: "50px", fontSize: "12px", fontWeight: "800", boxShadow: "0 2px 8px rgba(0,0,0,0.18)" }}>
+                                {p.name}
+                            </span>
+                        ))}
+                    </div>
                 </div>
             </div>
 

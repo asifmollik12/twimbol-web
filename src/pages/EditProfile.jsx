@@ -164,9 +164,17 @@ export default function EditProfile() {
   }
 
   return (
-    <div style={styles.page}>
+    <div style={styles.page} className="ep-page">
+      <style>{`
+        @media (max-width: 640px) {
+          .ep-page { flex-direction: column !important; padding: 16px !important; gap: 16px !important; }
+          .ep-sidebar { width: 100% !important; min-width: 0 !important; }
+          .ep-main { padding: 20px !important; }
+          .ep-grid2, .ep-grid3 { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
       {/* ── Left Sidebar ── */}
-      <aside style={styles.sidebar}>
+      <aside style={styles.sidebar} className="ep-sidebar">
         {/* Back to Home */}
         <div style={styles.backRow}>
           <button style={styles.backLink} onClick={() => navigate("/")}>
@@ -274,7 +282,7 @@ export default function EditProfile() {
       </aside>
 
       {/* ── Main Panel ── */}
-      <main style={styles.main}>
+      <main style={styles.main} className="ep-main">
         {/* Alerts */}
         {error && <div style={styles.alertError}>{error}</div>}
         {success && <div style={styles.alertSuccess}>{success}</div>}
@@ -282,7 +290,7 @@ export default function EditProfile() {
         {/* Personal Information */}
         <section style={styles.section}>
           <h3 style={styles.sectionTitle}>Personal Information</h3>
-          <div style={styles.grid2}>
+          <div style={styles.grid2} className="ep-grid2">
             <div style={styles.fieldGroup}>
               <label style={styles.label}>First Name</label>
               <input
@@ -349,7 +357,7 @@ export default function EditProfile() {
         {/* Social Media */}
         <section style={styles.section}>
           <h3 style={styles.sectionTitle}>Social Media</h3>
-          <div style={styles.grid3}>
+          <div style={styles.grid3} className="ep-grid3">
             <div style={styles.fieldGroup}>
               <label style={styles.label}>Facebook</label>
               <input

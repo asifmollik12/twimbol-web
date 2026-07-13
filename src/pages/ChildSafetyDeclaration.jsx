@@ -266,7 +266,15 @@ const styles = `
     gap: 12px;
     margin-top: 16px;
   }
-  @media (max-width: 540px) { .info-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 540px) {
+    .info-grid { grid-template-columns: 1fr; }
+    .hero { padding: 40px 16px 48px !important; }
+    .content { padding: 0 14px !important; }
+    .status-card { padding: 20px 18px !important; }
+    .section-header { padding: 18px !important; }
+    .section-body { padding: 0 18px 20px !important; }
+    .contact-card { padding: 24px 18px !important; }
+  }
   .info-item {
     background: var(--surface-2);
     border-radius: var(--radius);

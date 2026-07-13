@@ -86,6 +86,7 @@ export default function NavBar({ activePage = "Reels" }) {
           display: flex;
           align-items: center;
           flex: 1;
+          min-width: 0;
           max-width: 480px;
           background: #f5f4fb;
           border: 2px solid #e5e0f5;
@@ -99,6 +100,7 @@ export default function NavBar({ activePage = "Reels" }) {
         }
         .fun-search input {
           flex: 1;
+          min-width: 0;
           border: none;
           background: transparent;
           outline: none;
@@ -157,6 +159,19 @@ export default function NavBar({ activePage = "Reels" }) {
           color: #8b85a3;
         }
         .nav-icon-item.active .nav-icon-label { color: #2D1B69; }
+
+        .nav-icon-row {
+          scrollbar-width: none;
+          -webkit-overflow-scrolling: touch;
+        }
+        .nav-icon-row::-webkit-scrollbar { display: none; }
+
+        @media (max-width: 640px) {
+          .nav-row1 { padding: 10px 12px !important; gap: 10px !important; }
+          .fun-search { padding-left: 14px !important; }
+          .fun-search input { font-size: 14px !important; }
+          .nav-icon-row { padding: 2px 12px 10px !important; gap: 8px !important; justify-content: flex-start !important; }
+        }
       `}</style>
 
             <nav
@@ -173,6 +188,7 @@ export default function NavBar({ activePage = "Reels" }) {
             >
                 {/* Row 1 — logo, big fun search bar, notif + profile */}
                 <div
+                    className="nav-row1"
                     style={{
                         display: "flex",
                         alignItems: "center",
@@ -184,7 +200,7 @@ export default function NavBar({ activePage = "Reels" }) {
                     {/* Logo */}
                     <a href="/" style={{ textDecoration: "none", flexShrink: 0 }}>
                         <div className="flex items-center gap-1">
-                            <img src="/logo.png" alt="Twimbol Logo" className="w-24" />
+                            <img src="/logo.png" alt="Twimbol Logo" className="w-16 sm:w-24" />
                         </div>
                     </a>
 
@@ -291,6 +307,7 @@ export default function NavBar({ activePage = "Reels" }) {
 
                 {/* Row 2 — colorful icon nav row */}
                 <div
+                    className="nav-icon-row"
                     style={{
                         display: "flex",
                         alignItems: "center",

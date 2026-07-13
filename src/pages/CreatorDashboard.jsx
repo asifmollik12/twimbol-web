@@ -74,7 +74,7 @@ function ContentRow({ post, onDelete, onEdit }) {
     };
 
     return (
-        <div className="flex items-center gap-3 px-4 py-3 bg-white border border-black/[0.07] rounded-xl hover:border-[var(--color-brand)]/30 transition-colors " >
+        <div className="flex flex-wrap items-center gap-3 gap-y-2 px-4 py-3 bg-white border border-black/[0.07] rounded-xl hover:border-[var(--color-brand)]/30 transition-colors " >
             {/* type badge */}
             <span className="inline-flex items-center gap-1.5 bg-[var(--color-surface)] border border-black/[0.06] text-[var(--color-txt-secondary)] text-xs font-medium px-2.5 py-1 rounded-lg flex-shrink-0">
                 {TYPE_ICON[post.post_type] || "📄"}
@@ -82,7 +82,7 @@ function ContentRow({ post, onDelete, onEdit }) {
             </span>
 
             {/* info */}
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-[140px]">
                 <p className="text-sm font-medium text-[var(--color-txt)] truncate cursor-pointer" onClick={() => navigate(`/${post.post_type=="post"?"post":"reel"}/${post.id}`)}>
                     {post.post_title || post.title || "Untitled"}
                 </p>
@@ -99,22 +99,23 @@ function ContentRow({ post, onDelete, onEdit }) {
                 <span>👁 {fmt(post.view_count || 0)}</span>
             </div>
 
-            {/* edit */}
-            <button
-                onClick={() => onEdit(post)}
-                className="text-xs font-semibold text-[var(--color-brand)] border border-[var(--color-brand)]/20 bg-[var(--color-brand-light)] hover:bg-[var(--color-brand)]/10 px-3 py-1.5 rounded-lg transition-colors flex-shrink-0"
-            >
-                Edit
-            </button>
+            {/* edit + delete */}
+            <div className="flex items-center gap-2 ml-auto flex-shrink-0">
+                <button
+                    onClick={() => onEdit(post)}
+                    className="text-xs font-semibold text-[var(--color-brand)] border border-[var(--color-brand)]/20 bg-[var(--color-brand-light)] hover:bg-[var(--color-brand)]/10 px-3 py-1.5 rounded-lg transition-colors flex-shrink-0"
+                >
+                    Edit
+                </button>
 
-            {/* delete */}
-            <button
-                onClick={handleDelete}
-                disabled={deleting}
-                className="text-xs font-semibold text-red-500 border border-red-200 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
-            >
-                {deleting ? "…" : "Delete"}
-            </button>
+                <button
+                    onClick={handleDelete}
+                    disabled={deleting}
+                    className="text-xs font-semibold text-red-500 border border-red-200 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+                >
+                    {deleting ? "…" : "Delete"}
+                </button>
+            </div>
         </div>
     );
 }

@@ -71,9 +71,18 @@ export default function Game() {
         <div style={{ minHeight: "100vh", background: "#f8f7fc", fontFamily: "'DM Sans', sans-serif" }}>
             <NavBar activePage="Game" />
             <ComingSoonModal open={comingSoonOpen} onClose={() => setComingSoonOpen(false)} />
+            <style>{`
+                @media (max-width: 640px) {
+                    .game-hero { padding: 32px 16px 28px !important; }
+                    .game-hero h1 { font-size: 24px !important; }
+                    .game-container { padding: 24px 12px !important; }
+                    .game-banner { padding: 20px !important; }
+                }
+            `}</style>
 
             {/* Hero */}
             <div
+                className="game-hero"
                 style={{
                     position: "relative",
                     overflow: "hidden",
@@ -108,10 +117,11 @@ export default function Game() {
                 </div>
             </div>
 
-            <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "32px 16px" }}>
+            <div className="game-container" style={{ maxWidth: "1100px", margin: "0 auto", padding: "32px 16px" }}>
 
                 {/* Featured banner */}
                 <div
+                    className="game-banner"
                     onClick={() => setComingSoonOpen(true)}
                     style={{
                         background: "linear-gradient(135deg, #2D1B69, #5B2FC9)",

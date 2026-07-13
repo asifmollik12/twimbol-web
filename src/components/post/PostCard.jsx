@@ -68,7 +68,7 @@ function ImageGrid({ images, onImageClick }) {
                         key={i}
                         src={src}
                         alt={`Post ${i + 1}`}
-                        className="w-full h-56 object-cover cursor-pointer hover:brightness-95 transition-all duration-200"
+                        className="w-full aspect-square object-cover cursor-pointer hover:brightness-95 transition-all duration-200"
                         onClick={() => onImageClick(images, i)}
                     />
                 ))}
@@ -83,7 +83,6 @@ function ImageGrid({ images, onImageClick }) {
                     src={visibleImages[0]}
                     alt="Post 1"
                     className="row-span-2 w-full h-full object-cover cursor-pointer hover:brightness-95 transition-all duration-200"
-                    style={{ maxHeight: "340px" }}
                     onClick={() => onImageClick(images, 0)}
                 />
                 {visibleImages.slice(1).map((src, i) => (
@@ -91,7 +90,7 @@ function ImageGrid({ images, onImageClick }) {
                         key={i}
                         src={src}
                         alt={`Post ${i + 2}`}
-                        className="w-full h-[168px] object-cover cursor-pointer hover:brightness-95 transition-all duration-200"
+                        className="w-full aspect-square object-cover cursor-pointer hover:brightness-95 transition-all duration-200"
                         onClick={() => onImageClick(images, i + 1)}
                     />
                 ))}
@@ -108,7 +107,7 @@ function ImageGrid({ images, onImageClick }) {
                     key={i}
                     src={src}
                     alt={`Post ${i + 1}`}
-                    className="w-full h-52 object-cover cursor-pointer hover:brightness-95 transition-all duration-200"
+                    className="w-full aspect-square object-cover cursor-pointer hover:brightness-95 transition-all duration-200"
                     onClick={() => onImageClick(images, i)}
                 />
             ))}
@@ -125,8 +124,7 @@ function ImageGrid({ images, onImageClick }) {
                         <img
                             src={src}
                             alt={`Post ${i + 3}`}
-                            className={`w-full object-cover hover:brightness-95 transition-all duration-200 ${count === 4 ? "h-52" : "h-40"
-                                } ${isLast ? "brightness-50" : ""}`}
+                            className={`w-full aspect-square object-cover hover:brightness-95 transition-all duration-200 ${isLast ? "brightness-50" : ""}`}
                         />
                         {isLast && (
                             <div className="absolute inset-0 flex items-center justify-center">

@@ -62,6 +62,7 @@ export default function Menu({ profile, onClose }) {
         top: "calc(100% + 12px)",
         right: 0,
         width: "280px",
+        maxWidth: "calc(100vw - 24px)",
         background: "#fff",
         borderRadius: "20px",
         boxShadow: "0 20px 60px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.08)",

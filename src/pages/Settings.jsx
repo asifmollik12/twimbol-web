@@ -202,10 +202,10 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center p-6">
-      <div className="flex gap-5 w-full max-w-6xl">
+    <div className="min-h-screen bg-surface flex items-center justify-center p-3 sm:p-6">
+      <div className="flex flex-col sm:flex-row gap-5 w-full max-w-6xl">
         {/* ── Sidebar ── */}
-        <aside className="w-72 bg-white rounded-2xl shadow-sm p-4 flex flex-col shrink-0 self-start sticky top-6">
+        <aside className="w-full sm:w-72 bg-white rounded-2xl shadow-sm p-4 flex flex-col shrink-0 sm:self-start sm:sticky sm:top-6">
           {/* Back */}
           <button
             onClick={() => navigate(-1)}
@@ -262,7 +262,7 @@ export default function Settings() {
         </aside>
 
         {/* ── Content panel ── */}
-        <main className="flex-1 bg-white rounded-2xl shadow-sm p-8 min-h-[600px]">
+        <main className="flex-1 bg-white rounded-2xl shadow-sm p-4 sm:p-8 min-h-[600px] overflow-x-auto">
           {SECTIONS[active]}
         </main>
       </div>

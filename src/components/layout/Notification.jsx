@@ -64,6 +64,7 @@ export default function Notification({ notifications = [], onClose, onUpdate }) 
         top: "calc(100% + 12px)",
         right: 0,
         width: "360px",
+        maxWidth: "calc(100vw - 24px)",
         maxHeight: "480px",
         background: "#fff",
         borderRadius: "18px",

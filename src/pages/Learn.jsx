@@ -202,9 +202,16 @@ export default function Learn() {
         <div style={{ minHeight: "100vh", background: "#f8f7fc", fontFamily: "'DM Sans', sans-serif" }}>
             <NavBar activePage="Learn" />
             <ComingSoonModal open={comingSoonOpen} onClose={() => setComingSoonOpen(false)} />
+            <style>{`
+                @media (max-width: 640px) {
+                    .learn-hero { padding: 36px 16px 32px !important; }
+                    .learn-hero h1 { font-size: 24px !important; }
+                    .learn-container { padding: 24px 12px !important; }
+                }
+            `}</style>
 
             {/* Hero */}
-            <div style={{ position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1a0a3e 0%, #2D1B69 45%, #3B1F8E 100%)", padding: "56px 32px 48px", textAlign: "center" }}>
+            <div className="learn-hero" style={{ position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1a0a3e 0%, #2D1B69 45%, #3B1F8E 100%)", padding: "56px 32px 48px", textAlign: "center" }}>
                 {/* Decorative rings, matching the login page's brand accent treatment */}
                 <div style={{ position: "absolute", top: "-50px", left: "-50px", width: "180px", height: "180px", borderRadius: "50%", border: "2px solid rgba(77,217,232,0.22)", pointerEvents: "none" }} />
                 <div style={{ position: "absolute", bottom: "-70px", right: "-40px", width: "240px", height: "240px", borderRadius: "50%", border: "1px solid rgba(233,30,140,0.18)", pointerEvents: "none" }} />
@@ -248,7 +255,7 @@ export default function Learn() {
                 </div>
             </div>
 
-            <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "32px 16px" }}>
+            <div className="learn-container" style={{ maxWidth: "1100px", margin: "0 auto", padding: "32px 16px" }}>
 
                 {/* Category filter */}
                 <div style={{ marginBottom: "28px", textAlign: "center" }}>

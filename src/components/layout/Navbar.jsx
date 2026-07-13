@@ -298,11 +298,10 @@ export default function NavBar({ activePage = "Reels" }) {
                     </div>
                 </div>
 
-                {/* Row 2 — colorful icon nav row */}
+                {/* Row 2 — colorful icon nav row (desktop only) */}
                 <div
-                    className="nav-icon-row"
+                    className="nav-icon-row hidden sm:flex"
                     style={{
-                        display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         gap: "12px",

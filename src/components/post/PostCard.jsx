@@ -235,6 +235,7 @@ function PostMenu({ isOpen, onHide, onReport, onBlock, menuRef }) {
 // ─── PostCard ─────────────────────────────────────────────────────────────────
 
 export default function PostCard({ post, onHidden }) {
+    const navigate = useNavigate();
     const [liked, setLiked] = useState(post.liked_by_user || false);
     const [followed, setFollowed] = useState(post.user_profile.followed_by_user || false);
     const [likeCount, setLikeCount] = useState(post.like_count || 0);
@@ -382,7 +383,10 @@ export default function PostCard({ post, onHidden }) {
                 <div className="flex items-start justify-between px-5 pt-5 pb-3">
                     <div className="flex items-center gap-3">
                         {/* Avatar */}
-                        <div className="w-11 h-11 rounded-full bg-surface overflow-hidden flex-shrink-0 ring-2 ring-brand/20">
+                        <div
+                            className="w-11 h-11 rounded-full bg-surface overflow-hidden flex-shrink-0 ring-2 ring-brand/20 cursor-pointer"
+                            onClick={() => navigate(`/profile/${post.created_by}`)}
+                        >
                             {profilePic ? (
                                 <img
                                     src={profilePic}
@@ -397,7 +401,12 @@ export default function PostCard({ post, onHidden }) {
                         </div>
                         <div>
                             <div className="flex items-center gap-2">
-                                <span className="font-semibold text-sm text-txt">{username}</span>
+                                <span
+                                    className="font-semibold text-sm text-txt cursor-pointer hover:underline"
+                                    onClick={() => navigate(`/profile/${post.created_by}`)}
+                                >
+                                    {username}
+                                </span>
                                 <span className="text-brand text-sm font-semibold cursor-pointer hover:underline" onClick={() => handleFollow(post.created_by)}>
                                     {followed ? "• Following" : "• Follow"}
                                 </span>

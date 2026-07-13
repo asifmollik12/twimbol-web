@@ -100,6 +100,12 @@ export const fetchProfile = async () => {
   return data;
 };
 
+// GET another user's public profile by id — used on /profile/:id
+export const getUserProfile = async (userId) => {
+  const { data } = await api.get(`/user/api/profile/${userId}/`);
+  return Array.isArray(data) ? data[0] : data;
+};
+
 export const updateProfile = async (userId, formData) => {
   const { data } = await api.patch(`/user/api/update/${userId}/`, formData, {
     headers: { "Content-Type": "multipart/form-data" },

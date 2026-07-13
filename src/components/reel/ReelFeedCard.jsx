@@ -109,7 +109,10 @@ export default function ReelFeedCard({ reel }) {
       {/* Header */}
       <div className="flex items-center justify-between px-5 pt-5 pb-3">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-full bg-surface overflow-hidden flex-shrink-0 ring-2 ring-brand/20">
+          <div
+            className="w-11 h-11 rounded-full bg-surface overflow-hidden flex-shrink-0 ring-2 ring-brand/20 cursor-pointer"
+            onClick={() => navigate(`/profile/${reel.user_profile?.user?.id || reel.created_by}`)}
+          >
             {profilePic ? (
               <img src={profilePic} alt={username} className="w-full h-full object-cover" />
             ) : (
@@ -120,7 +123,12 @@ export default function ReelFeedCard({ reel }) {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-sm text-txt">{username}</span>
+              <span
+                className="font-semibold text-sm text-txt cursor-pointer hover:underline"
+                onClick={() => navigate(`/profile/${reel.user_profile?.user?.id || reel.created_by}`)}
+              >
+                {username}
+              </span>
               <span
                 className="text-brand text-sm font-semibold cursor-pointer hover:underline"
                 onClick={handleFollow}

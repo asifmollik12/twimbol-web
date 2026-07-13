@@ -31,3 +31,13 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #c4b5fd; border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: #5B2FC9; }
+
+/* Tailwind's preflight resets <button> to cursor:default — restore the
+   hand cursor on every clickable control/link-like element site-wide. */
+button:not(:disabled),
+[role="button"],
+select,
+label[for],
+summary {
+  cursor: pointer;
+}

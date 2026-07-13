@@ -248,11 +248,27 @@ export default function Learn() {
             <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "32px 16px" }}>
 
                 {/* Category filter */}
-                <div style={{ marginBottom: "28px" }}>
+                <div style={{ marginBottom: "28px", textAlign: "center" }}>
                     <p style={{ fontSize: "11px", color: "#999", marginBottom: "8px", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.5px" }}>Category</p>
-                    <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "center" }}>
                         {CATEGORIES.map((cat) => (
-                            <button key={cat.id} onClick={() => setActiveCategory(cat.id)} style={{ padding: "7px 16px", borderRadius: "50px", border: "none", cursor: "pointer", fontSize: "13px", fontWeight: "600", fontFamily: "'DM Sans', sans-serif", background: activeCategory === cat.id ? "#FF6B35" : "#fff", color: activeCategory === cat.id ? "#fff" : "#555", boxShadow: "0 1px 4px rgba(0,0,0,0.08)", transition: "all 0.2s" }}>
+                            <button
+                                key={cat.id}
+                                onClick={() => setActiveCategory(cat.id)}
+                                style={{
+                                    padding: "7px 16px",
+                                    borderRadius: "50px",
+                                    border: "none",
+                                    cursor: "pointer",
+                                    fontSize: "13px",
+                                    fontWeight: "600",
+                                    fontFamily: "'DM Sans', sans-serif",
+                                    background: activeCategory === cat.id ? "linear-gradient(135deg, #2D1B69, #5B2FC9)" : "#fff",
+                                    color: activeCategory === cat.id ? "#fff" : "#555",
+                                    boxShadow: activeCategory === cat.id ? "0 4px 12px rgba(91,47,201,0.3)" : "0 1px 4px rgba(0,0,0,0.08)",
+                                    transition: "all 0.2s",
+                                }}
+                            >
                                 {cat.label}
                             </button>
                         ))}
@@ -330,7 +346,7 @@ function CourseCard({ course }) {
                         <span style={{ fontSize: "17px", fontWeight: "800", color: "#2D1B69" }}>{course.price}</span>
                         {course.originalPrice && <span style={{ fontSize: "12px", color: "#aaa", textDecoration: "line-through", marginLeft: "6px" }}>{course.originalPrice}</span>}
                     </div>
-                    <a href={course.link} target="_blank" rel="noopener noreferrer" style={{ background: "linear-gradient(135deg, #FF6B35, #ff8c5a)", color: "#fff", padding: "8px 18px", borderRadius: "50px", fontSize: "13px", fontWeight: "700", textDecoration: "none", whiteSpace: "nowrap" }}>
+                    <a href={course.link} target="_blank" rel="noopener noreferrer" style={{ background: "linear-gradient(135deg, #2D1B69, #5B2FC9)", color: "#fff", padding: "8px 18px", borderRadius: "50px", fontSize: "13px", fontWeight: "700", textDecoration: "none", whiteSpace: "nowrap" }}>
                         দেখুন →
                     </a>
                 </div>

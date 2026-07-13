@@ -5,7 +5,7 @@ import NavBar from "../components/layout/Navbar.jsx";
 import PostCard from "../components/post/PostCard.jsx";
 import Spinner from "../components/ui/Spinner.jsx";
 import { getUserProfile, getImageUrl, toggleFollow } from "../api/api.js";
-import { getPosts } from "../api/posts.js";
+import { getCreatorPosts } from "../api/posts.js";
 import { useAuthStore } from "../store/authStore";
 
 const GROUP_COLOR = {
@@ -55,7 +55,7 @@ export default function UserProfile() {
       // Fallback: derive a public profile from the first post's embedded
       // user_profile if a dedicated profile-by-id lookup isn't available.
       try {
-        const res = await getPosts({ created_by: id, page: 1, page_size: 1 });
+        const res = await getCreatorPosts(id, { page: 1, page_size: 1 });
         const first = res.data?.results?.[0];
         if (first?.user_profile) {
           setProfile(first.user_profile);
@@ -74,7 +74,7 @@ export default function UserProfile() {
       if (pageNum === 1) setLoading(true);
       else setLoadingMore(true);
 
-      const res = await getPosts({ created_by: id, page: pageNum, page_size: 10 });
+      const res = await getCreatorPosts(id, { page: pageNum, page_size: 10 });
       const data = res.data;
       const results = data.results || [];
 

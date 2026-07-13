@@ -8,6 +8,11 @@ export const getPosts = (params = {}) =>
 export const getPost = (id) =>
   api.get(`/api/posts/${id}/`);
 
+// Public, actually filters by user (unlike /api/posts/?created_by=, which the
+// backend silently ignores) — used on /profile/:id to load a user's timeline.
+export const getCreatorPosts = (userId, params = {}) =>
+  api.get(`/create/api/creator/${userId}/posts/`, { params });
+
 export const createPost = (formData) =>
   api.post("/api/posts/", formData, {
     headers: { "Content-Type": "multipart/form-data" },

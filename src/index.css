@@ -15,6 +15,11 @@
   --color-border: #e5e0f5;
 }
 
+html {
+  background: #f5f4fb;
+  overscroll-behavior-y: none;
+}
+
 body {
   @apply antialiased;
   font-family: 'DM Sans', sans-serif;

@@ -39,10 +39,10 @@ export default function Home() {
         <NavBar activePage="Home" />
 
         {/* ── Videos (YouTube-Kids-style grid, every reel) ── */}
-        <section className="max-w-400 mx-auto px-8 py-8">
+        <section className="max-w-6xl mx-auto px-10 py-8">
           <h2 className="text-xl font-bold text-txt mb-4">Videos</h2>
           {videosLoading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="rounded-2xl bg-white border border-border animate-pulse" style={{ aspectRatio: "16/9" }} />
               ))}
@@ -58,7 +58,7 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
               {videos.map((reel) => {
                 const username =
                   reel.user_profile?.username || reel.user_profile?.user?.username || "twimbol";

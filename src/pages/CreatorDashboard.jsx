@@ -6,6 +6,8 @@ import {
     deletePost,
     createPost,
     createReel,
+    updateReel,
+    updatePost,
     uploadVideoToCloudinary,
     getAnalytics
 } from "../api/creator";
@@ -59,7 +61,7 @@ function StatCard({ label, value, icon, loading }) {
 /* ─────────────────────────────────────
    ContentRow
 ───────────────────────────────────── */
-function ContentRow({ post, onDelete }) {
+function ContentRow({ post, onDelete, onEdit }) {
     const navigate = useNavigate();
 
     const [deleting, setDeleting] = useState(false);
@@ -97,6 +99,14 @@ function ContentRow({ post, onDelete }) {
                 <span>👁 {fmt(post.view_count || 0)}</span>
             </div>
 
+            {/* edit */}
+            <button
+                onClick={() => onEdit(post)}
+                className="text-xs font-semibold text-[var(--color-brand)] border border-[var(--color-brand)]/20 bg-[var(--color-brand-light)] hover:bg-[var(--color-brand)]/10 px-3 py-1.5 rounded-lg transition-colors flex-shrink-0"
+            >
+                Edit
+            </button>
+
             {/* delete */}
             <button
                 onClick={handleDelete}
@@ -119,6 +129,70 @@ function SkeletonRow() {
                 <div className="h-2.5 w-1/4 bg-[var(--color-surface)] rounded animate-pulse" />
             </div>
         </div>
+    );
+}
+
+/* ─────────────────────────────────────
+   EditContentModal
+   Edits title/description of an existing post or reel.
+   PATCH /api/posts/{id}/ or PATCH /api/reels/{id}/
+───────────────────────────────────── */
+function EditContentModal({ post, onClose, onUpdated }) {
+    const isPost = post.post_type === "post";
+    const [title, setTitle] = useState(isPost ? (post.post_title || "") : (post.title || ""));
+    const [desc, setDesc] = useState(isPost ? (post.post_description || "") : (post.reel_description || ""));
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
+    const handleSubmit = async () => {
+        if (!title.trim()) return setError("Title is required.");
+        setLoading(true);
+        setError("");
+        try {
+            if (isPost) {
+                await updatePost(post.id, { post_title: title, post_description: desc });
+            } else {
+                await updateReel(post.id, { title, reel_description: desc });
+            }
+            onUpdated();
+        } catch (e) {
+            setError(
+                e.response?.data?.title?.[0] ||
+                e.response?.data?.post_title?.[0] ||
+                e.response?.data?.detail ||
+                "Failed to save changes."
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <ModalShell title={isPost ? "Edit Post" : "Edit Video"} onClose={loading ? undefined : onClose}>
+            {error && <Alert type="error">{error}</Alert>}
+            <FormField label="Title *">
+                <input
+                    className={inputCls}
+                    value={title}
+                    onChange={e => setTitle(e.target.value)}
+                    placeholder="Title…"
+                />
+            </FormField>
+            <FormField label="Description">
+                <textarea
+                    className={`${inputCls} resize-y min-h-[80px]`}
+                    value={desc}
+                    onChange={e => setDesc(e.target.value)}
+                    placeholder="Description…"
+                />
+            </FormField>
+            <ModalFooter
+                onClose={onClose}
+                onSubmit={handleSubmit}
+                loading={loading}
+                label="Save Changes"
+            />
+        </ModalShell>
     );
 }
 
@@ -506,6 +580,7 @@ export default function CreatorDashboard() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modal, setModal] = useState(null); // null | 'post' | 'reel'
+    const [editingPost, setEditingPost] = useState(null);
     const [tab, setTab] = useState("overview");
 
     // Analytics derived from posts list
@@ -558,6 +633,11 @@ export default function CreatorDashboard() {
     const handleDelete = async (postId, post_type) => {
         await deletePost(postId, post_type);
         setPosts(prev => prev.filter(p => p.id !== postId));
+    };
+
+    const handleUpdated = () => {
+        setEditingPost(null);
+        fetchPosts();
     };
 
     const handleCreated = () => {
@@ -659,7 +739,7 @@ export default function CreatorDashboard() {
                             : posts.length === 0
                                 ? <EmptyState icon="🎨" text="No content yet. Create your first post or reel!" />
                                 : posts.slice(0, 5).map(p => (
-                                    <ContentRow key={p.id} post={p} onDelete={handleDelete} />
+                                    <ContentRow key={p.id} post={p} onDelete={handleDelete} onEdit={setEditingPost} />
                                 ))
                         }
                     </div>
@@ -681,7 +761,7 @@ export default function CreatorDashboard() {
                             : posts.length === 0
                                 ? <EmptyState icon="📭" text="No content yet. Start creating!" />
                                 : posts.map(p => (
-                                    <ContentRow key={p.id} post={p} onDelete={handleDelete} />
+                                    <ContentRow key={p.id} post={p} onDelete={handleDelete} onEdit={setEditingPost} />
                                 ))
                         }
                     </div>
@@ -694,6 +774,9 @@ export default function CreatorDashboard() {
             )}
             {modal === "reel" && (
                 <UploadReelModal onClose={() => setModal(null)} onCreated={handleCreated} />
+            )}
+            {editingPost && (
+                <EditContentModal post={editingPost} onClose={() => setEditingPost(null)} onUpdated={handleUpdated} />
             )}
         </div>
     );

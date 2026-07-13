@@ -49,6 +49,16 @@ export const deletePost = (postId, post_type) =>{
 export const createReel = (data) =>
   api.post("/create/api/reel/", data);
 
+// ── Update Reel/Video title & description ────────────────────────
+// PATCH /api/reels/{postId}/
+export const updateReel = (postId, data) =>
+  api.patch(`/api/reels/${postId}/`, data);
+
+// ── Update Post title & description ──────────────────────────────
+// PATCH /api/posts/{postId}/
+export const updatePost = (postId, data) =>
+  api.patch(`/api/posts/${postId}/`, data);
+
 // ── Create Video (after Cloudinary upload) ───────────────────────
 // POST /create/api/video/
 export const createVideo = (data) =>

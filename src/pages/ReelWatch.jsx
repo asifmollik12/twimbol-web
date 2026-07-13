@@ -14,6 +14,7 @@ import { toggleFollow } from "../api/posts.js";
 import CommentsCard from "../components/reel/ReelComments.jsx";
 import DescriptionCard from "../components/reel/ReelDescription.jsx";
 import ReelError from "../components/reel/ReelError.jsx";
+import NavBar from "../components/layout/Navbar.jsx";
 
 
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -663,6 +664,7 @@ export default function ReelWatch() {
     return (
       <>
         <style>{CSS}</style>
+        <NavBar activePage="Reels" />
         <div className="rw-skeleton-screen">
           {/* Prev ghost skeleton */}
           <div className="rw-skeleton-ghost rw-skeleton-ghost-prev">
@@ -727,6 +729,7 @@ export default function ReelWatch() {
   return (
     <>
       <style>{CSS}</style>
+      <NavBar activePage="Reels" />
       <div className="rw-root">
 
         {/* Back button — outside the player */}
@@ -848,7 +851,7 @@ const CSS = `
   .rw-root {
     display: flex;
     align-items: stretch;
-    height: 100dvh;
+    height: calc(100dvh - 64px);
     background: #0a0a0f;
     font-family: 'DM Sans', sans-serif;
     color: #fff;
@@ -860,7 +863,7 @@ const CSS = `
   /* ── Back button ── */
   .rw-back-btn {
     position: fixed;
-    top: 18px;
+    top: 82px;
     left: 18px;
     z-index: 100;
     background: rgba(0,0,0,0.45);
@@ -880,7 +883,7 @@ const CSS = `
   .rw-player-col {
     flex: 1;
     position: relative;
-    height: 100dvh;
+    height: calc(100dvh - 64px);
     overflow: hidden;
     transition: flex 0.3s ease;
     touch-action: none; /* blocks browser pull-to-refresh & native scroll handling */
@@ -894,7 +897,7 @@ const CSS = `
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: min(calc(100dvh - 80px), calc((100dvw - 80px) * 16 / 9));
+    height: min(calc(calc(100dvh - 64px) - 80px), calc((100dvw - 80px) * 16 / 9));
     aspect-ratio: 9 / 16;
     border-radius: 18px;
     overflow: hidden;
@@ -902,7 +905,7 @@ const CSS = `
     z-index: 2;
   }
   .rw-player-col.panel-open .reel-active-wrap {
-    height: min(calc(100dvh - 80px), calc((min(52vw, 460px) - 100px) * 16 / 9));
+    height: min(calc(calc(100dvh - 64px) - 80px), calc((min(52vw, 460px) - 100px) * 16 / 9));
   }
 
   /* ── Ghost reels — absolutely anchored to active center ── */
@@ -910,7 +913,7 @@ const CSS = `
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: calc(min(calc(100dvh - 80px), calc((100dvw - 80px) * 16 / 9)) * 9 / 16 * 0.6);
+    width: calc(min(calc(calc(100dvh - 64px) - 80px), calc((100dvw - 80px) * 16 / 9)) * 9 / 16 * 0.6);
     aspect-ratio: 9 / 16;
     border-radius: 12px;
     overflow: hidden;
@@ -929,12 +932,12 @@ const CSS = `
   .reel-ghost-arrow { width: 22px; height: 22px; color: rgba(255,255,255,0.9); }
   /* Prev: sits just above the top edge of the active reel */
   .reel-ghost-prev {
-    bottom: calc(50% + min(calc(100dvh - 80px), calc((100dvw - 80px) * 16 / 9)) / 2 + 10px);
+    bottom: calc(50% + min(calc(calc(100dvh - 64px) - 80px), calc((100dvw - 80px) * 16 / 9)) / 2 + 10px);
   }
   .reel-ghost-prev:hover { transform: translateX(-50%) translateY(-5px); opacity: 0.75; }
   /* Next: sits just below the bottom edge of the active reel */
   .reel-ghost-next {
-    top: calc(50% + min(calc(100dvh - 80px), calc((100dvw - 80px) * 16 / 9)) / 2 + 10px);
+    top: calc(50% + min(calc(calc(100dvh - 64px) - 80px), calc((100dvw - 80px) * 16 / 9)) / 2 + 10px);
   }
   .reel-ghost-next:hover { transform: translateX(-50%) translateY(5px); opacity: 0.75; }
 
@@ -1233,7 +1236,7 @@ const CSS = `
 
   /* ── Loading / Empty ── */
   .rw-loading {
-    height: 100dvh;
+    height: calc(100dvh - 64px);
     display: flex; flex-direction: column;
     align-items: center; justify-content: center; gap: 16px;
     background: #0a0a0f; color: rgba(255,255,255,0.45);
@@ -1242,7 +1245,7 @@ const CSS = `
 
   /* ── Skeleton loading screen ── */
   .rw-skeleton-screen {
-    height: 100dvh;
+    height: calc(100dvh - 64px);
     background: #0a0a0f;
     position: relative;
     overflow: hidden;
@@ -1264,7 +1267,7 @@ const CSS = `
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: calc(min(calc(100dvh - 80px), calc((100dvw - 80px) * 16 / 9)) * 9 / 16);
+    width: calc(min(calc(calc(100dvh - 64px) - 80px), calc((100dvw - 80px) * 16 / 9)) * 9 / 16);
     aspect-ratio: 9/16;
     border-radius: 18px;
     overflow: hidden;
@@ -1355,7 +1358,7 @@ const CSS = `
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: calc(min(calc(100dvh - 80px), calc((100dvw - 80px) * 16 / 9)) * 9 / 16 * 0.6);
+    width: calc(min(calc(calc(100dvh - 64px) - 80px), calc((100dvw - 80px) * 16 / 9)) * 9 / 16 * 0.6);
     aspect-ratio: 9/16;
     border-radius: 12px;
     overflow: hidden;
@@ -1363,10 +1366,10 @@ const CSS = `
     z-index: 1;
   }
   .rw-skeleton-ghost-prev {
-    bottom: calc(50% + min(calc(100dvh - 80px), calc((100dvw - 80px) * 16 / 9)) / 2 + 10px);
+    bottom: calc(50% + min(calc(calc(100dvh - 64px) - 80px), calc((100dvw - 80px) * 16 / 9)) / 2 + 10px);
   }
   .rw-skeleton-ghost-next {
-    top: calc(50% + min(calc(100dvh - 80px), calc((100dvw - 80px) * 16 / 9)) / 2 + 10px);
+    top: calc(50% + min(calc(calc(100dvh - 64px) - 80px), calc((100dvw - 80px) * 16 / 9)) / 2 + 10px);
   }
 
   @keyframes spin { to { transform: rotate(360deg); } }

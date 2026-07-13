@@ -80,12 +80,12 @@ export default function NavBar({ activePage = "Reels" }) {
           align-items: center;
           flex: 1;
           min-width: 0;
-          max-width: 480px;
           background: #f5f4fb;
           border: 2px solid #e5e0f5;
           border-radius: 999px;
           padding: 4px 4px 4px 20px;
           transition: border-color 0.2s, box-shadow 0.2s;
+          overflow: hidden;
         }
         .fun-search:focus-within {
           border-color: #5B2FC9;
@@ -160,10 +160,16 @@ export default function NavBar({ activePage = "Reels" }) {
         .nav-icon-row::-webkit-scrollbar { display: none; }
 
         @media (max-width: 640px) {
-          .nav-row1 { padding: 10px 12px !important; gap: 10px !important; }
-          .fun-search { padding-left: 14px !important; }
-          .fun-search input { font-size: 14px !important; }
+          .nav-row1 { padding: 10px 12px !important; gap: 8px !important; }
+          .fun-search { 
+            flex: 1;
+            min-width: 0;
+            padding-left: 12px !important; 
+          }
+          .fun-search input { font-size: 13px !important; }
+          .fun-search button { width: 34px !important; height: 34px !important; flex-shrink: 0; }
           .nav-icon-row { padding: 2px 12px 10px !important; gap: 8px !important; justify-content: flex-start !important; }
+          .icon-btn { width: 36px !important; height: 36px !important; flex-shrink: 0; }
         }
       `}</style>
 
@@ -186,19 +192,19 @@ export default function NavBar({ activePage = "Reels" }) {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        gap: "16px",
+                        gap: "12px",
                         padding: "12px 32px",
+                        flexWrap: "nowrap",
+                        minWidth: 0,
                     }}
                 >
                     {/* Logo */}
                     <a href="/" style={{ textDecoration: "none", flexShrink: 0 }}>
-                        <div className="flex items-center gap-1">
-                            <img src="/logo.png" alt="Twimbol Logo" className="w-16 sm:w-24" />
-                        </div>
+                        <img src="/logo.png" alt="Twimbol Logo" style={{ height: "36px", width: "auto", display: "block" }} />
                     </a>
 
-                    {/* Big playful search bar */}
-                    <form onSubmit={handleSearch} className="fun-search">
+                    {/* Big playful search bar — takes remaining space */}
+                    <form onSubmit={handleSearch} className="fun-search" style={{ flex: 1, minWidth: 0, maxWidth: "480px" }}>
                         <input
                             type="text"
                             value={searchQuery}
@@ -211,7 +217,7 @@ export default function NavBar({ activePage = "Reels" }) {
                     </form>
 
                     {/* Right side: notification + profile */}
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
                         {/* Notification bell */}
                         <div ref={notifRef} style={{ position: "relative" }}>
                             <button

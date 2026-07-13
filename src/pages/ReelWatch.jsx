@@ -131,8 +131,9 @@ function ReelSlide({
   const lastTapRef = useRef(0);
   const [followed, setFollowed] = useState(reel.user_profile?.followed_by_user || false);
   const viewRecorded = useRef(false);
+  const navigate = useNavigate();
 
-  
+  const goToProfile = () => navigate(`/profile/${reel.user_profile?.user?.id || reel.created_by}`);
 
   const handleFollow = async () => {
     const next = !followed;
@@ -373,13 +374,13 @@ function ReelSlide({
         {/* Creator row */}
         <div className="reel-creator-row">
           {avatarSrc ? (
-            <img src={avatarSrc} alt="avatar" className="reel-avatar" />
+            <img src={avatarSrc} alt="avatar" className="reel-avatar" style={{ cursor: "pointer" }} onClick={goToProfile} />
           ) : (
-            <div className="reel-avatar-ph">
+            <div className="reel-avatar-ph" style={{ cursor: "pointer" }} onClick={goToProfile}>
               {(reel.user_profile?.user?.username || "?")[0].toUpperCase()}
             </div>
           )}
-          <div className="reel-creator-meta">
+          <div className="reel-creator-meta" style={{ cursor: "pointer" }} onClick={goToProfile}>
             <span className="reel-creator-name">
               {reel.user_profile?.user?.first_name
                 ? `${reel.user_profile.user.first_name} ${reel.user_profile.user.last_name || ""}`.trim()

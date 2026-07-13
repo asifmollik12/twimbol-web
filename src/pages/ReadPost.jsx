@@ -658,9 +658,16 @@ export default function ReadPost() {
           {/* ── Header ── */}
           <div className="flex items-center justify-between px-5 pt-5 pb-0">
             <div className="flex items-center gap-3 flex-1 min-w-0">
-              <Avatar src={profilePic} name={username} size="lg" />
+              <div className="cursor-pointer" onClick={() => navigate(`/profile/${post.created_by}`)}>
+                <Avatar src={profilePic} name={username} size="lg" />
+              </div>
               <div className="min-w-0">
-                <p className="font-semibold text-txt leading-tight truncate">{username}</p>
+                <p
+                  className="font-semibold text-txt leading-tight truncate cursor-pointer hover:underline"
+                  onClick={() => navigate(`/profile/${post.created_by}`)}
+                >
+                  {username}
+                </p>
                 <p className="text-xs text-txt-secondary mt-0.5">{timeAgo(post.created_at)}</p>
               </div>
             </div>

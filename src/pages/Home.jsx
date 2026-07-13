@@ -15,15 +15,25 @@ function getVideoHref(reel) {
 }
 
 function VideoCard({ reel, onClick }) {
+  const navigate = useNavigate();
   const [hovering, setHovering] = useState(false);
   const isYouTube = isYouTubeUrl(reel.video_url);
   const youtubeId = isYouTube ? getYouTubeId(reel.video_url) : null;
+  const creatorId = reel.user_profile?.user?.id || reel.created_by;
+  const creatorName =
+    reel.user_profile?.username || reel.user_profile?.user?.username || null;
 
   const handleClick = (e) => {
     // Let modifier/middle clicks behave like a normal link (open in new tab, etc.)
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
     e.preventDefault();
     onClick();
+  };
+
+  const handleCreatorClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (creatorId) navigate(`/profile/${creatorId}`);
   };
 
   return (
@@ -65,6 +75,14 @@ function VideoCard({ reel, onClick }) {
       <p className="text-base font-semibold text-txt mt-3 line-clamp-2 leading-snug min-h-11">
         {reel.title || "Untitled"}
       </p>
+      {creatorName && (
+        <span
+          onClick={handleCreatorClick}
+          className="inline-block text-xs text-txt-secondary mt-1 hover:text-brand hover:underline"
+        >
+          {creatorName}
+        </span>
+      )}
     </a>
   );
 }

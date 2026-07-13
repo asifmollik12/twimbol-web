@@ -7,6 +7,7 @@ import { onNotifications, startNotificationPolling } from "../../api/notificatio
 
 const NAV_LINKS = [
     { label: "Home", href: "/home" },
+    { label: "Kids Book", href: "/kids-book" },
     { label: "Reels", href: "/reel" },
     { label: "Learn", href: "/learn" },
     { label: "Game", href: "/game" },

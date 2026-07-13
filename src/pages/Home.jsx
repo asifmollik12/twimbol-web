@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import NavBar from "../components/layout/Navbar.jsx";
 import PostCard from "../components/post/PostCard.jsx";
 import ReelFeedCard from "../components/reel/ReelFeedCard.jsx";
@@ -8,7 +7,7 @@ import { getPosts } from "../api/posts.js";
 import Spinner from "../components/ui/Spinner.jsx";
 import DecorativeBackground from "../components/ui/DecorativeBackground.jsx";
 import GroundFooter from "../components/ui/GroundFooter.jsx";
-import { Play, Newspaper } from "lucide-react";
+import { Newspaper } from "lucide-react";
 
 // Insert a reel into the feed after every REEL_INTERVAL posts.
 const REEL_INTERVAL = 3;
@@ -18,12 +17,10 @@ const AUTO_LOAD_PAGES = 2;
 
 /**
  * Home.jsx – Twimbol news feed.
- * Instagram-style reel "stories" bar up top, Facebook-style vertical
- * feed mixing posts and reels below. Supports infinite scroll / load more.
+ * Facebook-style vertical feed mixing posts and reels. Supports infinite
+ * scroll / load more.
  */
 export default function Home() {
-  const navigate = useNavigate();
-  const [stories, setStories] = useState([]);
   const [feedItems, setFeedItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -61,13 +58,6 @@ export default function Home() {
         reelsExhaustedRef.current = true;
       }
     }
-  }, []);
-
-  // Stories bar (independent small fetch, first page of reels)
-  useEffect(() => {
-    fetchReels(1, 15)
-      .then((data) => setStories(data.results || []))
-      .catch(() => {});
   }, []);
 
   const loadPosts = useCallback(async (pageNum = 1) => {
@@ -134,47 +124,6 @@ export default function Home() {
       <NavBar activePage="Home" />
 
       <main className="max-w-xl mx-auto px-4 py-6">
-        {/* ── Stories bar (reels) ── */}
-        {stories.length > 0 && (
-          <div
-            className="flex gap-4 overflow-x-auto pb-1 mb-5"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            {stories.map((reel) => {
-              const username =
-                reel.user_profile?.username || reel.user_profile?.user?.username || "Reel";
-              return (
-                <button
-                  key={reel.post}
-                  onClick={() => navigate(`/reel/${reel.post}`)}
-                  className="flex flex-col items-center gap-1.5 flex-shrink-0 w-16"
-                >
-                  <div
-                    className="w-16 h-16 rounded-full flex-shrink-0"
-                    style={{ padding: "2.5px", background: "linear-gradient(135deg, #2D1B69, #5B2FC9, #a855f7)" }}
-                  >
-                    <div className="relative w-full h-full rounded-full overflow-hidden bg-txt border-2 border-white">
-                      {reel.thumbnail_url && (
-                        <img
-                          src={reel.thumbnail_url}
-                          alt={username}
-                          className="w-full h-full object-cover"
-                        />
-                      )}
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/15">
-                        <Play size={14} className="text-white fill-white" />
-                      </div>
-                    </div>
-                  </div>
-                  <span className="text-[11px] text-txt truncate w-full text-center">
-                    {username}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-
         {/* Error state */}
         {error && (
           <div className="flex items-center gap-3 bg-brand-light border border-brand/20 text-brand-hover rounded-xl px-5 py-3 mb-4 text-sm">

@@ -13,6 +13,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 
 // // Protected Pages
 import Home from './pages/Home'
+import KidsBook from './pages/KidsBook'
 import ReelWatch from './pages/ReelWatch'
 import Posts from './pages/Posts'
 import ReadPost from './pages/ReadPost'
@@ -41,6 +42,7 @@ export default function App() {
 
         {/* Protected */}
         <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/kids-book" element={<ProtectedRoute><KidsBook /></ProtectedRoute>} />
         <Route path="/reel" element={<ProtectedRoute><ReelWatch /></ProtectedRoute>} />
         {/* <Route path="/reel/:id" element={<ReelWatch />} /> */}
         <Route path="/reel/:id" element={<ProtectedRoute><ReelWatch /></ProtectedRoute>} />

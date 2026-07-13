@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import NavBar from "../components/layout/Navbar";
+import GroundFooter from "../components/ui/GroundFooter.jsx";
+
+const PAGE_SIZE = 20;
 
 const CATEGORIES = [
     { id: "all", label: "সব" },
@@ -187,6 +190,7 @@ export default function Learn() {
     const [activeCategory, setActiveCategory] = useState("all");
     const [activePlatform, setActivePlatform] = useState("all");
     const [search, setSearch] = useState("");
+    const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
     const filtered = COURSES.filter((c) => {
         const matchCat = activeCategory === "all" || c.category === activeCategory;
@@ -195,6 +199,11 @@ export default function Learn() {
         const matchSearch = c.title.toLowerCase().includes(q) || c.provider.toLowerCase().includes(q) || c.description.toLowerCase().includes(q);
         return matchCat && matchPlat && matchSearch;
     });
+    const visible = filtered.slice(0, visibleCount);
+
+    React.useEffect(() => {
+        setVisibleCount(PAGE_SIZE);
+    }, [activeCategory, activePlatform, search]);
 
     return (
         <div style={{ minHeight: "100vh", background: "#f8f7fc", fontFamily: "'DM Sans', sans-serif" }}>
@@ -259,7 +268,7 @@ export default function Learn() {
                 <p style={{ color: "#888", fontSize: "13px", marginBottom: "20px" }}>{filtered.length}টি course পাওয়া গেছে</p>
 
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "24px" }}>
-                    {filtered.map((course) => <CourseCard key={course.id} course={course} />)}
+                    {visible.map((course) => <CourseCard key={course.id} course={course} />)}
                 </div>
 
                 {filtered.length === 0 && (
@@ -268,7 +277,31 @@ export default function Learn() {
                         <p style={{ fontSize: "16px" }}>কোনো course পাওয়া যায়নি।</p>
                     </div>
                 )}
+
+                {visibleCount < filtered.length && (
+                    <div style={{ display: "flex", justifyContent: "center", padding: "32px 0 8px" }}>
+                        <button
+                            onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                            style={{
+                                background: "linear-gradient(135deg, #2563eb, #3b82f6)",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "50px",
+                                padding: "12px 32px",
+                                fontSize: "14px",
+                                fontWeight: "700",
+                                cursor: "pointer",
+                                fontFamily: "'DM Sans', sans-serif",
+                                boxShadow: "0 4px 16px rgba(37,99,235,0.3)",
+                            }}
+                        >
+                            See More
+                        </button>
+                    </div>
+                )}
             </div>
+
+            <GroundFooter />
         </div>
     );
 }

@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import NavBar from "../components/layout/Navbar";
+import GroundFooter from "../components/ui/GroundFooter.jsx";
+
+const PAGE_SIZE = 20;
 
 const GAMES = [
     {
@@ -65,6 +68,9 @@ const GAMES = [
 ];
 
 export default function Game() {
+    const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+    const visible = GAMES.slice(0, visibleCount);
+
     return (
         <div style={{ minHeight: "100vh", background: "#f8f7fc", fontFamily: "'DM Sans', sans-serif" }}>
             <NavBar activePage="Game" />
@@ -141,7 +147,7 @@ export default function Game() {
                         gap: "20px",
                     }}
                 >
-                    {GAMES.map((game) => (
+                    {visible.map((game) => (
                         <div
                             key={game.id}
                             style={{
@@ -247,7 +253,31 @@ export default function Game() {
                         </div>
                     ))}
                 </div>
+
+                {visibleCount < GAMES.length && (
+                    <div style={{ display: "flex", justifyContent: "center", padding: "32px 0 8px" }}>
+                        <button
+                            onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                            style={{
+                                background: "linear-gradient(135deg, #2563eb, #3b82f6)",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "50px",
+                                padding: "12px 32px",
+                                fontSize: "14px",
+                                fontWeight: "700",
+                                cursor: "pointer",
+                                fontFamily: "'DM Sans', sans-serif",
+                                boxShadow: "0 4px 16px rgba(37,99,235,0.3)",
+                            }}
+                        >
+                            See More
+                        </button>
+                    </div>
+                )}
             </div>
+
+            <GroundFooter />
         </div>
     );
 }

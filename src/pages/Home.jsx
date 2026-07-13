@@ -12,6 +12,9 @@ import { Play, Newspaper } from "lucide-react";
 
 // Insert a reel into the feed after every REEL_INTERVAL posts.
 const REEL_INTERVAL = 3;
+// Auto-load only the first 2 pages (~20 posts) via scroll; after that the
+// user must tap "See More" to keep going.
+const AUTO_LOAD_PAGES = 2;
 
 /**
  * Home.jsx – Twimbol news feed.
@@ -103,8 +106,11 @@ export default function Home() {
     loadPosts(1);
   }, [loadPosts]);
 
-  // Infinite scroll with IntersectionObserver
+  // Infinite scroll with IntersectionObserver -- only auto-loads the first
+  // AUTO_LOAD_PAGES pages (~20 posts); after that a manual "See More"
+  // button takes over so the feed doesn't scroll forever unprompted.
   useEffect(() => {
+    if (page >= AUTO_LOAD_PAGES) return;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && page < totalPages && !loadingMore) {
@@ -215,9 +221,25 @@ export default function Home() {
           </div>
         )}
 
-        {page < totalPages && (
+        {page < totalPages && page < AUTO_LOAD_PAGES && (
           <div className="flex justify-center py-8" ref={loaderRef}>
             {loadingMore && <Spinner />}
+          </div>
+        )}
+
+        {page < totalPages && page >= AUTO_LOAD_PAGES && (
+          <div className="flex justify-center py-8">
+            <button
+              onClick={() => loadPosts(page + 1)}
+              disabled={loadingMore}
+              className="text-white font-bold text-sm rounded-full px-8 py-3 disabled:opacity-60"
+              style={{
+                background: "linear-gradient(135deg, #2563eb, #3b82f6)",
+                boxShadow: "0 4px 16px rgba(37,99,235,0.3)",
+              }}
+            >
+              {loadingMore ? <Spinner /> : "See More"}
+            </button>
           </div>
         )}
       </main>

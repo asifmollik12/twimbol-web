@@ -217,9 +217,9 @@ const CSS = `
   .home-grid-wrapper {
     position: relative;
     z-index: 2;
-    max-width: 1400px;
+    max-width: 100%;
     margin: 0 auto;
-    padding: 24px 16px 100px;
+    padding: 24px 0 100px;
   }
 
   .home-section-title {
@@ -228,24 +228,27 @@ const CSS = `
     font-weight: 700;
     color: #3b3266;
     margin-bottom: 18px;
+    padding: 0 20px;
   }
 
-  .home-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 18px;
+  /* Horizontal scrollable row */
+  .home-row {
+    display: flex;
+    flex-direction: row;
+    gap: 14px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 8px 20px 16px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
   }
+  .home-row::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
-  @media (max-width: 480px) {
-    .home-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-    .home-section-title { font-size: 1.1rem; }
-  }
-
-  /* ── Reel card ── */
+  /* Each card fixed width in the row */
   .home-reel-card {
+    flex: 0 0 160px;
+    scroll-snap-align: start;
     cursor: pointer;
     border-radius: 16px;
     overflow: hidden;
@@ -258,7 +261,11 @@ const CSS = `
     box-shadow: 0 8px 28px rgba(0,0,0,0.14);
   }
 
-  /* Thumbnail — 9:16 aspect ratio */
+  @media (max-width: 480px) {
+    .home-reel-card { flex: 0 0 130px; }
+    .home-section-title { font-size: 1.1rem; }
+    .home-row { gap: 10px; padding: 8px 12px 16px; }
+  }
   .home-reel-thumb {
     position: relative;
     width: 100%;

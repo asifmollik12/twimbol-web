@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { X, Send, Trash2, MessageCircle } from "lucide-react";
 import { getComments, addComment, deleteComment } from "../../api/posts";
+import { getImageUrl } from "../../api/api";
 import { useAuthStore } from "../../store/authStore";
-
-const BASE_URL = "https://rafidabdullahsamiweb.pythonanywhere.com";
 
 function formatTime(dateStr) {
   const date = new Date(dateStr);
@@ -106,9 +105,7 @@ export default function CommentsModal({ postId, isOpen, onClose, commentCount })
           ) : (
             comments.map((c) => {
               const isOwner = user?.id === (c.created_by.id);
-              const profilePic = c.created_by.user?.profile_pic
-                ? `${BASE_URL}${c.created_by.user.profile_pic}`
-                : null;
+              const profilePic = getImageUrl(c.created_by.user?.profile_pic);
               const username = c.created_by.user?.username || c.created_by.user.username || "User";
               const commentText = c.comment || "";
 

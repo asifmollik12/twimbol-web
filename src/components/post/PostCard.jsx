@@ -19,8 +19,6 @@ import { getImageUrl } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { Toast, showToast } from "../ui/Toast";
 
-const BASE_URL = "https://rafidabdullahsamiweb.pythonanywhere.com";
-
 function formatCount(n) {
     if (!n && n !== 0) return "0";
     if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
@@ -343,16 +341,11 @@ export default function PostCard({ post, onHidden }) {
     // Build images array from post data
     const images = [];
     if (post.post_banner) {
-        const url = post.post_banner.startsWith("http")
-            ? post.post_banner
-            : `${BASE_URL}${post.post_banner}`;
-        images.push(url);
+        images.push(getImageUrl(post.post_banner));
     }
     if (post.images?.length) {
         post.images.forEach((img) => {
-            const url = typeof img === "string"
-                ? (img.startsWith("http") ? img : `${BASE_URL}${img}`)
-                : img.url || img.image || "";
+            const url = typeof img === "string" ? getImageUrl(img) : img.url || img.image || "";
             if (url) images.push(url);
         });
     }

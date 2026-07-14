@@ -12,19 +12,10 @@ import {
   reportPost,
   hidePost,
 } from "../api/readpost";
+import { getImageUrl } from "../api/api";
 import {useAuthStore} from "../store/authStore";
 import NavBar from "../components/layout/Navbar";
 import {showToast, Toast} from "../components/ui/Toast";
-
-const BASE_URL = "https://rafidabdullahsamiweb.pythonanywhere.com";
-
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-function fullUrl(path) {
-  if (!path) return null;
-  if (path.startsWith("http")) return path;
-  return `${BASE_URL}${path}`;
-}
 
 function timeAgo(dateStr) {
   if (!dateStr) return "";
@@ -135,7 +126,7 @@ function ImageGallery({ images }) {
             onClick={() => openLightbox(i)}
           >
             <img
-              src={fullUrl(src)}
+              src={getImageUrl(src)}
               alt={`Image ${i + 1}`}
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
               loading="lazy"
@@ -180,7 +171,7 @@ function ImageGallery({ images }) {
             </>
           )}
           <img
-            src={fullUrl(imgList[slideIdx])}
+            src={getImageUrl(imgList[slideIdx])}
             alt={`Image ${slideIdx + 1}`}
             className="max-w-[90vw] max-h-[90vh] object-contain select-none"
             onClick={(e) => e.stopPropagation()}
@@ -214,7 +205,7 @@ function Avatar({ src, name, size = "md" }) {
   const initials = name ? name.slice(0, 2).toUpperCase() : "?";
   return src ? (
     <img
-      src={fullUrl(src)}
+      src={getImageUrl(src)}
       alt={name}
       className={`${sizes[size]} rounded-full object-cover shrink-0`}
     />

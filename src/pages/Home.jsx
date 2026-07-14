@@ -167,15 +167,16 @@ export default function Home() {
         <DecorativeBackground />
         <div className="relative" style={{ zIndex: 1 }}>
           <NavBar activePage="Home" />
+          {/* Hero ground scene — sits right below the navbar */}
           <GroundFooter />
         </div>
 
-        {/* ── Reels grid ── */}
-        <div className="home-grid-wrapper">
+        {/* ── Reels horizontal row ── */}
+        <div className="home-grid-wrapper" style={{ position: "relative", zIndex: 2 }}>
           <h2 className="home-section-title">🎬 Reels</h2>
 
           {loading ? (
-            <div className="home-grid">
+            <div className="home-row">
               {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
             </div>
           ) : reels.length === 0 ? (
@@ -183,7 +184,7 @@ export default function Home() {
               <span>No reels yet 😕</span>
             </div>
           ) : (
-            <div className="home-grid">
+            <div className="home-row">
               {reels.map((reel) => (
                 <ReelCard
                   key={reel.post}
@@ -191,11 +192,10 @@ export default function Home() {
                   onClick={(id) => navigate(`/reel/${id}`)}
                 />
               ))}
+              {/* Infinite scroll trigger inside the row */}
+              {hasMore && <div ref={loaderRef} style={{ minWidth: 20, height: "100%" }} />}
             </div>
           )}
-
-          {/* Infinite scroll trigger */}
-          {hasMore && <div ref={loaderRef} style={{ height: 40 }} />}
 
           {loadingMore && (
             <div className="home-loading-more">

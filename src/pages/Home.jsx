@@ -171,7 +171,7 @@ export default function Home() {
 
         {/* ── Reels horizontal row ── */}
         <div className="home-grid-wrapper" style={{ position: "relative", zIndex: 2 }}>
-          <h2 className="home-section-title">🎬 Reels</h2>
+          <h2 className="home-section-title">📹 Videos</h2>
 
           {loading ? (
             <div className="home-row">
@@ -190,10 +190,11 @@ export default function Home() {
                   onClick={(id) => navigate(`/reel/${id}`)}
                 />
               ))}
-              {/* Infinite scroll trigger inside the row */}
-              {hasMore && <div ref={loaderRef} style={{ minWidth: 20, height: "100%" }} />}
             </div>
           )}
+
+          {/* Infinite scroll trigger */}
+          {hasMore && <div ref={loaderRef} style={{ height: 40 }} />}
 
           {loadingMore && (
             <div className="home-loading-more">
@@ -232,45 +233,39 @@ const CSS = `
     padding: 0 20px;
   }
 
-  /* Horizontal scrollable row */
+  /* Video grid — 4 columns desktop, 2 on mobile */
   .home-row {
-    display: flex;
-    flex-direction: row;
-    gap: 14px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 8px 20px 16px;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 0 20px 16px;
   }
-  .home-row::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
-  /* Each card fixed width in the row */
+  /* Each card */
   .home-reel-card {
-    flex: 0 0 160px;
-    scroll-snap-align: start;
     cursor: pointer;
-    border-radius: 16px;
+    border-radius: 12px;
     overflow: hidden;
     background: #fff;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
     transition: transform 0.18s ease, box-shadow 0.18s ease;
   }
   .home-reel-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.13);
   }
 
-  @media (max-width: 480px) {
-    .home-reel-card { flex: 0 0 130px; }
+  @media (max-width: 900px) {
+    .home-row { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .home-row { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px 16px; }
     .home-section-title { font-size: 1.1rem; }
-    .home-row { gap: 10px; padding: 8px 12px 16px; }
   }
   .home-reel-thumb {
     position: relative;
     width: 100%;
-    aspect-ratio: 9 / 16;
+    aspect-ratio: 16 / 9;
     background: #e8e4f8;
     overflow: hidden;
   }
@@ -356,7 +351,7 @@ const CSS = `
     100% { background-position: 200% 0; }
   }
   .home-skeleton-thumb {
-    aspect-ratio: 9 / 16;
+    aspect-ratio: 16 / 9;
     background: linear-gradient(90deg, #ede8f8 25%, #d8d0f0 50%, #ede8f8 75%);
     background-size: 200% 100%;
     animation: shimmer 1.6s ease-in-out infinite;

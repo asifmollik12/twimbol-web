@@ -14,7 +14,7 @@ import { NAV_LINKS } from "../../constants/navLinks.js";
  * notification bell and profile avatar.
  *
  * Props:
- *   activePage – one of "Home" | "Kids Book" | "Reels" | "Learn" | "Game"
+ *   activePage – one of "Home" | "Kids Feed" | "Reels" | "Learn" | "Game"
  */
 export default function NavBar({ activePage = "Reels" }) {
     const navigate = useNavigate();

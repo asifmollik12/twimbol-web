@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 
 const BOTTOM_LINKS = [
   { label: "Home", href: "/home", icon: Home, color: "#5B2FC9" },
-  { label: "Kids Book", href: "/kids-book", icon: BookOpen, color: "#e8620c" },
+  { label: "Kids Feed", href: "/kids-book", icon: BookOpen, color: "#e8620c" },
   { label: "Reels", href: "/reel", icon: Clapperboard, color: "#d6208a" },
   { label: "Learn", href: "/learn", icon: Lightbulb, color: "#0a9b8f" },
   { label: "Game", href: "/game", icon: Gamepad2, color: "#2e9d3f" },

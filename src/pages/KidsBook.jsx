@@ -70,7 +70,7 @@ export default function KidsBook() {
     <div className="min-h-screen bg-surface" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <DecorativeBackground />
       <div className="relative" style={{ zIndex: 1 }}>
-        <NavBar activePage="Kids Book" />
+        <NavBar activePage="Kids Feed" />
 
         <main className="max-w-xl mx-auto px-4 py-6">
           {/* Error state */}

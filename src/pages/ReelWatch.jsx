@@ -288,7 +288,6 @@ function ReelSlide({
 
       {/* ── Top bar ───────────────────────────────────────────────────────── */}
       <div className="reel-topbar">
-        <span className="reel-topbar-title">Reels</span>
         <button className="reel-icon-btn" onClick={onMenuOpen}>
           <svg viewBox="0 0 24 24" fill="currentColor">
             <circle cx="12" cy="5" r="1.6" />

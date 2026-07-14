@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import NavBar from "../components/layout/Navbar.jsx";
 import { NAV_LINKS } from "../constants/navLinks.js";
 import DecorativeBackground from "../components/ui/DecorativeBackground.jsx";

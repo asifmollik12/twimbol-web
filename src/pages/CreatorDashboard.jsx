@@ -26,7 +26,7 @@ const fmt = (n = 0) =>
             : String(n);
 
 const TYPE_LABEL = { post: "Post", reel: "Reel", video: "Video" };
-const TYPE_ICON = { post: "📝", reel: "🎬", video: "📹" };
+const TYPE_ICON = { post: "📝", reel: "🎬", video: "🎥" };
 
 /* ─────────────────────────────────────
    StatCard

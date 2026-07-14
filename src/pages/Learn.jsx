@@ -272,7 +272,6 @@ export default function Learn() {
                             { name: "10 Minute School", color: "#15803d" },
                             { name: "Creative IT", color: "#be123c" },
                             { name: "Shikho", color: "#c2410c" },
-                            { name: "Bohubrihi", color: "#1d4ed8" },
                         ].map((p) => (
                             <span key={p.name} style={{ background: "#fff", color: p.color, padding: "5px 14px", borderRadius: "50px", fontSize: "12px", fontWeight: "800", boxShadow: "0 2px 8px rgba(0,0,0,0.18)" }}>
                                 {p.name}

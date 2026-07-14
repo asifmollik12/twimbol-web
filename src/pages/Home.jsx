@@ -259,7 +259,7 @@ const CSS = `
     .home-row { grid-template-columns: repeat(3, 1fr); }
   }
   @media (max-width: 600px) {
-    .home-row { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px 16px; }
+    .home-row { grid-template-columns: 1fr; gap: 14px; padding: 0 12px 16px; }
     .home-section-title { font-size: 1.1rem; }
   }
   .home-reel-thumb {

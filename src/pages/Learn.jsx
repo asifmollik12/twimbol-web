@@ -203,23 +203,50 @@ export default function Learn() {
             <NavBar activePage="Learn" />
             <ComingSoonModal open={comingSoonOpen} onClose={() => setComingSoonOpen(false)} />
             <style>{`
+                .learn-desc {
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
                 @media (max-width: 640px) {
-                    .learn-hero { padding: 36px 16px 32px !important; }
-                    .learn-hero h1 { font-size: 24px !important; }
-                    .learn-container { padding: 24px 12px !important; }
+                    .learn-hero { padding: 32px 16px 28px !important; }
+                    .learn-hero h1 { font-size: 22px !important; margin-bottom: 8px !important; }
+                    .learn-hero .learn-eyebrow { margin-bottom: 14px !important; }
+                    .learn-hero p { font-size: 13.5px !important; margin-bottom: 20px !important; }
+                    .learn-search { margin-bottom: 20px !important; }
+                    .learn-deco-1 { width: 110px !important; height: 110px !important; top: -35px !important; left: -35px !important; }
+                    .learn-deco-2 { width: 150px !important; height: 150px !important; bottom: -45px !important; right: -25px !important; }
+                    .learn-deco-3, .learn-deco-4 { display: none !important; }
+                    .learn-container { padding: 20px 0 24px !important; }
+                    .learn-cat-label { padding: 0 16px !important; }
+                    .learn-cat-row {
+                        flex-wrap: nowrap !important;
+                        justify-content: flex-start !important;
+                        overflow-x: auto !important;
+                        -webkit-overflow-scrolling: touch !important;
+                        scrollbar-width: none !important;
+                        padding: 2px 16px 4px !important;
+                        margin: 0 !important;
+                    }
+                    .learn-cat-row::-webkit-scrollbar { display: none !important; }
+                    .learn-cat-row button { flex-shrink: 0 !important; }
+                    .learn-count { padding: 0 16px !important; }
+                    .learn-grid { grid-template-columns: 1fr !important; padding: 0 16px !important; gap: 16px !important; }
+                    .learn-empty, .learn-more { padding-left: 16px !important; padding-right: 16px !important; }
                 }
             `}</style>
 
             {/* Hero */}
             <div className="learn-hero" style={{ position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1a0a3e 0%, #2D1B69 45%, #3B1F8E 100%)", padding: "56px 32px 48px", textAlign: "center" }}>
                 {/* Decorative rings, matching the login page's brand accent treatment */}
-                <div style={{ position: "absolute", top: "-50px", left: "-50px", width: "180px", height: "180px", borderRadius: "50%", border: "2px solid rgba(77,217,232,0.22)", pointerEvents: "none" }} />
-                <div style={{ position: "absolute", bottom: "-70px", right: "-40px", width: "240px", height: "240px", borderRadius: "50%", border: "1px solid rgba(233,30,140,0.18)", pointerEvents: "none" }} />
-                <div style={{ position: "absolute", top: "18%", right: "9%", width: "90px", height: "90px", borderRadius: "50%", background: "rgba(255,215,0,0.1)", pointerEvents: "none" }} />
-                <div style={{ position: "absolute", bottom: "12%", left: "7%", width: "70px", height: "70px", borderRadius: "50%", background: "rgba(77,217,232,0.1)", pointerEvents: "none" }} />
+                <div className="learn-deco-1" style={{ position: "absolute", top: "-50px", left: "-50px", width: "180px", height: "180px", borderRadius: "50%", border: "2px solid rgba(77,217,232,0.22)", pointerEvents: "none" }} />
+                <div className="learn-deco-2" style={{ position: "absolute", bottom: "-70px", right: "-40px", width: "240px", height: "240px", borderRadius: "50%", border: "1px solid rgba(233,30,140,0.18)", pointerEvents: "none" }} />
+                <div className="learn-deco-3" style={{ position: "absolute", top: "18%", right: "9%", width: "90px", height: "90px", borderRadius: "50%", background: "rgba(255,215,0,0.1)", pointerEvents: "none" }} />
+                <div className="learn-deco-4" style={{ position: "absolute", bottom: "12%", left: "7%", width: "70px", height: "70px", borderRadius: "50%", background: "rgba(77,217,232,0.1)", pointerEvents: "none" }} />
 
                 <div style={{ position: "relative", zIndex: 1 }}>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", color: "#4DD9E8", padding: "5px 14px", borderRadius: "50px", fontSize: "11px", fontWeight: "800", letterSpacing: "0.6px", textTransform: "uppercase", marginBottom: "18px" }}>
+                    <span className="learn-eyebrow" style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", color: "#4DD9E8", padding: "5px 14px", borderRadius: "50px", fontSize: "11px", fontWeight: "800", letterSpacing: "0.6px", textTransform: "uppercase", marginBottom: "18px" }}>
                         <Sparkles size={12} style={{ marginRight: "2px" }} />
                         Learning Hub
                     </span>
@@ -230,7 +257,7 @@ export default function Learn() {
                     <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "15px", margin: "0 0 28px" }}>
                         10 Minute School, Creative IT সহ দেশের সেরা platforms এর courses এক জায়গায়
                     </p>
-                    <div style={{ maxWidth: "500px", margin: "0 auto 28px", position: "relative" }}>
+                    <div className="learn-search" style={{ maxWidth: "500px", margin: "0 auto 28px", position: "relative" }}>
                         <input
                             type="text"
                             placeholder="Course খুঁজুন..."
@@ -259,8 +286,8 @@ export default function Learn() {
 
                 {/* Category filter */}
                 <div style={{ marginBottom: "28px", textAlign: "center" }}>
-                    <p style={{ fontSize: "11px", color: "#999", marginBottom: "8px", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.5px" }}>Category</p>
-                    <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "center" }}>
+                    <p className="learn-cat-label" style={{ fontSize: "11px", color: "#999", marginBottom: "8px", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.5px" }}>Category</p>
+                    <div className="learn-cat-row" style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "center" }}>
                         {CATEGORIES.map((cat) => (
                             <button
                                 key={cat.id}
@@ -285,23 +312,23 @@ export default function Learn() {
                     </div>
                 </div>
 
-                <p style={{ color: "#888", fontSize: "13px", marginBottom: "20px" }}>{filtered.length}টি course পাওয়া গেছে</p>
+                <p className="learn-count" style={{ color: "#888", fontSize: "13px", marginBottom: "20px" }}>{filtered.length}টি course পাওয়া গেছে</p>
 
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "24px" }}>
+                <div className="learn-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "24px" }}>
                     {visible.map((course) => (
                         <CourseCard key={course.id} course={course} onSelect={() => setComingSoonOpen(true)} />
                     ))}
                 </div>
 
                 {filtered.length === 0 && (
-                    <div style={{ textAlign: "center", padding: "80px 0", color: "#aaa" }}>
+                    <div className="learn-empty" style={{ textAlign: "center", padding: "80px 0", color: "#aaa" }}>
                         <div style={{ fontSize: "48px", marginBottom: "12px" }}>📚</div>
                         <p style={{ fontSize: "16px" }}>কোনো course পাওয়া যায়নি।</p>
                     </div>
                 )}
 
                 {visibleCount < filtered.length && (
-                    <div style={{ display: "flex", justifyContent: "center", padding: "32px 0 8px" }}>
+                    <div className="learn-more" style={{ display: "flex", justifyContent: "center", padding: "32px 0 8px" }}>
                         <button
                             onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
                             style={{
@@ -349,13 +376,13 @@ function CourseCard({ course, onSelect }) {
             </div>
             <div style={{ padding: "16px" }}>
                 <h3 style={{ margin: "0 0 8px", fontSize: "15px", fontWeight: "700", color: "#1a1a2e", lineHeight: "1.4" }}>{course.title}</h3>
-                <p style={{ margin: "0 0 12px", fontSize: "13px", color: "#666", lineHeight: "1.5" }}>{course.description}</p>
+                <p className="learn-desc" style={{ margin: "0 0 12px", fontSize: "13px", color: "#666", lineHeight: "1.5" }}>{course.description}</p>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
                     <span style={{ color: "#f59e0b", fontSize: "13px", fontWeight: "700" }}>★ {course.rating}</span>
                     <span style={{ color: "#aaa", fontSize: "12px" }}>({course.students} জন)</span>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
+                    <div style={{ minWidth: 0 }}>
                         <span style={{ fontSize: "17px", fontWeight: "800", color: "#2D1B69" }}>{course.price}</span>
                         {course.originalPrice && <span style={{ fontSize: "12px", color: "#aaa", textDecoration: "line-through", marginLeft: "6px" }}>{course.originalPrice}</span>}
                     </div>

@@ -171,8 +171,6 @@ export default function Home() {
 
         {/* ── Reels horizontal row ── */}
         <div className="home-grid-wrapper" style={{ position: "relative", zIndex: 2 }}>
-          <h2 className="home-section-title">Reels</h2>
-
           {loading ? (
             <div className="home-row">
               {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
@@ -224,15 +222,6 @@ const CSS = `
     padding: 24px 0 100px;
   }
 
-  .home-section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #3b3266;
-    margin-bottom: 18px;
-    padding: 0 20px;
-  }
-
   /* Video grid — 4 columns desktop, 2 on mobile */
   .home-row {
     display: grid;
@@ -260,7 +249,6 @@ const CSS = `
   }
   @media (max-width: 600px) {
     .home-row { grid-template-columns: 1fr; gap: 14px; padding: 0 12px 16px; }
-    .home-section-title { font-size: 1.1rem; }
   }
   .home-reel-thumb {
     position: relative;

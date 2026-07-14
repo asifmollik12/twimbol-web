@@ -39,11 +39,6 @@ function MobileBottomNav({ activePage }) {
 
 // ── Single reel card ──────────────────────────────────────────────────────────
 function ReelCard({ reel, onClick }) {
-  const avatarSrc = getImageUrl(reel.user_profile?.user?.profile_pic);
-  const displayName = reel.user_profile?.user?.first_name
-    ? `${reel.user_profile.user.first_name} ${reel.user_profile.user.last_name || ""}`.trim()
-    : reel.user_profile?.user?.username || "Creator";
-
   const fmtCount = (n) => {
     if (!n && n !== 0) return "0";
     if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
@@ -53,38 +48,23 @@ function ReelCard({ reel, onClick }) {
 
   return (
     <div className="home-reel-card" onClick={() => onClick(reel.post)}>
-      {/* Thumbnail */}
+      {/* Thumbnail only — no text below */}
       <div className="home-reel-thumb">
         {reel.thumbnail_url ? (
           <img src={reel.thumbnail_url} alt={reel.title || "reel"} className="home-reel-img" />
         ) : (
           <div className="home-reel-img home-reel-placeholder" />
         )}
-        {/* Play icon overlay */}
+        {/* Play icon overlay on hover */}
         <div className="home-reel-play-overlay">
           <div className="home-reel-play-btn">
-            <Play size={18} fill="white" color="white" />
+            <Play size={20} fill="white" color="white" />
           </div>
         </div>
-        {/* View count badge */}
+        {/* View count badge — bottom left */}
         {reel.view_count > 0 && (
           <span className="home-reel-views">{fmtCount(reel.view_count)} views</span>
         )}
-      </div>
-
-      {/* Info row */}
-      <div className="home-reel-info">
-        {avatarSrc ? (
-          <img src={avatarSrc} alt={displayName} className="home-reel-avatar" />
-        ) : (
-          <div className="home-reel-avatar-ph">
-            {(displayName[0] || "?").toUpperCase()}
-          </div>
-        )}
-        <div className="home-reel-meta">
-          <p className="home-reel-title">{reel.title || "Untitled"}</p>
-          <p className="home-reel-creator">{displayName}</p>
-        </div>
       </div>
     </div>
   );
@@ -95,13 +75,6 @@ function SkeletonCard() {
   return (
     <div className="home-reel-card">
       <div className="home-reel-thumb home-skeleton-thumb" />
-      <div className="home-reel-info">
-        <div className="home-skeleton-avatar" />
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
-          <div className="home-skeleton-line" style={{ width: "75%" }} />
-          <div className="home-skeleton-line" style={{ width: "50%", height: 10 }} />
-        </div>
-      </div>
     </div>
   );
 }

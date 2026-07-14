@@ -4,7 +4,7 @@ import NavBar from "../components/layout/Navbar.jsx";
 import { NAV_LINKS } from "../constants/navLinks.js";
 import DecorativeBackground from "../components/ui/DecorativeBackground.jsx";
 import GroundFooter from "../components/ui/GroundFooter.jsx";
-import { fetchReels } from "../api/api.js";
+import { fetchReels, getImageUrl } from "../api/api.js";
 import { Play } from "lucide-react";
 
 // ── Mobile bottom nav ─────────────────────────────────────────────────────────
@@ -233,42 +233,39 @@ const CSS = `
     padding: 0 20px;
   }
 
-  /* Video grid — 5 columns desktop, 3 tablet, 2 mobile */
+  /* Video grid — 4 columns desktop, 2 on mobile */
   .home-row {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
     padding: 0 20px 16px;
   }
 
-  /* Each card — just the thumbnail, no text */
+  /* Each card */
   .home-reel-card {
     cursor: pointer;
-    border-radius: 16px;
+    border-radius: 12px;
     overflow: hidden;
-    background: #1a1a2e;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
     transition: transform 0.18s ease, box-shadow 0.18s ease;
   }
   .home-reel-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.13);
   }
 
-  @media (max-width: 1100px) {
-    .home-row { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 900px) {
+    .home-row { grid-template-columns: repeat(3, 1fr); }
   }
-  @media (max-width: 800px) {
-    .home-row { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  }
-  @media (max-width: 500px) {
-    .home-row { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 0 12px 16px; }
+  @media (max-width: 600px) {
+    .home-row { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px 16px; }
     .home-section-title { font-size: 1.1rem; }
   }
   .home-reel-thumb {
     position: relative;
     width: 100%;
-    aspect-ratio: 9 / 16;
+    aspect-ratio: 16 / 9;
     background: #e8e4f8;
     overflow: hidden;
   }
@@ -277,10 +274,6 @@ const CSS = `
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.3s ease;
-  }
-  .home-reel-card:hover .home-reel-img {
-    transform: scale(1.05);
   }
   .home-reel-placeholder {
     background: linear-gradient(135deg, #c8b9f5 0%, #a78bfa 100%);
@@ -317,6 +310,39 @@ const CSS = `
     padding: 3px 7px;
     border-radius: 20px;
     backdrop-filter: blur(4px);
+  }
+
+  /* Info row */
+  .home-reel-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 10px 12px;
+  }
+  .home-reel-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%; object-fit: cover; flex-shrink: 0;
+    border: 2px solid #e8e4f8;
+  }
+  .home-reel-avatar-ph {
+    width: 30px; height: 30px; flex-shrink: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f7a84a, #e55d3c);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.75rem; color: #fff;
+  }
+  .home-reel-meta { flex: 1; min-width: 0; }
+  .home-reel-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; font-weight: 600;
+    color: #2d2456;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin: 0 0 2px;
+  }
+  .home-reel-creator {
+    font-size: 0.7rem; color: #9891ad;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin: 0;
   }
 
   /* ── Skeleton ── */

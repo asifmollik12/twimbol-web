@@ -171,7 +171,7 @@ export default function Home() {
 
         {/* ── Reels horizontal row ── */}
         <div className="home-grid-wrapper" style={{ position: "relative", zIndex: 2 }}>
-          <h2 className="home-section-title">📹 Videos</h2>
+          <h2 className="home-section-title">📹</h2>
 
           {loading ? (
             <div className="home-row">

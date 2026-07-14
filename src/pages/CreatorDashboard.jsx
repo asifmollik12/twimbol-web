@@ -277,7 +277,7 @@ function CreatePostModal({ onClose, onCreated }) {
    Flow: upload file → Cloudinary → receive URL →
          POST /create/api/reel/ with { video_url, title, reel_description }
 ───────────────────────────────────── */
-function UploadReelModal({ onClose, onCreated }) {
+function UploadReelModal({ onClose, onCreated, isAdmin }) {
     const [source, setSource] = useState("file"); // file | youtube
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
@@ -293,6 +293,7 @@ function UploadReelModal({ onClose, onCreated }) {
         setError("");
 
         if (source === "youtube") {
+            if (!isAdmin) return setError("Only admins can publish YouTube links.");
             if (!youtubeUrl.trim()) return setError("Please paste a YouTube link.");
             if (!youtubeId) return setError("That doesn't look like a valid YouTube link.");
             try {
@@ -359,7 +360,7 @@ function UploadReelModal({ onClose, onCreated }) {
                     <div className="inline-flex gap-1 bg-[var(--color-surface)] border border-black/[0.07] rounded-xl p-1 self-start">
                         {[
                             { id: "file", label: "📁 Upload File" },
-                            { id: "youtube", label: "▶️ YouTube Link" },
+                            ...(isAdmin ? [{ id: "youtube", label: "▶️ YouTube Link" }] : []),
                         ].map(opt => (
                             <button
                                 key={opt.id}
@@ -774,7 +775,7 @@ export default function CreatorDashboard() {
                 <CreatePostModal onClose={() => setModal(null)} onCreated={handleCreated} />
             )}
             {modal === "reel" && (
-                <UploadReelModal onClose={() => setModal(null)} onCreated={handleCreated} />
+                <UploadReelModal onClose={() => setModal(null)} onCreated={handleCreated} isAdmin={isAdmin} />
             )}
             {editingPost && (
                 <EditContentModal post={editingPost} onClose={() => setEditingPost(null)} onUpdated={handleUpdated} />

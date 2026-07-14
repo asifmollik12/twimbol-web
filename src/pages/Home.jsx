@@ -219,7 +219,7 @@ const CSS = `
   .home-grid-wrapper {
     position: relative;
     z-index: 2;
-    max-width: 100%;
+    max-width: 1152px;
     margin: 0 auto;
     padding: 24px 0 100px;
   }
@@ -351,7 +351,18 @@ const CSS = `
     100% { background-position: 200% 0; }
   }
   .home-skeleton-thumb {
-    aspect-ratio: 9 / 16;
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(90deg, #ede8f8 25%, #d8d0f0 50%, #ede8f8 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+  .home-skeleton-avatar {
+    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    background: #ede8f8;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+  .home-skeleton-line {
+    height: 12px; border-radius: 6px;
     background: linear-gradient(90deg, #ede8f8 25%, #d8d0f0 50%, #ede8f8 75%);
     background-size: 200% 100%;
     animation: shimmer 1.6s ease-in-out infinite;

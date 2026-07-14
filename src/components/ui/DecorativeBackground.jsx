@@ -51,7 +51,7 @@ const STAR_COMPONENTS = { star4: Star4, star5: Star5 };
 export default function DecorativeBackground() {
   return (
     <div
-      className="fixed inset-0 pointer-events-none overflow-hidden"
+      className="fixed inset-0 pointer-events-none overflow-hidden hidden md:block"
       style={{ zIndex: 0 }}
       aria-hidden="true"
     >

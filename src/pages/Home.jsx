@@ -167,8 +167,6 @@ export default function Home() {
         <DecorativeBackground />
         <div className="relative" style={{ zIndex: 1 }}>
           <NavBar activePage="Home" />
-          {/* Hero ground scene — sits right below the navbar */}
-          <GroundFooter />
         </div>
 
         {/* ── Reels horizontal row ── */}
@@ -203,6 +201,9 @@ export default function Home() {
             </div>
           )}
         </div>
+
+        {/* Ground footer at the very bottom */}
+        <GroundFooter />
 
         <MobileBottomNav activePage="Home" />
       </div>

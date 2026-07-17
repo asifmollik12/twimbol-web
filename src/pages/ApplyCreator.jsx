@@ -1,81 +1,99 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { applyForCreator, getCreatorApplication } from "../api/creator";
-import {useAuthStore} from "../store/authStore.js";
+import { useAuthStore } from "../store/authStore.js";
 
-
-
-const instructions = [
-  {
-    icon: "👤",
-    title: "Complete your profile",
-    desc: "Add your name, profile picture and bio so we can verify your identity.",
-  },
-  {
-    icon: "🔗",
-    title: "Add social media links",
-    desc: "Link your Facebook, Twitter/X, or YouTube in your profile settings.",
-  },
-  {
-    icon: "📧",
-    title: "Verify your email address",
-    desc: "Confirm your email so we can send the application decision.",
-  },
-  {
-    icon: "📋",
-    title: "Review creator guidelines",
-    desc: "Creators must post original content that follows our community standards.",
-  },
+const CATEGORIES = [
+  "Kids Education",
+  "Kids Entertainment",
+  "Storytelling",
+  "Science & Nature",
+  "Arts & Crafts",
+  "Music & Dance",
+  "Sports & Fitness",
+  "Cooking & Nutrition",
+  "Language Learning",
+  "Other",
 ];
+
+const inputCls =
+  "w-full rounded-xl border border-[var(--color-border)] bg-[#f8f7fc] px-4 py-3 text-sm text-[var(--color-txt)] placeholder-gray-400 outline-none focus:border-[var(--color-brand)] focus:ring-2 focus:ring-[var(--color-brand)]/10 transition-all";
+
+const labelCls = "block text-xs font-bold uppercase tracking-wider text-[var(--color-txt-secondary)] mb-1.5";
+
+function Field({ label, required, children }) {
+  return (
+    <div>
+      <label className={labelCls}>
+        {label} {required && <span className="text-rose-500">*</span>}
+      </label>
+      {children}
+    </div>
+  );
+}
 
 export const ApplyCreator = () => {
   const { user, fetchProfile, accessToken } = useAuthStore();
   const [application, setApplication] = useState(null);
-  const [loading, setLoading]         = useState(true);
-  const [submitting, setSubmitting]   = useState(false);
-  const [error, setError]             = useState("");
-  const [success, setSuccess]         = useState("");
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [step, setStep] = useState("info"); // info | form
 
-  const userGroup = user?.user_group || [];
+  // Form fields
+  const [bio, setBio] = useState("");
+  const [category, setCategory] = useState("");
+  const [demoUrl, setDemoUrl] = useState("");
+  const [facebook, setFacebook] = useState("");
+  const [youtube, setYoutube] = useState("");
+  const [instagram, setInstagram] = useState("");
+  const [whyCreator, setWhyCreator] = useState("");
+
+  const userGroup = user?.user_group || user?.user?.user_group || [];
   const isCreator = userGroup.includes("creator");
-  const isAdmin   = userGroup.includes("admin");
+  const isAdmin = userGroup.includes("admin");
 
   useEffect(() => {
     (async () => {
       try {
         const res = await getCreatorApplication(user.user.id);
-            // console.log("Application response:", res.data[0].id);
-
-        if (res.data?.length > 0) setApplication(res.data[0]);
-        if (res.data[0].id) {
-            fetchProfile(accessToken);
+        if (res.data?.length > 0) {
+          setApplication(res.data[0]);
+          fetchProfile(accessToken);
         }
-      } catch (e) {
-        // no application yet — that's fine
+      } catch {
+        // no application yet
       } finally {
         setLoading(false);
       }
     })();
   }, []);
 
-  const handleApply = async () => {
+  const handleSubmit = async () => {
+    if (!bio.trim()) return setError("Please tell us about yourself.");
+    if (!category) return setError("Please select a content category.");
+    if (!whyCreator.trim()) return setError("Please tell us why you want to be a creator.");
+
     setError("");
-    setSuccess("");
     setSubmitting(true);
     try {
-      const res = await applyForCreator(user.user.id);
+      const res = await applyForCreator(user.user.id, {
+        bio,
+        content_category: category,
+        demo_content_url: demoUrl || undefined,
+        social_facebook: facebook || undefined,
+        social_youtube: youtube || undefined,
+        social_instagram: instagram || undefined,
+        why_creator: whyCreator,
+      });
       setApplication(res.data?.data || { application_status: "0" });
-      setSuccess("Application submitted! We'll review it shortly.");
     } catch (e) {
-      setError(
-        e.response?.data?.detail || "Failed to submit. Please try again."
-      );
+      setError(e.response?.data?.detail || "Failed to submit. Please try again.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  // Creator/admin: parent component handles routing
   if (isCreator || isAdmin) return null;
 
   if (loading) {
@@ -86,123 +104,258 @@ export const ApplyCreator = () => {
     );
   }
 
+  // ── Already applied ──
+  if (application) {
+    const status = application.application_status;
+    const isPending = status === "0";
+    const isApproved = status === "1";
+    const isRejected = status === "2";
+
+    return (
+      <div className="min-h-screen bg-[var(--color-surface)] flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-3xl shadow-sm border border-black/[0.07] overflow-hidden">
+            <div className="h-1 bg-[var(--color-brand)]" />
+            <div className="p-8 text-center">
+              <div className={`w-20 h-20 rounded-full flex items-center justify-center text-4xl mx-auto mb-5 ${
+                isPending ? "bg-amber-50 border border-amber-200" :
+                isApproved ? "bg-emerald-50 border border-emerald-200" :
+                "bg-rose-50 border border-rose-200"
+              }`}>
+                {isPending ? "⏳" : isApproved ? "✅" : "❌"}
+              </div>
+              <h2 className="text-2xl font-bold text-[var(--color-txt)] mb-2">
+                {isPending ? "Application Under Review" : isApproved ? "Application Approved!" : "Application Rejected"}
+              </h2>
+              <p className="text-[var(--color-txt-secondary)] text-sm leading-relaxed max-w-xs mx-auto">
+                {isPending
+                  ? "Your application is being reviewed. We'll notify you once a decision is made — usually within 2–5 business days."
+                  : isApproved
+                  ? "Congratulations! You're now a creator. Head to your dashboard to start uploading."
+                  : application.rejection_reason
+                  ? `Your application was not approved: ${application.rejection_reason}`
+                  : "Your application was not approved at this time. You may apply again later."}
+              </p>
+              {isPending && (
+                <div className="inline-flex items-center gap-2 mt-5 bg-amber-50 text-amber-700 text-sm font-semibold px-5 py-2 rounded-full border border-amber-200">
+                  <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                  Pending Review
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Info page (step 1) ──
+  if (step === "info") {
+    return (
+      <div className="min-h-screen bg-[var(--color-surface)] flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-xl">
+          <div className="bg-white rounded-3xl shadow-sm border border-black/[0.07] overflow-hidden">
+            <div className="h-1 bg-[var(--color-brand)]" />
+            <div className="p-8 sm:p-10">
+              <div className="inline-flex items-center gap-2 bg-[var(--color-brand-light)] text-[var(--color-brand)] text-[10px] font-bold uppercase tracking-[0.12em] px-3 py-1.5 rounded-full mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] animate-pulse" />
+                Creator Program
+              </div>
+
+              <h1 className="text-3xl font-bold text-[var(--color-txt)] leading-tight mb-2">
+                Become a Creator
+              </h1>
+              <p className="text-[var(--color-txt-secondary)] text-sm leading-relaxed mb-8">
+                Share educational and entertaining content with kids on Twimbol. Fill out a short application — we review every submission personally.
+              </p>
+
+              {/* Benefits */}
+              <div className="grid grid-cols-2 gap-3 mb-8">
+                {[
+                  { icon: "🎬", title: "Upload Videos & Reels", desc: "Share your content with thousands of kids" },
+                  { icon: "📊", title: "Creator Analytics", desc: "Track views, likes and followers" },
+                  { icon: "✅", title: "Verified Badge", desc: "Get recognized as a trusted creator" },
+                  { icon: "🛡️", title: "Safe Platform", desc: "Content reviewed before going live" },
+                ].map(b => (
+                  <div key={b.title} className="flex items-start gap-2.5 p-3 rounded-xl bg-[var(--color-surface)] border border-black/[0.06]">
+                    <span className="text-xl">{b.icon}</span>
+                    <div>
+                      <p className="text-xs font-semibold text-[var(--color-txt)]">{b.title}</p>
+                      <p className="text-[11px] text-[var(--color-txt-secondary)] leading-relaxed">{b.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="h-px bg-black/[0.06] mb-6" />
+
+              <p className="text-xs text-[var(--color-txt-secondary)] flex flex-wrap items-center gap-1 mb-6">
+                By applying you agree to our{" "}
+                <Link to="/terms" className="text-[var(--color-brand)] font-medium hover:underline">Terms & Conditions</Link>
+                <span className="text-black/20">·</span>
+                <Link to="/privacy" className="text-[var(--color-brand)] font-medium hover:underline">Privacy Policy</Link>
+              </p>
+
+              <button
+                onClick={() => setStep("form")}
+                className="w-full flex items-center justify-center gap-2 bg-[var(--color-brand)] hover:bg-[var(--color-brand)]/90 active:scale-[0.99] text-white font-bold text-sm rounded-xl py-4 transition-all"
+              >
+                Start Application →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Application Form (step 2) ──
   return (
     <div className="min-h-screen bg-[var(--color-surface)] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-xl">
         <div className="bg-white rounded-3xl shadow-sm border border-black/[0.07] overflow-hidden">
-
-          {/* top accent stripe */}
           <div className="h-1 bg-[var(--color-brand)]" />
-
           <div className="p-8 sm:p-10">
 
-            {/* badge */}
-            <div className="inline-flex items-center gap-2 bg-[var(--color-brand-light)] text-[var(--color-brand)] text-[10px] font-bold uppercase tracking-[0.12em] px-3 py-1.5 rounded-full mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] animate-pulse" />
-              Creator Program
-            </div>
+            {/* Header */}
+            <button
+              onClick={() => setStep("info")}
+              className="flex items-center gap-1.5 text-xs text-[var(--color-txt-secondary)] hover:text-[var(--color-txt)] mb-5 transition-colors"
+            >
+              ← Back
+            </button>
 
-            {/* ── Pending state ── */}
-            {application ? (
-              <div className="text-center py-4">
-                <div className="w-20 h-20 rounded-full bg-[var(--color-brand-light)] border border-[var(--color-brand)]/20 flex items-center justify-center text-4xl mx-auto mb-5">
-                  ⏳
-                </div>
-                <h2 className="text-2xl font-bold text-[var(--color-txt)] mb-2">
-                  Application Submitted
-                </h2>
-                <p className="text-[var(--color-txt-secondary)] text-sm leading-relaxed max-w-xs mx-auto">
-                  Your application is under review. We'll notify you once a
-                  decision is made — usually within 2–5 business days.
+            <div className="inline-flex items-center gap-2 bg-[var(--color-brand-light)] text-[var(--color-brand)] text-[10px] font-bold uppercase tracking-[0.12em] px-3 py-1.5 rounded-full mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-brand)]" />
+              Creator Application
+            </div>
+            <h2 className="text-2xl font-bold text-[var(--color-txt)] mb-1">Tell us about yourself</h2>
+            <p className="text-sm text-[var(--color-txt-secondary)] mb-7">
+              This helps us understand your content style and audience fit.
+            </p>
+
+            <div className="space-y-5">
+
+              {/* Bio */}
+              <Field label="About You" required>
+                <textarea
+                  value={bio}
+                  onChange={e => setBio(e.target.value)}
+                  placeholder="Tell us who you are, your background, and what kind of content you create..."
+                  rows={3}
+                  className={`${inputCls} resize-none`}
+                />
+              </Field>
+
+              {/* Category */}
+              <Field label="Content Category" required>
+                <select
+                  value={category}
+                  onChange={e => setCategory(e.target.value)}
+                  className={inputCls}
+                >
+                  <option value="">Select a category...</option>
+                  {CATEGORIES.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </Field>
+
+              {/* Demo Content URL */}
+              <Field label="Demo Content URL">
+                <input
+                  type="url"
+                  value={demoUrl}
+                  onChange={e => setDemoUrl(e.target.value)}
+                  placeholder="https://youtube.com/watch?v=... or any video link"
+                  className={inputCls}
+                />
+                <p className="text-[11px] text-[var(--color-txt-secondary)] mt-1">
+                  Share a sample of your existing content so we can review your style.
                 </p>
-                <div className="inline-flex items-center gap-2 mt-5 bg-[var(--color-brand-light)] text-[var(--color-brand)] text-sm font-semibold px-5 py-2 rounded-full">
-                  <span className="w-2 h-2 rounded-full bg-[var(--color-brand)] animate-pulse" />
-                  Approval Pending
+              </Field>
+
+              {/* Social Links */}
+              <div>
+                <label className={labelCls}>Social Media Links</label>
+                <div className="space-y-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-50 text-blue-600 text-sm flex-shrink-0">f</span>
+                    <input
+                      type="url"
+                      value={facebook}
+                      onChange={e => setFacebook(e.target.value)}
+                      placeholder="Facebook page URL"
+                      className={inputCls}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-rose-50 text-rose-600 text-sm flex-shrink-0">▶</span>
+                    <input
+                      type="url"
+                      value={youtube}
+                      onChange={e => setYoutube(e.target.value)}
+                      placeholder="YouTube channel URL"
+                      className={inputCls}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-purple-50 text-purple-600 text-sm flex-shrink-0">ig</span>
+                    <input
+                      type="url"
+                      value={instagram}
+                      onChange={e => setInstagram(e.target.value)}
+                      placeholder="Instagram profile URL"
+                      className={inputCls}
+                    />
+                  </div>
                 </div>
               </div>
-            ) : (
-              <>
-                <h1 className="text-[2rem] font-bold text-[var(--color-txt)] leading-tight mb-2">
-                  Become a Creator
-                </h1>
-                <p className="text-[var(--color-txt-secondary)] text-sm leading-relaxed mb-8">
-                  Share your content with the world. Complete the checklist
-                  below before submitting your application.
-                </p>
 
-                {/* checklist */}
-                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-txt-secondary)] mb-3">
-                  Before you apply
-                </p>
-                <ul className="space-y-2 mb-8">
-                  {instructions.map(item => (
-                    <li
-                      key={item.title}
-                      className="flex items-start gap-3 p-3.5 rounded-xl bg-[var(--color-surface)] border border-black/[0.06] hover:border-[var(--color-brand)]/40 transition-colors"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-[var(--color-brand-light)] flex items-center justify-center text-sm flex-shrink-0">
-                        {item.icon}
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-[var(--color-txt)]">
-                          {item.title}
-                        </p>
-                        <p className="text-xs text-[var(--color-txt-secondary)] font-light mt-0.5 leading-relaxed">
-                          {item.desc}
-                        </p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+              {/* Why creator */}
+              <Field label="Why do you want to be a Twimbol Creator?" required>
+                <textarea
+                  value={whyCreator}
+                  onChange={e => setWhyCreator(e.target.value)}
+                  placeholder="Tell us your motivation, what value you'll bring to kids on the platform..."
+                  rows={4}
+                  className={`${inputCls} resize-none`}
+                />
+              </Field>
 
-                <div className="h-px bg-black/[0.06] mb-6" />
+            </div>
 
-                {/* legal */}
-                <p className="text-xs text-[var(--color-txt-secondary)] flex flex-wrap items-center gap-1 mb-6">
-                  By applying you agree to our
-                  <Link to="/terms" className="text-[var(--color-brand)] font-medium hover:underline">
-                    Terms & Conditions
-                  </Link>
-                  <span className="text-black/20">·</span>
-                  <Link to="/privacy" className="text-[var(--color-brand)] font-medium hover:underline">
-                    Privacy Policy
-                  </Link>
-                </p>
+            <div className="h-px bg-black/[0.06] my-6" />
 
-                {/* alerts */}
-                {error && (
-                  <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl mb-4">
-                    <span>⚠</span> {error}
-                  </div>
-                )}
-                {success && (
-                  <div className="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-xl mb-4">
-                    <span>✓</span> {success}
-                  </div>
-                )}
-
-                {/* submit */}
-                <button
-                  onClick={handleApply}
-                  disabled={submitting}
-                  className="w-full flex items-center justify-center gap-2 bg-[var(--color-brand)] hover:bg-[var(--color-brand)]/90 active:scale-[0.99] text-white font-bold text-sm rounded-xl py-4 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {submitting ? (
-                    <>
-                      <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                      Submitting...
-                    </>
-                  ) : (
-                    "Submit Application →"
-                  )}
-                </button>
-              </>
+            {error && (
+              <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl mb-4">
+                <span>⚠</span> {error}
+              </div>
             )}
+
+            <button
+              onClick={handleSubmit}
+              disabled={submitting}
+              className="w-full flex items-center justify-center gap-2 bg-[var(--color-brand)] hover:bg-[var(--color-brand)]/90 active:scale-[0.99] text-white font-bold text-sm rounded-xl py-4 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {submitting ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                "Submit Application →"
+              )}
+            </button>
+
+            <p className="text-center text-xs text-[var(--color-txt-secondary)] mt-4">
+              We review applications within 2–5 business days.
+            </p>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default ApplyCreator;

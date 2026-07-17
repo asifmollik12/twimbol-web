@@ -1,8 +1,8 @@
 import api from "./axios";
 
 // ── Creator Application ──────────────────────────────────────────
-export const applyForCreator = (userId) =>
-  api.post(`/create/api/apply-for-creator/`, { user: userId });
+export const applyForCreator = (userId, formData = {}) =>
+  api.post(`/create/api/apply-for-creator/`, { user: userId, ...formData });
 
 export const getCreatorApplication = (userId) =>
   api.get(`/user/api/creator-application/by-user/${userId}/`);

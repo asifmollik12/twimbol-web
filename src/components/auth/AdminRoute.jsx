@@ -29,5 +29,5 @@ export default function AdminRoute({ children }) {
     );
   }
 
-  return isAdmin(user) ? children : <Navigate to="/admin" replace />;
+  return token && user ? children : <Navigate to="/admin" replace />;
 }

@@ -79,17 +79,22 @@ function SkeletonCard() {
 export default function Home() {
   const navigate = useNavigate();
   const [reels, setReels] = useState([]);
-  const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const loaderRef = useRef(null);
+  // Mirrors of page/in-flight state, read inside the observer callback so it
+  // can stay out of the effect deps -- otherwise every toggle rebuilds the
+  // observer, which re-fires immediately on an already-visible sentinel.
+  const pageRef = useRef(1);
+  const inFlightRef = useRef(false);
 
   const loadReels = useCallback(async (pageNum) => {
+    inFlightRef.current = true;
     try {
       const data = await fetchReels(pageNum, 20);
       const results = data.results || [];
-      setHasMore(!!data.next);
+      setHasMore(!!data.next && results.length > 0);
       if (pageNum === 1) {
         setReels(results);
       } else {
@@ -100,7 +105,10 @@ export default function Home() {
       }
     } catch (err) {
       console.error("Failed to load reels:", err);
+      // Stop paging on failure; retrying forever just thrashes the layout.
+      setHasMore(false);
     } finally {
+      inFlightRef.current = false;
       setLoading(false);
       setLoadingMore(false);
     }
@@ -113,26 +121,29 @@ export default function Home() {
 
   // Infinite scroll via IntersectionObserver
   useEffect(() => {
-    if (!loaderRef.current || !hasMore) return;
+    const node = loaderRef.current;
+    if (!node || !hasMore) return;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !loadingMore && hasMore) {
-          setLoadingMore(true);
-          const next = page + 1;
-          setPage(next);
-          loadReels(next);
-        }
+        if (!entries[0].isIntersecting || inFlightRef.current) return;
+        const next = pageRef.current + 1;
+        pageRef.current = next;
+        setLoadingMore(true);
+        loadReels(next);
       },
       { threshold: 0.1 }
     );
-    observer.observe(loaderRef.current);
+    observer.observe(node);
     return () => observer.disconnect();
-  }, [hasMore, loadingMore, page, loadReels]);
+  }, [hasMore, loadReels]);
 
   return (
     <>
       <style>{CSS}</style>
-      <div className="min-h-screen bg-surface" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <div
+        className="min-h-screen bg-surface flex flex-col"
+        style={{ fontFamily: "'DM Sans', sans-serif" }}
+      >
         <DecorativeBackground />
         <div className="relative" style={{ zIndex: 1 }}>
           <NavBar activePage="Home" />
@@ -160,12 +171,17 @@ export default function Home() {
             </div>
           )}
 
-          {/* Infinite scroll trigger */}
-          {hasMore && <div ref={loaderRef} style={{ height: 40 }} />}
+          {/* Infinite scroll trigger -- only once a first page actually landed,
+              so an empty or still-loading feed can't retrigger it. */}
+          {!loading && reels.length > 0 && hasMore && (
+            <div ref={loaderRef} style={{ height: 40 }} />
+          )}
 
-          {loadingMore && (
+          {/* Slot keeps its height whether or not the spinner is up, so the
+              footer below never shifts. */}
+          {!loading && reels.length > 0 && hasMore && (
             <div className="home-loading-more">
-              <div className="home-spinner" />
+              {loadingMore && <div className="home-spinner" />}
             </div>
           )}
         </div>
@@ -181,9 +197,12 @@ export default function Home() {
 const CSS = `
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700&display=swap');
 
+  /* flex:1 pushes GroundFooter to the viewport bottom on short pages */
   .home-grid-wrapper {
     position: relative;
     z-index: 2;
+    flex: 1;
+    width: 100%;
     max-width: 1152px;
     margin: 0 auto;
     padding: 24px 0 100px;
@@ -331,8 +350,10 @@ const CSS = `
     font-size: 1rem;
   }
   .home-loading-more {
-    display: flex; justify-content: center;
+    display: flex; justify-content: center; align-items: center;
     padding: 20px;
+    box-sizing: border-box;
+    min-height: 72px;
   }
   .home-spinner {
     width: 32px; height: 32px;

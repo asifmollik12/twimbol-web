@@ -48,29 +48,74 @@ function ApplicationRow({ app, onApprove, onReject }) {
           {new Date(app.created_at).toLocaleDateString()}
         </p>
 
-        {/* Application reason / pitch */}
-        {app.reason && (
+        {/* Bio */}
+        {app.bio && (
           <div className="rounded-xl bg-[var(--color-surface)] px-4 py-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-txt-secondary)]">
-              Application note
+            <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-txt-secondary)] mb-1">
+              About
             </p>
-            <p className="mt-1 text-sm text-[var(--color-txt)]">{app.reason}</p>
+            <p className="text-sm text-[var(--color-txt)]">{app.bio}</p>
           </div>
         )}
 
-        {/* Social / portfolio links */}
-        {app.social_links && app.social_links.length > 0 && (
+        {/* Category + Why */}
+        <div className="flex flex-wrap gap-2">
+          {app.content_category && (
+            <span className="inline-flex items-center rounded-full bg-[var(--color-brand-light)] text-[var(--color-brand)] border border-[var(--color-border)] px-2.5 py-0.5 text-[11px] font-semibold">
+              📂 {app.content_category}
+            </span>
+          )}
+        </div>
+
+        {app.why_creator && (
+          <div className="rounded-xl bg-sky-50 border border-sky-100 px-4 py-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-sky-600 mb-1">
+              Why they want to be a creator
+            </p>
+            <p className="text-sm text-[var(--color-txt)]">{app.why_creator}</p>
+          </div>
+        )}
+
+        {/* Content samples */}
+        {app.content_samples && (() => {
+          try {
+            const samples = JSON.parse(app.content_samples);
+            if (!samples?.length) return null;
+            return (
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-txt-secondary)] mb-2">
+                  Recent Content
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  {samples.filter(s => s.url).map((s, i) => (
+                    <a
+                      key={i}
+                      href={s.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 rounded-xl bg-white border border-[var(--color-border)] px-3 py-2 text-xs font-semibold text-[var(--color-brand)] hover:bg-[var(--color-surface)] transition-colors"
+                    >
+                      <ExternalLink size={11} />
+                      <span className="truncate">{s.title || s.url}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            );
+          } catch { return null; }
+        })()}
+
+        {/* Social links */}
+        {(app.social_facebook || app.social_youtube || app.social_instagram) && (
           <div className="flex flex-wrap gap-2">
-            {app.social_links.map((link, i) => (
-              <a
-                key={i}
-                href={link}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1 rounded-full border border-[var(--color-border)] bg-white px-2.5 py-1 text-[11px] font-semibold text-[var(--color-brand)] hover:underline"
-              >
-                <ExternalLink size={10} />
-                {new URL(link).hostname.replace("www.", "")}
+            {[
+              { label: "Facebook", url: app.social_facebook, color: "bg-blue-50 text-blue-700 border-blue-200" },
+              { label: "YouTube", url: app.social_youtube, color: "bg-rose-50 text-rose-700 border-rose-200" },
+              { label: "Instagram", url: app.social_instagram, color: "bg-purple-50 text-purple-700 border-purple-200" },
+            ].filter(s => s.url).map(s => (
+              <a key={s.label} href={s.url} target="_blank" rel="noreferrer"
+                className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold hover:underline ${s.color}`}>
+                <ExternalLink size={10} /> {s.label}
               </a>
             ))}
           </div>

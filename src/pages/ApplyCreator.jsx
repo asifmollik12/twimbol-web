@@ -43,11 +43,16 @@ export const ApplyCreator = () => {
   // Form fields
   const [bio, setBio] = useState("");
   const [category, setCategory] = useState("");
-  const [demoUrl, setDemoUrl] = useState("");
+  const [contentSamples, setContentSamples] = useState([{ title: "", url: "" }]);
   const [facebook, setFacebook] = useState("");
   const [youtube, setYoutube] = useState("");
   const [instagram, setInstagram] = useState("");
   const [whyCreator, setWhyCreator] = useState("");
+
+  const addSample = () => setContentSamples(s => [...s, { title: "", url: "" }]);
+  const removeSample = (i) => setContentSamples(s => s.filter((_, idx) => idx !== i));
+  const updateSample = (i, field, value) =>
+    setContentSamples(s => s.map((item, idx) => idx === i ? { ...item, [field]: value } : item));
 
   const userGroup = user?.user_group || user?.user?.user_group || [];
   const isCreator = userGroup.includes("creator");
@@ -74,17 +79,21 @@ export const ApplyCreator = () => {
     if (!category) return setError("Please select a content category.");
     if (!whyCreator.trim()) return setError("Please tell us why you want to be a creator.");
 
+    const validSamples = contentSamples.filter(s => s.url.trim());
+    if (validSamples.length === 0) return setError("Please add at least one content link.");
+
     setError("");
     setSubmitting(true);
     try {
       const res = await applyForCreator(user.user.id, {
         bio,
         content_category: category,
-        demo_content_url: demoUrl || undefined,
+        demo_content_url: validSamples[0]?.url || undefined,
         social_facebook: facebook || undefined,
         social_youtube: youtube || undefined,
         social_instagram: instagram || undefined,
         why_creator: whyCreator,
+        content_samples: JSON.stringify(validSamples),
       });
       setApplication(res.data?.data || { application_status: "0" });
     } catch (e) {
@@ -261,19 +270,52 @@ export const ApplyCreator = () => {
                 </select>
               </Field>
 
-              {/* Demo Content URL */}
-              <Field label="Demo Content URL">
-                <input
-                  type="url"
-                  value={demoUrl}
-                  onChange={e => setDemoUrl(e.target.value)}
-                  placeholder="https://youtube.com/watch?v=... or any video link"
-                  className={inputCls}
-                />
-                <p className="text-[11px] text-[var(--color-txt-secondary)] mt-1">
-                  Share a sample of your existing content so we can review your style.
+              {/* Demo/Sample Content */}
+              <div>
+                <label className={labelCls}>
+                  Your Recent Content <span className="text-rose-500">*</span>
+                </label>
+                <p className="text-[11px] text-[var(--color-txt-secondary)] mb-3">
+                  Add links to your best or most recent content — YouTube, Facebook, TikTok, or any platform.
                 </p>
-              </Field>
+                <div className="space-y-2.5">
+                  {contentSamples.map((sample, i) => (
+                    <div key={i} className="flex gap-2 items-start">
+                      <div className="flex-1 flex gap-2">
+                        <input
+                          type="text"
+                          value={sample.title}
+                          onChange={e => updateSample(i, "title", e.target.value)}
+                          placeholder={`Content title (e.g. "My Story for Kids")`}
+                          className={`${inputCls} flex-1`}
+                        />
+                        <input
+                          type="url"
+                          value={sample.url}
+                          onChange={e => updateSample(i, "url", e.target.value)}
+                          placeholder="https://youtube.com/watch?v=..."
+                          className={`${inputCls} flex-1`}
+                        />
+                      </div>
+                      {contentSamples.length > 1 && (
+                        <button
+                          onClick={() => removeSample(i)}
+                          className="mt-3 text-rose-400 hover:text-rose-600 text-lg leading-none flex-shrink-0"
+                          title="Remove"
+                        >×</button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                {contentSamples.length < 5 && (
+                  <button
+                    onClick={addSample}
+                    className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-[var(--color-brand)] hover:underline"
+                  >
+                    + Add another content link
+                  </button>
+                )}
+              </div>
 
               {/* Social Links */}
               <div>

@@ -81,6 +81,17 @@ function ContentRow({ post, onDelete, onEdit }) {
                 {TYPE_LABEL[post.post_type] || post.post_type}
             </span>
 
+            {/* moderation status badge */}
+            {post.moderation_status && post.moderation_status !== "approved" && (
+                <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg flex-shrink-0 ${
+                    post.moderation_status === "pending"
+                        ? "bg-amber-50 text-amber-700 border border-amber-200"
+                        : "bg-rose-50 text-rose-700 border border-rose-200"
+                }`}>
+                    {post.moderation_status === "pending" ? "⏳ Pending Review" : "❌ Rejected"}
+                </span>
+            )}
+
             {/* info */}
             <div className="flex-1 min-w-[140px]">
                 <p className="text-sm font-medium text-[var(--color-txt)] truncate cursor-pointer" onClick={() => navigate(`/${post.post_type=="post"?"post":"reel"}/${post.id}`)}>

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import ProtectedRoute from './components/auth/ProtectedRoute'
+import AdminRoute from './components/auth/AdminRoute'
 import CheckLogin from './components/auth/CheckLogin'
 import BottomNav from './components/layout/BottomNav'
 
@@ -23,6 +24,9 @@ import EditProfile from './pages/EditProfile'
 import Events from './pages/Events'
 import Learn from './pages/Learn'
 import Game from './pages/Game'
+
+// Admin Pages
+import AdminDashboard from './pages/admin/AdminDashboard'
 
 export default function App() {
   return (
@@ -49,6 +53,9 @@ export default function App() {
         <Route path="/creator/dashboard" element={<ProtectedRoute><CreatorDashboard /></ProtectedRoute>} />
         <Route path="/learn" element={<ProtectedRoute><Learn /></ProtectedRoute>} />
         <Route path="/game" element={<ProtectedRoute><Game /></ProtectedRoute>} />
+
+        {/* Admin — guarded by AdminRoute (admin group only) */}
+        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
       </Routes>
 
       {/* Global bottom nav — shows on mobile across all pages */}

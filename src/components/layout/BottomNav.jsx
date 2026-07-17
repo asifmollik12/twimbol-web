@@ -13,9 +13,12 @@ const BOTTOM_LINKS = [
 export default function BottomNav() {
   const location = useLocation();
 
-  // Don't show on public pages
+  // Don't show on public pages or admin dashboard
   const hiddenRoutes = ["/", "/signup", "/login", "/outgoing", "/child-safety", "/privacy-policy"];
-  if (hiddenRoutes.some(r => location.pathname === r || location.pathname.startsWith("/outgoing"))) {
+  if (
+    hiddenRoutes.some((r) => location.pathname === r || location.pathname.startsWith("/outgoing")) ||
+    location.pathname.startsWith("/admin")
+  ) {
     return null;
   }
 

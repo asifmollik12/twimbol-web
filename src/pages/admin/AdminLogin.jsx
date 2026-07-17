@@ -24,6 +24,15 @@ export default function AdminLogin() {
       if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
 
       await setAuth(data.access, data.refresh);
+
+      // Check admin after profile is loaded
+      const { user } = useAuthStore.getState();
+      if (!isAdmin(user)) {
+        useAuthStore.getState().logout();
+        setError("Access denied. Admin accounts only.");
+        return;
+      }
+
       navigate("/admin/dashboard");
     } catch (err) {
       setError(err.response?.data?.detail || "Invalid credentials.");

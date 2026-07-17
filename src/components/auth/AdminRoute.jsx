@@ -19,15 +19,15 @@ export default function AdminRoute({ children }) {
     if (token && !user) fetchProfile();
   }, [token, user, fetchProfile]);
 
-  if (!token) return <Navigate to="/" replace />;
+  if (!token) return <Navigate to="/admin" replace />;
 
   if (!user || isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--color-surface)]">
-        <div className="h-8 w-8 animate-spin rounded-full border-3 border-[var(--color-border)] border-t-[var(--color-brand)]" />
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0f]">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-[#5B2FC9]" />
       </div>
     );
   }
 
-  return isAdmin(user) ? children : <Navigate to="/home" replace />;
+  return isAdmin(user) ? children : <Navigate to="/admin" replace />;
 }

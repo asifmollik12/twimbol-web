@@ -26,6 +26,7 @@ import Learn from './pages/Learn'
 import Game from './pages/Game'
 
 // Admin Pages
+import AdminLogin from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
 
 export default function App() {
@@ -54,8 +55,9 @@ export default function App() {
         <Route path="/learn" element={<ProtectedRoute><Learn /></ProtectedRoute>} />
         <Route path="/game" element={<ProtectedRoute><Game /></ProtectedRoute>} />
 
-        {/* Admin — guarded by AdminRoute (admin group only) */}
-        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        {/* Admin — /admin = login, /admin/dashboard = guarded dashboard */}
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
       </Routes>
 
       {/* Global bottom nav — shows on mobile across all pages */}
